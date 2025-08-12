@@ -1,10 +1,10 @@
 import AuthLayout from "@/components/layouts/AuthLayout";
-import Register from "@/components/views/Register";
+import RegisterSuccess from "@/components/views/Auth/RegisterSuccess";
 
 const RegistersuccessPage = () => {
   return (
     <AuthLayout title="Tiket | Register success">
-      <h1>register sukses</h1>
+      <RegisterSuccess />
     </AuthLayout>
   );
 };

@@ -8,8 +8,7 @@ import useRegister from "./useRegister";
 import { Controller } from "react-hook-form";
 import * as React from "react";
 import CircularProgress from "@mui/material/CircularProgress";
-import Box from "@mui/material/Box";
-import { error } from "console";
+
 
 const Register = () => {
   const [password, setPassword] = useState("");
@@ -78,7 +77,7 @@ const Register = () => {
           <form className="space-y-3" onSubmit={handleSubmit(handleRegister)}>
             <div>
               <label className="block text-sm font-medium text-gray-700">
-                Email<span className="text-red-500">*</span>
+                Full Name<span className="text-red-500">*</span>
               </label>
               <Controller
                 name="fullName"
