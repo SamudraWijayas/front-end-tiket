@@ -2,6 +2,7 @@ import "@/styles/globals.css";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { SessionProvider } from "next-auth/react";
 import type { AppProps } from "next/app";
+import { HeroUIProvider } from "@heroui/react";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -12,11 +13,16 @@ const queryClient = new QueryClient({
   },
 });
 
-export default function App({ Component, pageProps: {session, ...pageProps} }: AppProps) {
+export default function App({
+  Component,
+  pageProps: { session, ...pageProps },
+}: AppProps) {
   return (
     <SessionProvider session={session}>
       <QueryClientProvider client={queryClient}>
-        <Component {...pageProps} />
+        <HeroUIProvider>
+          <Component {...pageProps} />
+        </HeroUIProvider>
       </QueryClientProvider>
     </SessionProvider>
   );

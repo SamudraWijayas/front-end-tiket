@@ -1,16 +1,16 @@
 import { ReactNode, useState } from "react";
+import React from "react";
 import PageHead from "@/components/commons/PageHead";
 import DashboardLayoutSidebar from "./DashboardLayoutSidebar";
 import { SIDEBAR_ADMIN, SIDEBAR_ORGANIZER } from "./DashboardLayout.constant";
-
-// MUI
-import AppBar from "@mui/material/AppBar";
-import Toolbar from "@mui/material/Toolbar";
-import Typography from "@mui/material/Typography";
-import IconButton from "@mui/material/IconButton";
+import {
+  Navbar,
+  NavbarBrand,
+  NavbarContent,
+  Avatar,
+  Button,
+} from "@heroui/react";
 import { AlignJustify } from "lucide-react";
-import Avatar from "@mui/material/Avatar";
-import Box from "@mui/material/Box";
 
 interface PropTypes {
   children: ReactNode;
@@ -19,8 +19,12 @@ interface PropTypes {
   type: string;
 }
 
-const DashboardLayout = (props: PropTypes) => {
-  const { children, description, title, type = "admin" } = props;
+const DashboardLayout = ({
+  children,
+  description,
+  title,
+  type = "admin",
+}: PropTypes) => {
   const [open, setOpen] = useState(false);
 
   return (
@@ -34,36 +38,60 @@ const DashboardLayout = (props: PropTypes) => {
         />
 
         {/* Main Section */}
+
         <div className="h-screen w-full overflow-y-auto">
-          {/* Navbar */}
-          <nav>
-            <AppBar
-              position="static"
-              color="default"
-              elevation={1}
-              sx={{ backgroundColor: "white" }}
-            >
-              <Toolbar className="flex justify-between">
-                <Box className="flex items-center gap-3">
-                  <Typography variant="h6" component="div">
-                    {title || "Dashboard"}
-                  </Typography>
-                </Box>
-                <div className="flex gap-3">
-                  <Avatar alt="User Avatar" src="/images/general/avatar.png" />
-                  <IconButton
-                    edge="start"
-                    color="inherit"
-                    aria-label={open ? "Close Menu" : "Open Menu"}
-                    onClick={() => setOpen(!open)}
-                    sx={{ display: { lg: "none" } }}
-                  >
-                    <AlignJustify />
-                  </IconButton>
+          <Navbar
+            maxWidth="full"
+            className="sticky top-0 z-40 bg-white px-4 shadow-sm"
+          >
+            {/* Left side */}
+            <NavbarContent justify="start" className="gap-3">
+              <Button
+                isIconOnly
+                variant="light"
+                radius="full"
+                aria-label="Back"
+                className="hover:bg-gray-100"
+                onPress={() => console.log("Back clicked")}
+              >
+                ←
+              </Button>
+              <NavbarBrand>
+                <div className="flex flex-col leading-tight">
+                  <p className="text-lg font-semibold text-gray-800">
+                    {title || "Dashboard Overview"}
+                  </p>
+                  <p className="text-sm text-gray-500">
+                    {description || "Welcome to your dashboard"}
+                  </p>
                 </div>
-              </Toolbar>
-            </AppBar>
-          </nav>
+              </NavbarBrand>
+            </NavbarContent>
+
+            {/* Right side */}
+            <NavbarContent justify="end" className="items-center gap-3">
+              {/* Avatar */}
+              <Avatar
+                src="/images/general/logo.png"
+                alt="User Avatar"
+                className="h-9 w-9 border border-gray-200 shadow-sm transition-transform hover:scale-105"
+              />
+
+              {/* toogle */}
+              <Button
+                isIconOnly
+                variant="light"
+                radius="full"
+                onPress={() => setOpen(!open)}
+                aria-label={open ? "Close Menu" : "Open Menu"}
+                className="hover:bg-gray-100 lg:hidden"
+              >
+                <AlignJustify className="h-5 w-5 text-gray-700" />
+              </Button>
+            </NavbarContent>
+          </Navbar>
+
+          {/* Navbar */}
 
           {/* Page Content */}
           <div className="p-8">{children}</div>
