@@ -7,8 +7,7 @@ import { motion } from "framer-motion";
 import useRegister from "./useRegister";
 import { Controller } from "react-hook-form";
 import * as React from "react";
-import CircularProgress from "@mui/material/CircularProgress";
-
+import { Spinner } from "@heroui/react";
 
 const Register = () => {
   const [password, setPassword] = useState("");
@@ -336,7 +335,11 @@ const Register = () => {
               className="mt-4 flex w-full items-center justify-center rounded bg-red-600 py-2 font-medium text-white transition hover:bg-red-700 disabled:cursor-not-allowed disabled:bg-gray-400"
             >
               {isPendingRegister ? (
-                <CircularProgress size={20} style={{ color: "white" }} />
+                <Spinner
+                  classNames={{ label: "text-foreground mt-4" }}
+                  label="simple"
+                  variant="simple"
+                />
               ) : (
                 "Register"
               )}

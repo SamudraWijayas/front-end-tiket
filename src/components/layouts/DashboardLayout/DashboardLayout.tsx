@@ -46,16 +46,6 @@ const DashboardLayout = ({
           >
             {/* Left side */}
             <NavbarContent justify="start" className="gap-3">
-              <Button
-                isIconOnly
-                variant="light"
-                radius="full"
-                aria-label="Back"
-                className="hover:bg-gray-100"
-                onPress={() => console.log("Back clicked")}
-              >
-                ←
-              </Button>
               <NavbarBrand>
                 <div className="flex flex-col leading-tight">
                   <p className="text-lg font-semibold text-gray-800">

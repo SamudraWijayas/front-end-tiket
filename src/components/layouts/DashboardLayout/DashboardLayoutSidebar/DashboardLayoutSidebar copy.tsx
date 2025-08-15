@@ -2,10 +2,10 @@ import { signOut } from "next-auth/react";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { ReactNode } from "react";
-import { Button } from "@heroui/react";
 import Link from "next/link";
 import { cn } from "@/utils/cn";
-import { LogOut } from "lucide-react";
+import { Button } from "@heroui/react";
+import { LogOut, ChevronRight } from "lucide-react";
 
 interface SidebarItem {
   key: string;
@@ -17,33 +17,46 @@ interface SidebarItem {
 interface PropTypes {
   sidebarItems: SidebarItem[];
   isOpen: boolean;
+  isCollapsed: boolean;
 }
 
-const DashboardLayoutSidebar = ({ sidebarItems, isOpen }: PropTypes) => {
+const DashboardLayoutSidebar = ({
+  sidebarItems,
+  isOpen,
+  isCollapsed,
+}: PropTypes) => {
   const router = useRouter();
 
   return (
-    <div
+    <aside
       className={cn(
-        "fixed z-50 flex h-screen w-full max-w-[280px] -translate-x-full flex-col justify-between border-r border-gray-200/50 bg-white px-4 py-6 shadow-lg transition-transform duration-300 lg:relative lg:translate-x-0",
-        { "translate-x-0": isOpen }
+        "fixed z-50 flex h-screen w-full max-w-[260px] -translate-x-full flex-col justify-between border-r border-gray-200 bg-white px-3 py-4 transition-all duration-300 lg:relative lg:translate-x-0",
+        { "translate-x-0": isOpen },
+        { "translate-x-0": !isCollapsed },
+        isCollapsed && "md:w-[70px] md:items-center",
       )}
     >
-      {/* Logo */}
+      {/* Top Brand */}
       <div>
-        <div className="flex justify-center">
+        <div className="mb-6 flex items-center gap-2 px-2">
           <Image
             src="/images/general/logo.svg"
             alt="logo"
-            width={180}
-            height={60}
-            className="mb-8 w-32 cursor-pointer transition-transform hover:scale-105"
+            width={32}
+            height={32}
+            className="cursor-pointer"
             onClick={() => router.push("/")}
           />
+          {!isCollapsed && (
+            <span className="text-lg font-semibold text-gray-800">Fokys</span>
+          )}
         </div>
 
-        {/* Sidebar Menu */}
-        <nav className="space-y-2">
+        {/* MAIN MENU */}
+        {/* <p className="mb-2 px-2 text-xs font-semibold text-gray-400 uppercase">
+          Main Menu
+        </p> */}
+        <nav className="space-y-1">
           {sidebarItems.map((item) => {
             const isActive = router.pathname.startsWith(item.href);
             return (
@@ -51,38 +64,83 @@ const DashboardLayoutSidebar = ({ sidebarItems, isOpen }: PropTypes) => {
                 key={item.key}
                 href={item.href}
                 className={cn(
-                  "flex items-center gap-3 rounded-xl px-4 py-3 text-base font-medium transition-all duration-200 hover:bg-blue-50 hover:text-blue-600",
-                  isActive &&
-                    "bg-blue-500 text-white shadow-md hover:bg-blue-600 hover:text-white"
+                  "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
+                  isActive
+                    ? "bg-blue-100 text-gray-900"
+                    : "text-gray-600 hover:bg-gray-50",
+                  isCollapsed && "justify-center",
                 )}
               >
-                <span
-                  className={cn(
-                    "text-xl transition-colors",
-                    isActive ? "text-white" : "text-gray-500"
-                  )}
-                >
-                  {item.icon}
-                </span>
-                <span>{item.label}</span>
+                <span className="text-lg">{item.icon}</span>
+                {!isCollapsed && (
+                  <p className="whitespace-nowrap">{item.label}</p>
+                )}
               </Link>
             );
           })}
         </nav>
-      </div>
 
-      {/* Logout Button */}
-      <div className="mt-4">
+        {/* <p className="mt-6 mb-2 px-2 text-xs font-semibold text-gray-400 uppercase">
+        Others
+      </p> */}
+      </div>
+      {/* Bottom Section */}
+      <div className="space-y-2">
+        {/* Extra links */}
+        {/* <button className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm text-gray-600 hover:bg-gray-50">
+          👥 Invite Teams
+        </button>
+        <button className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm text-gray-600 hover:bg-gray-50">
+          ⚙️ Settings
+        </button>
+        <button className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm text-gray-600 hover:bg-gray-50">
+          ❓ Help Center
+        </button> */}
         <Button
           fullWidth
-          className="flex items-center gap-2 rounded-lg bg-red-500 px-4 py-2 font-medium text-white shadow-md transition-all hover:bg-red-600 hover:shadow-lg"
+          className={cn(
+            "sidebar-item bg-red-500",
+            isCollapsed && "md:w-[45px]",
+          )}
           onPress={() => signOut()}
         >
           <LogOut size={20} />
-          Logout
+          {!isCollapsed && "Logout"}
         </Button>
+        <button
+          onClick={() => signOut()}
+          className={cn("sidebar-item", isCollapsed && "md:w-[45px]")}
+        >
+          <LogOut size={22} className="flex-shrink-0" />
+          {!isCollapsed && <p className="whitespace-nowrap">Logout</p>}
+        </button>
+
+        {/* User card */}
+        <div className="mt-3 flex items-center justify-between rounded-lg border border-gray-200 p-3">
+          <div className="flex items-center gap-2">
+            <Image
+              src="/images/general/logo.png"
+              alt="User Avatar"
+              width={32}
+              height={32}
+              className="rounded-full"
+            />
+            <div>
+              <p className="text-sm font-medium text-gray-800">
+                Bruce Willingham
+              </p>
+              <p className="text-xs text-gray-500">willingbruce@fokys.com</p>
+            </div>
+          </div>
+          <button
+            onClick={() => signOut()}
+            className="text-gray-400 hover:text-red-500"
+          >
+            <ChevronRight size={18} />
+          </button>
+        </div>
       </div>
-    </div>
+    </aside>
   );
 };
 

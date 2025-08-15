@@ -26,7 +26,6 @@ const useLogin = () => {
     handleSubmit,
     formState: { errors },
     reset,
-    setError,
   } = useForm({
     resolver: yupResolver(loginSchema),
   });
@@ -45,6 +44,7 @@ const useLogin = () => {
   const { mutate: mutateLogin, isPending: isPendingLogin } = useMutation({
     mutationFn: loginService,
     onError: () => {
+      console.log("Login error - setting toaster");
       setToaster({
         type: "error",
         message: "Your credential is wrong",
