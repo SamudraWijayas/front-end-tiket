@@ -8,11 +8,12 @@ import useDebounce from "@/hooks/useDebounce";
 import categoryService from "@/services/category.service";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/router";
-import { ChangeEvent } from "react";
+import { ChangeEvent, useState } from "react";
 
 const useCategory = () => {
   const router = useRouter();
   const debounce = useDebounce();
+  const [selectedId, setSelectedId] = useState<string>("");
   const currentLimit = router.query.limit || LIMIT_LIST[0].value;
   const currentPage = router.query.page || 1;
   const currentSearch = router.query.search || "";
@@ -41,6 +42,7 @@ const useCategory = () => {
     data: dataCategory,
     isLoading: isLoadingCategory,
     isRefetching: isRefetchingCategory,
+    refetch: refetchCategory,
   } = useQuery({
     queryKey: ["Category", currentLimit, currentPage, currentSearch],
     queryFn: getCategories,
@@ -88,7 +90,7 @@ const useCategory = () => {
         page: PAGE_DEFAULT,
       },
     });
-  }
+  };
 
   return {
     setURL,
@@ -98,10 +100,13 @@ const useCategory = () => {
     currentLimit,
     currentSearch,
     isRefetchingCategory,
+    refetchCategory,
     handleChangePage,
     handleChangeLimit,
     handleClearSearch,
-    handleSearch
+    handleSearch,
+    selectedId,
+    setSelectedId,
   };
 };
 

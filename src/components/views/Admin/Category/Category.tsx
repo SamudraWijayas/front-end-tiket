@@ -5,6 +5,7 @@ import {
   DropdownItem,
   DropdownMenu,
   DropdownTrigger,
+  useDisclosure,
 } from "@heroui/react";
 import Image from "next/image";
 import { Key, ReactNode, useCallback, useEffect } from "react";
@@ -12,7 +13,8 @@ import { EllipsisVertical } from "lucide-react";
 import { useRouter } from "next/router";
 import { COLUMN_LIST_CATEGORY } from "./Categort.constants";
 import useCategory from "./useCategory";
-import InputFile from "@/components/ui/InputFile";
+import AddCategoryModal from "./AddCategoryModal";
+import DeleteCategoryModal from "./DeleteCategoryModal";
 
 const Category = () => {
   const { push, isReady, query } = useRouter();
@@ -20,6 +22,7 @@ const Category = () => {
     currentPage,
     currentLimit,
     isRefetchingCategory,
+    refetchCategory,
     dataCategory,
     isLoadingCategory,
     setURL,
@@ -27,7 +30,12 @@ const Category = () => {
     handleChangeLimit,
     handleClearSearch,
     handleSearch,
+    selectedId,
+    setSelectedId,
   } = useCategory();
+
+  const addCategoryModal = useDisclosure();
+  const deleteCategoryModal = useDisclosure();
 
   useEffect(() => {
     if (isReady) {
@@ -39,10 +47,15 @@ const Category = () => {
     (category: Record<string, unknown>, columnKey: Key) => {
       const cellValue = category[columnKey as keyof typeof category];
       switch (columnKey) {
-        // case "icon":
-        //   return (
-        //     <Image src={`${cellValue}`} width={100} height={100} alt="icon" />
-        //   );
+        case "icon":
+          return (
+            <Image
+              src={`${process.env.NEXT_PUBLIC_IMAGE}${cellValue}`}
+              width={100}
+              height={100}
+              alt="icon"
+            />
+          );
         case "actions":
           return (
             <Dropdown>
@@ -61,6 +74,10 @@ const Category = () => {
                 <DropdownItem
                   key="delete-category-button"
                   className="text-red-500"
+                  onPress={() => {
+                    setSelectedId(`${category._id}`);
+                    deleteCategoryModal.onOpen();
+                  }}
                 >
                   Delete
                 </DropdownItem>
@@ -89,12 +106,21 @@ const Category = () => {
           onChangeSearch={handleSearch}
           onCahngePage={handleChangePage}
           onClearSearch={handleClearSearch}
-          onClickButtonTopContent={() => {}}
+          onClickButtonTopContent={addCategoryModal.onOpen}
           renderCell={renderCell}
           totalPages={dataCategory?.pagination.totalPages || 0}
         />
       )}
-      <InputFile name={""}></InputFile>
+      <AddCategoryModal
+        refetchCategory={refetchCategory}
+        {...addCategoryModal}
+      />
+      <DeleteCategoryModal
+        refetchCategory={refetchCategory}
+        {...deleteCategoryModal}
+        selectedId={selectedId}
+        setSelectedId={setSelectedId}
+      />
     </section>
   );
 };

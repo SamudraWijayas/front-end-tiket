@@ -1,106 +1,153 @@
-"use client";
-
 import { cn } from "@/utils/cn";
-import { UploadCloud, X } from "lucide-react";
-import { useState, DragEvent } from "react";
+import { Button, Spinner } from "@heroui/react";
 import Image from "next/image";
+import { ChangeEvent, ReactNode, useEffect, useId, useRef } from "react";
+import { UploadCloud, X } from "lucide-react";
 
-interface PropsTypes {
-  name: string;
+interface PropTypes {
   className?: string;
-  onFileSelect?: (file: File) => void;
+  errorMessage?: string;
+  isDeleting?: boolean;
+  isDropable?: boolean;
+  isInvalid?: boolean;
+  isUploading?: boolean;
+  label?: ReactNode;
+  name: string;
+  onUpload?: (files: FileList) => void;
+  onDelete?: () => void;
+  preview?: string;
 }
 
-const InputFile = ({ name, className, onFileSelect }: PropsTypes) => {
-  const [isDragging, setIsDragging] = useState(false);
-  const [preview, setPreview] = useState<string | null>(null);
-  const [fileName, setFileName] = useState<string>("");
+const InputFile = (props: PropTypes) => {
+  const {
+    className,
+    errorMessage,
+    isDropable = false,
+    isInvalid,
+    isUploading,
+    isDeleting,
+    label,
+    name,
+    onUpload,
+    onDelete,
+    preview,
+  } = props;
 
-  const truncateFileName = (filename: string, maxLength = 20) => {
-    if (filename.length <= maxLength) return filename;
-    const ext = filename.split(".").pop();
-    return (
-      filename.slice(0, maxLength - (ext?.length ?? 0) - 3) + "... ." + ext
-    );
-  };
+  const drop = useRef<HTMLLabelElement>(null);
+  const dropzoneId = useId();
 
-  const handleFileChange = (file?: File) => {
-    if (file) {
-      const objectUrl = URL.createObjectURL(file);
-      setPreview(objectUrl);
-      setFileName(file.name);
-      onFileSelect?.(file);
+  const handleDragOver = (e: DragEvent) => {
+    if (isDropable) {
+      e.preventDefault();
+      e.stopPropagation();
     }
   };
 
-  const handleDrop = (e: DragEvent<HTMLLabelElement>) => {
+  const handleDrop = (e: DragEvent) => {
     e.preventDefault();
-    setIsDragging(false);
-    const file = e.dataTransfer.files[0];
-    handleFileChange(file);
+    const files = e.dataTransfer?.files;
+    if (files && onUpload) {
+      onUpload(files);
+    }
+  };
+
+  useEffect(() => {
+    const dropCurrent = drop.current;
+    if (dropCurrent) {
+      dropCurrent.addEventListener("dragover", handleDragOver);
+      dropCurrent.addEventListener("drop", handleDrop);
+
+      return () => {
+        dropCurrent.removeEventListener("dragover", handleDragOver);
+        dropCurrent.removeEventListener("drop", handleDrop);
+      };
+    }
+  }, []);
+
+  const handleOnUpload = (e: ChangeEvent<HTMLInputElement>) => {
+    const files = e.currentTarget.files;
+    if (files && onUpload) {
+      onUpload(files);
+    }
   };
 
   return (
-    <label
-      htmlFor="dropzone-file"
-      className={cn(
-        "flex min-h-32 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 transition hover:bg-gray-100",
-        isDragging && "border-blue-500 bg-blue-50",
-        className,
-      )}
-      onDragOver={(e) => {
-        e.preventDefault();
-        setIsDragging(true);
-      }}
-      onDragLeave={(e) => {
-        e.preventDefault();
-        setIsDragging(false);
-      }}
-      onDrop={handleDrop}
-    >
-      {preview ? (
-        <div className="relative flex flex-col items-center">
-          <Image
-            src={preview}
-            alt="Preview"
-            width={112}
-            height={112}
-            className="rounded-lg object-cover shadow"
-          />
-          <button
-            type="button"
-            onClick={(e) => {
-              e.preventDefault();
-              setPreview(null);
-              setFileName("");
-            }}
-            className="absolute -top-2 -right-2 rounded-full bg-red-500 p-1 text-white hover:bg-red-600"
-          >
-            <X size={14} />
-          </button>
-          <p className="mt-2 max-w-[200px] truncate text-xs text-gray-500">
-            {truncateFileName(fileName)}
-          </p>
-        </div>
-      ) : (
-        <>
-          <UploadCloud className="mb-2 h-8 w-8 text-gray-500" />
-          <p className="text-sm text-gray-500">
-            <span className="font-medium text-blue-600">Klik untuk upload</span>{" "}
-            atau seret file ke sini
-          </p>
-        </>
-      )}
+    <div className="w-full">
+      {label && <div className="mb-1 text-sm font-medium">{label}</div>}
+      <label
+        ref={drop}
+        htmlFor={`dropzone-file-${dropzoneId}`}
+        className={cn(
+          "hover:border-primary relative flex min-h-32 w-full cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed border-gray-300 bg-gradient-to-br from-gray-50 to-gray-100 transition hover:from-gray-100 hover:to-gray-200",
+          className,
+          { "border-danger-500": isInvalid },
+        )}
+      >
+        {preview && (
+          <div className="relative flex flex-col items-center justify-center p-4">
+            <div className="relative h-40 w-40 overflow-hidden rounded-xl shadow-md ring-1 ring-gray-200">
+              <Image
+                fill
+                src={preview}
+                alt="Preview"
+                className="object-cover"
+              />
+            </div>
+            <Button
+              isIconOnly
+              onPress={onDelete}
+              disabled={isDeleting}
+              className="absolute top-2 right-2 rounded-full bg-red-500 p-1 text-white shadow hover:bg-red-600"
+            >
+              {isDeleting ? (
+                <Spinner size="sm" color="white" />
+              ) : (
+                <X size={16} />
+              )}
+            </Button>
+          </div>
+        )}
 
-      <input
-        type="file"
-        id="dropzone-file"
-        name={name}
-        accept="image/*"
-        className="hidden"
-        onChange={(e) => handleFileChange(e.target.files?.[0])}
-      />
-    </label>
+        {!preview && !isUploading && (
+          <div className="flex flex-col items-center justify-center p-6 text-gray-500">
+            <UploadCloud className="mb-2 h-12 w-12 text-gray-400" />
+            <p className="text-center text-sm font-medium">
+              {isDropable
+                ? "Drag & Drop or Click to Upload"
+                : "Click to Upload"}
+            </p>
+            <span className="text-xs text-gray-400">
+              PNG, JPG or JPEG • Max 5MB
+            </span>
+          </div>
+        )}
+
+        {isUploading && (
+          <div className="flex flex-col items-center justify-center p-8">
+            <Spinner size="lg" color="primary" />
+            <p className="mt-2 text-xs text-gray-400">Uploading...</p>
+          </div>
+        )}
+
+        <input
+          name={name}
+          type="file"
+          className="hidden"
+          accept="image/*"
+          id={`dropzone-file-${dropzoneId}`}
+          onChange={handleOnUpload}
+          disabled={!!preview}
+          onClick={(e) => {
+            e.currentTarget.value = "";
+            e.target.dispatchEvent(new Event("change", { bubbles: true }));
+          }}
+        />
+      </label>
+
+      {isInvalid && (
+        <p className="text-danger-500 mt-1 text-xs">{errorMessage}</p>
+      )}
+    </div>
   );
 };
 

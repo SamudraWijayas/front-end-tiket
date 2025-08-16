@@ -40,7 +40,7 @@ const DashboardLayoutSidebar = ({ sidebarItems, isOpen }: PropTypes) => {
             className="cursor-pointer"
             onClick={() => router.push("/")}
           />
-          <span className="text-lg font-semibold text-gray-800">Fokys</span>
+          <span className="text-lg font-semibold text-gray-800">Tiketbdl</span>
         </div>
 
         {/* MAIN MENU */}
