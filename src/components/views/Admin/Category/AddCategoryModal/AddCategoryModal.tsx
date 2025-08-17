@@ -66,7 +66,7 @@ const AddCategoryModal = ({
         <ModalContent className="m-4">
           <ModalHeader>Add Category</ModalHeader>
           <ModalBody>
-            <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-2">
               {/* Nama kategori */}
               <Controller
                 name="name"
@@ -78,6 +78,7 @@ const AddCategoryModal = ({
                     label="Nama Kategori"
                     isInvalid={!!errors.name}
                     errorMessage={errors.name?.message}
+                    className="mb-2"
                   />
                 )}
               />
@@ -93,11 +94,13 @@ const AddCategoryModal = ({
                     variant="bordered"
                     isInvalid={!!errors.description}
                     errorMessage={errors.description?.message}
+                    className="mb-2"
                   />
                 )}
               />
 
               {/* Icon */}
+              <p className="text-sm font-bold">Icon</p>
               <Controller
                 name="icon"
                 control={control}

@@ -16,6 +16,7 @@ interface PropTypes {
   onUpload?: (files: FileList) => void;
   onDelete?: () => void;
   preview?: string;
+  
 }
 
 const InputFile = (props: PropTypes) => {
