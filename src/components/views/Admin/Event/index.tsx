@@ -1,2 +1,2 @@
-import Dashboard from "./Dashboard";
-export default Dashboard;
+import Event from "./Event";
+export default Event;

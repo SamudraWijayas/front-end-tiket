@@ -1,35 +1,26 @@
 import DataTable from "@/components/ui/DataTable";
 import {
-  Button,
-  Dropdown,
-  DropdownItem,
-  DropdownMenu,
-  DropdownTrigger,
+
   useDisclosure,
 } from "@heroui/react";
 import Image from "next/image";
 import { Key, ReactNode, useCallback, useEffect } from "react";
-import { EllipsisVertical } from "lucide-react";
 import { useRouter } from "next/router";
 import { COLUMN_LIST_CATEGORY } from "./Categort.constants";
 import useCategory from "./useCategory";
 import AddCategoryModal from "./AddCategoryModal";
 import DeleteCategoryModal from "./DeleteCategoryModal";
+import useChangeUrl from "@/hooks/useChangeUrls";
+import DropdownAction from "@/components/commons/DropdownAction";
 
 const Category = () => {
   const { push, isReady, query } = useRouter();
   const {
-    currentPage,
-    currentLimit,
     isRefetchingCategory,
     refetchCategory,
     dataCategory,
     isLoadingCategory,
-    setURL,
-    handleChangePage,
-    handleChangeLimit,
-    handleClearSearch,
-    handleSearch,
+
     selectedId,
     setSelectedId,
   } = useCategory();
@@ -37,9 +28,11 @@ const Category = () => {
   const addCategoryModal = useDisclosure();
   const deleteCategoryModal = useDisclosure();
 
+  const { setUrl } = useChangeUrl();
+
   useEffect(() => {
     if (isReady) {
-      setURL();
+      setUrl();
     }
   }, [isReady]);
 
@@ -58,31 +51,15 @@ const Category = () => {
           );
         case "actions":
           return (
-            <Dropdown>
-              <DropdownTrigger>
-                <Button isIconOnly size="sm" variant="light">
-                  <EllipsisVertical className="text-default-700" />
-                </Button>
-              </DropdownTrigger>
-              <DropdownMenu>
-                <DropdownItem
-                  key="detail-category-button"
-                  onPress={() => push(`/admin/category/${category._id}`)}
-                >
-                  Detail Category
-                </DropdownItem>
-                <DropdownItem
-                  key="delete-category-button"
-                  className="text-red-500"
-                  onPress={() => {
-                    setSelectedId(`${category._id}`);
-                    deleteCategoryModal.onOpen();
-                  }}
-                >
-                  Delete
-                </DropdownItem>
-              </DropdownMenu>
-            </Dropdown>
+            <DropdownAction
+              onClickDetail={() => push(`/admin/category/${category._id}`)}
+              onClickDelete={() => {
+                setSelectedId(`${category._id}`);
+                deleteCategoryModal.onOpen();
+              }}
+              textButtonDetail="Detail Category"
+              textButtonDelete="Delete Category"
+            />
           );
         default:
           return cellValue as ReactNode;
@@ -97,15 +74,9 @@ const Category = () => {
         <DataTable
           buttonTopContentLabel="Create Category"
           columns={COLUMN_LIST_CATEGORY}
-          currentPage={Number(currentPage)}
           data={dataCategory?.data || []}
           emptyContent="Category is empty"
           isLoading={isLoadingCategory || isRefetchingCategory}
-          limit={String(currentLimit)}
-          onChangeLimit={handleChangeLimit}
-          onChangeSearch={handleSearch}
-          onCahngePage={handleChangePage}
-          onClearSearch={handleClearSearch}
           onClickButtonTopContent={addCategoryModal.onOpen}
           renderCell={renderCell}
           totalPages={dataCategory?.pagination.totalPages || 0}

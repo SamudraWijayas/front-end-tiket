@@ -19,7 +19,7 @@ const { setToaster } = useContext(ToasterContext);
     data: dataCategory,
     refetch: refetchCategory,
   } = useQuery({
-    queryKey: ["category", query.id],
+    queryKey: ["Category", query.id],
     queryFn: () => getCategoryId(query.id as string),
     enabled: isReady && !!query.id,
   });

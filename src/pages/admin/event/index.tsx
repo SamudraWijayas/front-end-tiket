@@ -1,7 +1,15 @@
-import React from 'react'
+import DashboardLayout from "@/components/layouts/DashboardLayout";
+import Event from "@/components/views/Admin/Event";
 
-export const index = () => {
+const AdminEventPage = () => {
   return (
-    <div>index</div>
-  )
-}
+    <DashboardLayout
+      title="Event"
+      description="List of all, Event, create new event, adn manageexisting event"
+      type="admin"
+    >
+      <Event />
+    </DashboardLayout>
+  );
+};
+export default AdminEventPage;

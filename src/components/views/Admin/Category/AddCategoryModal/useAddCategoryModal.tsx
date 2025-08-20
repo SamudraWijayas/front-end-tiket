@@ -59,7 +59,6 @@ const useAddCategoryModal = () => {
     handleDeleteFile(fileUrl, () => onChange(undefined));
   };
 
-
   const handleOnClose = (onClose: () => void) => {
     handleDeleteFile(fileUrl, () => {
       reset();
