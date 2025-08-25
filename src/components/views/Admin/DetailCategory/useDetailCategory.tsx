@@ -7,20 +7,16 @@ import { useContext } from "react";
 
 const useDetailCategory = () => {
   const { query, isReady } = useRouter();
-const { setToaster } = useContext(ToasterContext);
+  const { setToaster } = useContext(ToasterContext);
 
-
-  const getCategoryId = async (id: string) => {
-    const { data } = await categoryService.getCategoryById(id);
+  const getCategoryId = async () => {
+    const { data } = await categoryService.getCategoryById(`${query.id}`);
     return data.data;
   };
 
-  const {
-    data: dataCategory,
-    refetch: refetchCategory,
-  } = useQuery({
+  const { data: dataCategory, refetch: refetchCategory } = useQuery({
     queryKey: ["Category", query.id],
-    queryFn: () => getCategoryId(query.id as string),
+    queryFn: getCategoryId,
     enabled: isReady && !!query.id,
   });
 
@@ -52,8 +48,6 @@ const { setToaster } = useContext(ToasterContext);
       });
     },
   });
-
-  
 
   const handleUpdateCategory = async (data: ICategory) =>
     mutateUpdateCategory(data);

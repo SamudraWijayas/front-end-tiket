@@ -20,6 +20,7 @@ import InputFile from "@/components/ui/InputFile";
 import { useEffect } from "react";
 import { ICategory } from "@/types/Category";
 import { IRegency } from "@/types/Event";
+import { getLocalTimeZone, now } from "@internationalized/date";
 
 interface PropTypes {
   isOpen: boolean;
@@ -82,7 +83,11 @@ const AddEventModal = ({
     isSuccessMutateAddEvent ||
     isPendingMutateUploadFile ||
     isPendingMutateDeleteFile;
-
+    
+  useEffect(() => {
+    setValue("startDate", now(getLocalTimeZone()));
+    setValue("endDate", now(getLocalTimeZone()));
+  }, [onOpenChange]);
   return (
     <Modal
       onOpenChange={onOpenChange}

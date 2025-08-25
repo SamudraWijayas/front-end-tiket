@@ -61,7 +61,7 @@ const IconTab = (props: PropTypes) => {
           {/* Current Icon Preview */}
           <Skeleton
             isLoaded={!!currentIcon}
-            className="relative flex aspect-square items-center justify-center rounded-2xl border border-gray-200 bg-gray-50 shadow-inner"
+            className="relative flex aspect-video items-center justify-center rounded-2xl border border-gray-200 bg-gray-50 shadow-inner"
           >
             {currentIcon ? (
               <Image

@@ -12,7 +12,7 @@ import {
   TableHeader,
   TableRow,
 } from "@heroui/react";
-import { ChangeEvent, Key, ReactNode, useMemo } from "react";
+import { Key, ReactNode, useMemo } from "react";
 import { Search } from "lucide-react";
 import { LIMIT_LIST } from "@/constants/list.constants";
 import { cn } from "@/utils/cn";
@@ -27,11 +27,13 @@ interface PropsTypes {
   buttonTopContentLabel?: string;
   columns: ColumnType[];
   data: Record<string, unknown>[];
-  emptyContent: string;
+  emptyContent: string | React.ReactNode;
   isLoading?: boolean;
   onClickButtonTopContent?: () => void;
   renderCell: (item: Record<string, unknown>, columnKey: Key) => ReactNode;
   totalPages: number;
+  showLimit?: boolean;
+  showSearch?: boolean;
 }
 
 const DataTable = (props: PropsTypes) => {
@@ -53,18 +55,23 @@ const DataTable = (props: PropsTypes) => {
     onClickButtonTopContent,
     renderCell,
     totalPages,
+    showLimit = true,
+    showSearch = true,
   } = props;
+
   const topContent = useMemo(() => {
     return (
       <div className="flex flex-col-reverse items-start justify-between gap-y-4 lg:flex-row lg:items-center">
-        <Input
-          isClearable
-          className="w-full sm:max-w-[24%]"
-          placeholder="Search by name"
-          startContent={<Search />}
-          onClear={handleClearSearch}
-          onChange={handleSearch}
-        />
+        {showSearch && (
+          <Input
+            isClearable
+            className="w-full sm:max-w-[24%]"
+            placeholder="Search by name"
+            startContent={<Search />}
+            onClear={handleClearSearch}
+            onChange={handleSearch}
+          />
+        )}
         {buttonTopContentLabel && (
           <Button color="primary" onPress={onClickButtonTopContent}>
             {buttonTopContentLabel}
@@ -82,19 +89,21 @@ const DataTable = (props: PropsTypes) => {
   const ButtomContent = useMemo(() => {
     return (
       <div className="flex items-center justify-center lg:justify-between">
-        <Select
-          className="hidden max-w-36 lg:block"
-          size="md"
-          selectedKeys={[`${currentLimit}`]}
-          selectionMode="single"
-          onChange={handleChangeLimit}
-          startContent={<p className="text-small">Show:</p>}
-          disallowEmptySelection
-        >
-          {LIMIT_LIST.map((item) => (
-            <SelectItem key={item.value}>{item.label}</SelectItem>
-          ))}
-        </Select>
+        {showLimit && (
+          <Select
+            className="hidden max-w-36 lg:block"
+            size="md"
+            selectedKeys={[`${currentLimit}`]}
+            selectionMode="single"
+            onChange={handleChangeLimit}
+            startContent={<p className="text-small">Show:</p>}
+            disallowEmptySelection
+          >
+            {LIMIT_LIST.map((item) => (
+              <SelectItem key={item.value}>{item.label}</SelectItem>
+            ))}
+          </Select>
+        )}
         {totalPages > 1 && (
           <Pagination
             isCompact
@@ -108,7 +117,13 @@ const DataTable = (props: PropsTypes) => {
         )}
       </div>
     );
-  }, [currentLimit, currentPage, totalPages, handleChangeLimit, handleChangePage]);
+  }, [
+    currentLimit,
+    currentPage,
+    totalPages,
+    handleChangeLimit,
+    handleChangePage,
+  ]);
   return (
     <Table
       bottomContent={ButtomContent}

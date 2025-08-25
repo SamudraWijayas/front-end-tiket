@@ -5,15 +5,12 @@ import useMediaHandling from "@/hooks/useMediaHandling";
 import categoryServices from "@/services/category.service";
 import eventServices from "@/services/event.service";
 import { IEvent, IEventForm } from "@/types/Event";
-import { toDateStandard } from "@/utils/data";
+import { toDateStandard } from "@/utils/date";
 import { DateValue } from "@heroui/react";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { getLocalTimeZone, now } from "@internationalized/date";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { useRouter } from "next/router";
 import { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
-
 import * as yup from "yup";
 
 const schema = yup.object().shape({
@@ -35,7 +32,6 @@ const schema = yup.object().shape({
 
 const useAddEventModal = () => {
   const { setToaster } = useContext(ToasterContext);
-  const router = useRouter();
   const debounce = useDebounce();
   const {
     handleUploadFile,
@@ -63,8 +59,6 @@ const useAddEventModal = () => {
       ? `${process.env.NEXT_PUBLIC_IMAGE || process.env.NEXT_PUBLIC_API}${preview}`
       : "";
 
-  setValue("startDate", now(getLocalTimeZone()));
-  setValue("endDate", now(getLocalTimeZone()));
   const handleUploadBanner = (
     files: FileList,
     onChange: (files: FileList | undefined) => void,

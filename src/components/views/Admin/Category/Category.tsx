@@ -6,7 +6,7 @@ import {
 import Image from "next/image";
 import { Key, ReactNode, useCallback, useEffect } from "react";
 import { useRouter } from "next/router";
-import { COLUMN_LIST_CATEGORY } from "./Categort.constants";
+import { COLUMN_LIST_CATEGORY } from "./Category.constants";
 import useCategory from "./useCategory";
 import AddCategoryModal from "./AddCategoryModal";
 import DeleteCategoryModal from "./DeleteCategoryModal";

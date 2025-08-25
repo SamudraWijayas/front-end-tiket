@@ -9,6 +9,7 @@ import useEvent from "./useEvent";
 import useChangeUrl from "@/hooks/useChangeUrls";
 import DropdownAction from "@/components/commons/DropdownAction";
 import AddEventModal from "./AddEventModal";
+import DeleteEventModal from "./DeleteEventModal";
 
 const Event = () => {
   const { push, isReady, query } = useRouter();
@@ -90,9 +91,12 @@ const Event = () => {
           totalPages={dataEvents?.pagination.totalPages || 0}
         />
       )}
-      <AddEventModal
+      <AddEventModal refetchEvents={refetchEvents} {...addEventModal} />
+      <DeleteEventModal
         refetchEvents={refetchEvents}
-        {...addEventModal}
+        {...deleteEventModal}
+        selectedId={selectedId}
+        setSelectedId={setSelectedId}
       />
     </section>
   );

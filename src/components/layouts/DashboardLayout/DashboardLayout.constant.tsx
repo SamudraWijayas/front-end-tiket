@@ -5,6 +5,7 @@ import {
   List,
   Tag,
   Bookmark,
+  User,
 } from "lucide-react";
 const SIDEBAR_ADMIN = [
   {
@@ -12,6 +13,12 @@ const SIDEBAR_ADMIN = [
     label: "Dashboard",
     href: "/admin/dashboard",
     icon: <LayoutDashboard />,
+  },
+  {
+    key: "user",
+    label: "User",
+    href: "/admin/user",
+    icon: <User />,
   },
   {
     key: "event",

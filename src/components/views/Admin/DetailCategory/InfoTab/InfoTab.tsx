@@ -26,18 +26,16 @@ const InfoTab = (props: PropTypes) => {
     controlUpdateInfo,
     handleSubmitUpdateInfo,
     errorsUpdateInfo,
-    resetUpdateInfo,
     setValueUpdateInfo,
   } = useInfoTab();
 
   useEffect(() => {
-    setValueUpdateInfo("name", dataCategory?.name || "");
-    setValueUpdateInfo("description", dataCategory?.description || "");
+    setValueUpdateInfo("name", `${dataCategory?.name}`);
+    setValueUpdateInfo("description", `${dataCategory?.description}`);
   }, [dataCategory]);
 
   useEffect(() => {
     if (isSuccessUpdate) {
-      resetUpdateInfo();
     }
   }, [isSuccessUpdate]);
 
