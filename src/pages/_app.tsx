@@ -5,12 +5,20 @@ import type { AppProps } from "next/app";
 import { HeroUIProvider } from "@heroui/react";
 import { ToasterProvider } from "@/contexts/ToasterContext";
 import AppShell from "@/components/commons/AppShell";
+import { onErrorHander } from "@/libs/axios/responseHanler";
 
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       refetchOnWindowFocus: false,
       retry: false,
+      throwOnError(error) {
+        onErrorHander(error);
+        return false;
+      },
+    },
+    mutations: {
+      onError: onErrorHander,
     },
   },
 });

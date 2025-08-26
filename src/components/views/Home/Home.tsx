@@ -1,9 +1,8 @@
-import React from 'react'
+import LandingPageLayout from "@/components/layouts/LandingPageLayout";
+import React from "react";
 
 const Home = () => {
-  return (
-    <div>Home</div>
-  )
-}
+  return <LandingPageLayout title="d">children</LandingPageLayout>;
+};
 
-export default Home
+export default Home;

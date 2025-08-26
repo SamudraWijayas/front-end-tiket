@@ -88,6 +88,7 @@ const AddEventModal = ({
     setValue("startDate", now(getLocalTimeZone()));
     setValue("endDate", now(getLocalTimeZone()));
   }, [onOpenChange]);
+  
   return (
     <Modal
       onOpenChange={onOpenChange}
