@@ -45,10 +45,10 @@ const CoverTab = (props: PropTypes) => {
       {/* Header */}
       <CardHeader className="flex-col items-start space-y-2 border-b border-gray-100 pb-4">
         <h1 className="bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-3xl font-extrabold tracking-tight text-transparent">
-          Category Cover
+          Event Cover
         </h1>
         <p className="text-sm text-gray-500">
-          Upload and manage your category Cover with ease and style ✨
+          Upload and manage your event Cover with ease and style ✨
         </p>
       </CardHeader>
 

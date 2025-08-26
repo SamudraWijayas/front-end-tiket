@@ -1,5 +1,7 @@
 import PageHead from "@/components/commons/PageHead";
 import { Geist, Geist_Mono } from "next/font/google";
+import { getServerSession } from "next-auth/next";
+import { GetServerSidePropsContext } from "next";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -14,9 +16,9 @@ const geistMono = Geist_Mono({
 export default function Home() {
   return (
     <div
-      className={`${geistSans.className} ${geistMono.className} font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20`}
+      className={`${geistSans.className} ${geistMono.className} grid min-h-screen grid-rows-[20px_1fr_20px] items-center justify-items-center gap-16 p-8 pb-20 font-sans sm:p-20`}
     >
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
+      <main className="row-start-2 flex flex-col items-center gap-[32px] sm:items-start">
         <PageHead />
         hello world
       </main>

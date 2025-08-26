@@ -1,27 +1,23 @@
-import { Key, ReactNode, useCallback, useEffect } from "react";
-import { useRouter } from "next/router";
-import Image from "next/image";
-
 import DataTable from "@/components/ui/DataTable";
 import { Chip, useDisclosure } from "@heroui/react";
-import DropdownAction from "@/components/commons/DropdownAction";
-
-import useChangeUrl from "@/hooks/useChangeUrls";
-import useBanner from "./useBanner";
-
+import Image from "next/image";
+import { Key, ReactNode, useCallback, useEffect } from "react";
+import { useRouter } from "next/router";
 import { COLUMN_LISTS_BANNER } from "./Banner.constants";
+import useBanner from "./useBanner";
 import AddBannerModal from "./AddBannerModal";
 import DeleteBannerModal from "./DeleteBannerModal";
+import useChangeUrl from "@/hooks/useChangeUrls";
+import DropdownAction from "@/components/commons/DropdownAction";
 
 const Banner = () => {
   const { push, isReady, query } = useRouter();
-  const { setUrl } = useChangeUrl();
-
   const {
-    dataBanner,
-    isLoadingBanner,
     isRefetchingBanner,
     refetchBanner,
+    dataBanner,
+    isLoadingBanner,
+
     selectedId,
     setSelectedId,
   } = useBanner();
@@ -29,30 +25,27 @@ const Banner = () => {
   const addBannerModal = useDisclosure();
   const deleteBannerModal = useDisclosure();
 
-  // Set URL saat router ready
+  const { setUrl } = useChangeUrl();
+
   useEffect(() => {
     if (isReady) {
       setUrl();
     }
-  }, [isReady, setUrl]);
+  }, [isReady]);
 
-  // Render setiap cell di DataTable
   const renderCell = useCallback(
     (banner: Record<string, unknown>, columnKey: Key) => {
       const cellValue = banner[columnKey as keyof typeof banner];
-
       switch (columnKey) {
         case "image":
           return (
-              <Image
-                src={`${process.env.NEXT_PUBLIC_IMAGE}${cellValue}`}
-                width={300}
-                height={100}
-                className="rounded-lg"
-                alt="icon"
-              />
+            <Image
+              src={`${process.env.NEXT_PUBLIC_IMAGE}${cellValue}`}
+              width={100}
+              height={100}
+              alt="image"
+            />
           );
-
         case "isShow":
           return (
             <Chip
@@ -63,7 +56,6 @@ const Banner = () => {
               {cellValue === true ? "Show" : "Hide"}
             </Chip>
           );
-
         case "actions":
           return (
             <DropdownAction
@@ -76,12 +68,11 @@ const Banner = () => {
               textButtonDelete="Delete Banner"
             />
           );
-
         default:
           return cellValue as ReactNode;
       }
     },
-    [push, setSelectedId, deleteBannerModal],
+    [push],
   );
 
   return (
@@ -98,8 +89,10 @@ const Banner = () => {
           totalPages={dataBanner?.pagination.totalPages || 0}
         />
       )}
-
-      <AddBannerModal refetchBanner={refetchBanner} {...addBannerModal} />
+      <AddBannerModal
+        refetchBanner={refetchBanner}
+        {...addBannerModal}
+      />
       <DeleteBannerModal
         refetchBanner={refetchBanner}
         {...deleteBannerModal}

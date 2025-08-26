@@ -76,7 +76,7 @@ const AddBannerModal = ({
                   <Input
                     {...field}
                     autoFocus
-                    label="Nama Kategori"
+                    label="Title"
                     isInvalid={!!errors.title}
                     errorMessage={errors.title?.message}
                     className="mb-2"
