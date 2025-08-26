@@ -32,6 +32,7 @@ const LandingPageLayoutNavbar = () => {
   const router = useRouter();
   const session = useSession();
   const { dataProfile } = useLandingPageLayoutNavbar();
+  const isLoadingSession = session.status === "loading";
 
   const isAuthenticated = session.status === "authenticated";
 
@@ -64,123 +65,109 @@ const LandingPageLayoutNavbar = () => {
   return (
     <Navbar
       onMenuOpenChange={setIsMenuOpen}
-      className="max-w-screen-3xl 3xl:container"
+      className="top-0 right-0 left-0 z-50 shadow-md backdrop-blur-md lg:h-20"
       maxWidth="full"
-      shouldHideOnScroll
+      shouldHideOnScroll={false} // Kalau ingin tetap muncul saat scroll
     >
-      {/* Left: Brand + Navigation */}
-      <div className="flex items-center gap-8">
-        {/* Logo */}
-        <NavbarBrand className="gap-2">
-          <Image
-            width={50}
-            height={50}
-            src="/images/general/logogreen.jpg"
-            alt="logo"
-            className="cursor-pointer"
-          />
-        </NavbarBrand>
+      <div className="max-w-screen-3xl mx-auto flex w-full items-center justify-between px-0 sm:px-6 lg:px-10">
+        {/* Left: Brand + Navigation */}
+        <div className="flex items-center gap-8">
+          {/* Logo */}
+          <NavbarBrand className="gap-2">
+            <Image
+              width={50}
+              height={50}
+              src="/images/general/logogreen.jpg"
+              alt="logo"
+              className="cursor-pointer"
+            />
+          </NavbarBrand>
 
-        {/* Desktop Nav */}
-        <NavbarContent className="hidden gap-6 lg:flex">
-          {NAV_ITEMS.map((item) => (
-            <NavbarItem
-              key={item.label}
-              as={Link}
-              href={item.href}
-              className={cn(
-                "text-default-700 hover:text-primary font-medium",
-                router.pathname === item.href && "text-primary-500 font-bold",
-              )}
-            >
-              {item.label}
-            </NavbarItem>
-          ))}
-        </NavbarContent>
-      </div>
-
-      {/* Right: Search + Auth */}
-      <NavbarContent justify="end" className="hidden gap-6 lg:flex">
-        {/* Search */}
-        <NavbarItem>
-          <SearchBar />
-        </NavbarItem>
-
-        {/* Authenticated / Guest */}
-        {isAuthenticated ? (
-          <NavbarItem>
-            <Dropdown>
-              <DropdownTrigger>
-                <Avatar
-                  src={dataProfile?.profilePicture || undefined}
-                  name={initial}
-                  showFallback
-                  className={`cursor-pointer ${bg} ${text} ${border} font-semibold`}
-                />
-              </DropdownTrigger>
-              <DropdownMenu>
-                <DropdownItem
-                  key="admin"
-                  href="/admin/dashboard"
-                  className={cn({ hidden: dataProfile?.role !== "admin" })}
-                >
-                  Admin
-                </DropdownItem>
-                <DropdownItem key="profile" href="/member/profile">
-                  Profile
-                </DropdownItem>
-                <DropdownItem key="signout" onPress={() => signOut()}>
-                  Log Out
-                </DropdownItem>
-              </DropdownMenu>
-            </Dropdown>
-          </NavbarItem>
-        ) : (
-          <div className="flex gap-4">
-            {BUTTON_ITEMS.map((item) => (
-              <NavbarItem key={item.label}>
-                <Button
-                  color="primary"
-                  variant={item.variant as ButtonProps["variant"]}
-                >
-                  {item.label}
-                </Button>
+          {/* Desktop Nav */}
+          <NavbarContent className="hidden gap-10 lg:flex">
+            {NAV_ITEMS.map((item) => (
+              <NavbarItem
+                key={item.label}
+                as={Link}
+                href={item.href}
+                className={cn(
+                  "hover:text-primary text-sm text-black",
+                  router.pathname === item.href && "text-primary-500",
+                )}
+              >
+                {item.label}
               </NavbarItem>
             ))}
-          </div>
-        )}
-      </NavbarContent>
+          </NavbarContent>
+        </div>
 
-      {/* Toggle always visible on mobile */}
-      <NavbarMenuToggle
-        className="flex lg:hidden"
-        aria-label={isMenuOpen ? "Close menu" : "Open menu"}
-      />
+        {/* Right: Search + Auth */}
+        <NavbarContent justify="end" className="gap-6">
+          {/* Search */}
+          <NavbarItem>
+            <SearchBar />
+          </NavbarItem>
+
+          {/* Authenticated / Guest */}
+          {/* Authenticated / Guest */}
+          {isLoadingSession ? (
+            // bisa skeleton atau kosong dulu
+            <NavbarItem className="hidden lg:flex">
+              <div className="h-10 w-10 animate-pulse rounded-full bg-gray-200" />
+            </NavbarItem>
+          ) : isAuthenticated ? (
+            <NavbarItem className="hidden lg:flex">
+              <Dropdown>
+                <DropdownTrigger>
+                  <Avatar
+                    src={dataProfile?.profilePicture || undefined}
+                    name={initial}
+                    showFallback
+                    className={`cursor-pointer ${bg} ${text} ${border} text-xl font-bold md:text-2xl`}
+                  />
+                </DropdownTrigger>
+                <DropdownMenu>
+                  <DropdownItem
+                    key="admin"
+                    href="/admin/dashboard"
+                    className={cn({ hidden: dataProfile?.role !== "admin" })}
+                  >
+                    Admin
+                  </DropdownItem>
+                  <DropdownItem key="profile" href="/member/profile">
+                    Profile
+                  </DropdownItem>
+                  <DropdownItem key="signout" onPress={() => signOut()}>
+                    Log Out
+                  </DropdownItem>
+                </DropdownMenu>
+              </Dropdown>
+            </NavbarItem>
+          ) : (
+            <div className="flex gap-4">
+              {BUTTON_ITEMS.map((item) => (
+                <NavbarItem key={item.label}>
+                  <Button
+                    color="primary"
+                    variant={item.variant as ButtonProps["variant"]}
+                  >
+                    {item.label}
+                  </Button>
+                </NavbarItem>
+              ))}
+            </div>
+          )}
+        </NavbarContent>
+
+        {/* Toggle always visible on mobile */}
+        {/* <NavbarMenuToggle
+          className="flex lg:hidden"
+          aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+        /> */}
+      </div>
 
       {/* Mobile Menu */}
       <NavbarMenu className="gap-4 bg-white/90 backdrop-blur-md">
-        {/* Nav Items */}
-        {NAV_ITEMS.map((item) => (
-          <NavbarMenuItem
-            key={`nav-${item.label}`}
-            className={cn(
-              "text-default-700 hover:text-primary font-medium",
-              router.pathname === item.href && "text-primary font-bold",
-            )}
-          >
-            <Link
-              href={item.href}
-              size="lg"
-              className={cn(
-                "text-default-700 hover:text-primary font-medium",
-                router.pathname === item.href && "text-primary-500 font-bold",
-              )}
-            >
-              {item.label}
-            </Link>
-          </NavbarMenuItem>
-        ))}
-
         {/* Authenticated / Guest */}
         {isAuthenticated ? (
           <Fragment>
@@ -189,7 +176,7 @@ const LandingPageLayoutNavbar = () => {
             >
               <Link
                 href="/admin/dashboard"
-                className="text-default-700 text-lg hover:text-primary font-medium"
+                className="hover:text-primary text-lg font-medium text-black"
               >
                 Admin
               </Link>
@@ -198,7 +185,7 @@ const LandingPageLayoutNavbar = () => {
             <NavbarMenuItem>
               <Link
                 href="/member/profile"
-                className="text-default-700 text-lg hover:text-primary font-medium"
+                className="hover:text-primary text-lg font-medium text-black"
               >
                 Profile
               </Link>

@@ -1,8 +1,9 @@
+import { Home, FileText, Ticket } from "lucide-react";
+
 const NAV_ITEMS = [
-  { label: "Home", href: "/" },
-  { label: "Event", href: "/event" },
-  { label: "Features", href: "/features" },
-  { label: "Contact", href: "/contact" },
+  { label: "Home", href: "/", icon: Home },
+  { label: "Transaction", href: "/transaction", icon: FileText },
+  { label: "Tickets", href: "/tickets", icon: Ticket },
 ];
 
 const BUTTON_ITEMS = [

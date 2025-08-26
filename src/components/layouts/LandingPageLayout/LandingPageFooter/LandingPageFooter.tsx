@@ -1,9 +1,9 @@
 import React from "react";
-import { Facebook, Instagram, Phone, Mail, MapPin, Music } from "lucide-react";
+import { Facebook, Instagram, Phone, Mail, MapPin } from "lucide-react";
 
 const LandingPageFooter = () => {
   return (
-    <footer className="bg-gray-200 text-gray-800">
+    <footer className="bg-gray-100 text-gray-800 px-0 sm:px-6 lg:px-10">
       <div className="mx-auto grid max-w-8xl grid-cols-1 gap-8 px-6 py-10 sm:grid-cols-2 md:grid-cols-4">
         {/* Syarat & Ketentuan */}
         <div>

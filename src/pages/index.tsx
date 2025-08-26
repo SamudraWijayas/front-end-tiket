@@ -1,22 +1,20 @@
-import PageHead from "@/components/commons/PageHead";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Inter } from "next/font/google";
 import Homes from "@/components/views/Home";
+import LandingPageLayout from "@/components/layouts/LandingPageLayout";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+// Inisialisasi font Inter
+const inter = Inter({
   subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+  variable: "--font-inter", // opsional, bisa dipakai di CSS variable
+  weight: ["400", "500", "600", "700"], // pilih weight yang mau digunakan
 });
 
 export default function Home() {
   return (
-    <div>
-      <PageHead />
-      <Homes />
+    <div className={inter.className}>
+      <LandingPageLayout title="Home">
+        <Homes />
+      </LandingPageLayout>
     </div>
   );
 }
