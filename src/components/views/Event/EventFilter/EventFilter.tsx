@@ -70,7 +70,7 @@ const EventFilter = () => {
                     onChange(value);
                     handleChangeCategory(value !== null ? `${value}` : "");
                   }}
-                  className="w-full text-white placeholder-gray-300 sm:w-48" // input teks putih
+                  className="w-full placeholder-red-500 sm:w-48" // input teks putih
                 >
                   {(category: ICategory) => (
                     <AutocompleteItem key={category._id}>
