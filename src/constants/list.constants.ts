@@ -5,6 +5,7 @@ const LIMIT_LIST = [
 ];
 
 const LIMIT_DEFAULT = LIMIT_LIST[0].value;
+const LIMIT_ALL_EVENT = 10;
 
 const PAGE_DEFAULT = 1;
 
@@ -22,4 +23,5 @@ export {
   LIMIT_BANNER,
   LIMIT_CATEGORY,
   LIMIT_EVENT,
+  LIMIT_ALL_EVENT,
 };

@@ -1,7 +1,7 @@
 import { IEvent } from "@/types/Event";
 import { ICategory } from "@/types/Category";
 import Link from "next/link";
-import CardEvent from "@/components/ui/Card";
+import CardEvent from "@/components/ui/CardEvent";
 import { Select, SelectItem } from "@heroui/react";
 
 interface PropTypes {
@@ -20,7 +20,6 @@ const HomeList = ({
   ticketsByEvent,
   isLoading,
   categories,
-  loadingCate,
   urlMore = "/event",
 }: PropTypes) => {
   console.log(categories);
