@@ -1,6 +1,6 @@
 import { Inter } from "next/font/google";
-import Events from "@/components/views/Event";
 import LandingPageLayout from "@/components/layouts/LandingPageLayout";
+import DetailEvent from "@/components/views/DetailEvent";
 
 // Inisialisasi font Inter
 const inter = Inter({
@@ -13,7 +13,7 @@ export default function Event() {
   return (
     <div className={inter.className}>
       <LandingPageLayout title="Event" navbarBgColor="bg-blue-800" navbarColor="text-white" navbarPathColor="font-extrabold">
-        <Events />
+        <DetailEvent/>
       </LandingPageLayout>
     </div>
   );
