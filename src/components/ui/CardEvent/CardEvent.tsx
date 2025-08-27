@@ -94,7 +94,9 @@ const CardEvent = ({ event, className, isLoading, ticketPrice }: PropTypes) => {
                 // Kalau tiket sudah ada
                 <div className="border-t border-gray-300/50">
                   <div className="flex items-center justify-between pt-3">
-                    <p className="text-gray-600 text-[12px] font-semibold">Mulai Dari</p>
+                    <p className="text-[12px] font-semibold text-gray-600">
+                      Mulai Dari
+                    </p>
                     <p className="text-[13px] font-semibold text-black">
                       {formattedTicketPrice}
                     </p>
@@ -112,12 +114,18 @@ const CardEvent = ({ event, className, isLoading, ticketPrice }: PropTypes) => {
           </CardBody>
 
           <CardFooter className="flex w-full flex-col items-start gap-2 px-4 pb-4">
-            <Skeleton className="bg-default-200 h-4 w-3/5 rounded-lg" />
-            <Skeleton className="bg-default-200 h-4 w-4/5 rounded-lg" />
-            <Skeleton className="bg-default-200 h-4 w-2/5 rounded-lg" />
+            <div className="flex w-full max-w-[300px] items-center gap-3">
+              <div>
+                <Skeleton className="flex h-16 w-12 rounded-lg" />
+              </div>
+              <div className="flex w-full flex-col gap-2">
+                <Skeleton className="h-3 w-3/5 rounded-lg" />
+                <Skeleton className="h-3 w-4/5 rounded-lg" />
+              </div>
+            </div>
+            <Skeleton className="bg-default-200 mt-2 h-3 w-3/5 rounded-lg" />
+            <Skeleton className="bg-default-200 h-3 w-4/5 rounded-lg" />
 
-            {/* Skeleton untuk ticket price */}
-            <Skeleton className="bg-default-200 mt-2 h-4 w-1/3 rounded-lg" />
           </CardFooter>
         </Fragment>
       )}

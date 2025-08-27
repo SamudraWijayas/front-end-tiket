@@ -10,7 +10,9 @@ import Image from "next/image";
 
 const Event = () => {
   const router = useRouter();
-  const { dataEvents, isLoadingEvents, isRefetchingEvents } = useEvent();
+  const { dataEvents, isLoadingEvents, isRefetchingEvents, ticketsByEvent } =
+    useEvent();
+  console.log(ticketsByEvent);
   const { setUrlExplore } = useChangeUrl();
 
   useEffect(() => {
@@ -19,15 +21,19 @@ const Event = () => {
     }
   }, [router.isReady]);
   return (
-    <div className="flex w-full flex-col justify-center gap-6">
+    <div className="flex w-full flex-col justify-center gap-6 mb-6">
       <EventFilter />
       <div className="min-h-[70vh] w-full flex-1 px-4 sm:px-6 lg:px-15">
         <div className="mb-4 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
           {!isLoadingEvents && !isRefetchingEvents
             ? dataEvents?.data?.map((event: IEvent) => (
-                <CardEvent event={event} key={`card-event-${event._id}`} />
+                <CardEvent
+                  event={event}
+                  key={`card-event-${event._id}`}
+                  ticketPrice={event._id ? ticketsByEvent[event._id] : ""}
+                />
               ))
-            : Array.from({ length: 3 }).map((_, index) => (
+            : Array.from({ length: 4 }).map((_, index) => (
                 <CardEvent
                   key={`card-event-loading-${index}`}
                   isLoading={true}

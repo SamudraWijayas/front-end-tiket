@@ -26,8 +26,15 @@ import { cn } from "@/utils/cn";
 import { BUTTON_ITEMS, NAV_ITEMS } from "../LandingPageLayout.constants";
 import SearchBar from "./InputSearch";
 import useLandingPageLayoutNavbar from "./useLandingPageLayoutNavbar";
+interface PropTypes {
+  bgColor?: string; // bisa warna custom
+  className?: string;
+  color?: string;
+  pathColor?: string;
+}
 
-const LandingPageLayoutNavbar = () => {
+const LandingPageLayoutNavbar = (props: PropTypes) => {
+  const { bgColor, className, color, pathColor } = props;
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const router = useRouter();
   const session = useSession();
@@ -65,9 +72,12 @@ const LandingPageLayoutNavbar = () => {
   return (
     <Navbar
       onMenuOpenChange={setIsMenuOpen}
-      className="top-0 right-0 left-0 z-50 shadow-md backdrop-blur-md lg:h-20"
+      className={cn(
+        `top-0 right-0 left-0 z-50 bg-white shadow-md backdrop-blur-md lg:h-20 ${bgColor}`,
+        className,
+      )}
       maxWidth="full"
-      shouldHideOnScroll={false} // Kalau ingin tetap muncul saat scroll
+      shouldHideOnScroll={true} // Kalau ingin tetap muncul saat scroll
     >
       <div className="max-w-screen-3xl mx-auto flex w-full items-center justify-between px-0 sm:px-6 lg:px-10">
         {/* Left: Brand + Navigation */}
@@ -91,8 +101,8 @@ const LandingPageLayoutNavbar = () => {
                 as={Link}
                 href={item.href}
                 className={cn(
-                  "hover:text-primary text-sm text-black",
-                  router.pathname === item.href && "text-primary-500",
+                  `text-md font-semibold ${color}`,
+                  router.pathname === item.href && `${pathColor}`,
                 )}
               >
                 {item.label}
@@ -102,17 +112,50 @@ const LandingPageLayoutNavbar = () => {
         </div>
 
         {/* Right: Search + Auth */}
-        <NavbarContent justify="end" className="gap-6">
+        <NavbarContent justify="end" className="flex gap-6 lg:hidden">
+          {/* Authenticated / Guest */}
+          {isLoadingSession ? (
+            // bisa skeleton atau kosong dulu
+            <NavbarItem>
+              <div className="h-10 w-10 animate-pulse rounded-full bg-gray-200" />
+            </NavbarItem>
+          ) : isAuthenticated ? (
+            <NavbarItem>
+              <Avatar
+                src={dataProfile?.profilePicture || undefined}
+                name={initial}
+                showFallback
+                className={`cursor-pointer ${bg} ${text} ${border} text-xl font-bold md:text-2xl`}
+              />
+            </NavbarItem>
+          ) : (
+            <div className="flex gap-4">
+              {BUTTON_ITEMS.map((item) => (
+                <NavbarItem key={`button-${item.label}`}>
+                  <Button
+                    as={Link}
+                    color="primary"
+                    href={item.href}
+                    variant={item.variant as ButtonProps["variant"]}
+                  >
+                    {item.label}
+                  </Button>
+                </NavbarItem>
+              ))}
+            </div>
+          )}
+        </NavbarContent>
+
+        <NavbarContent justify="end" className="hidden gap-2 lg:flex">
           {/* Search */}
           <NavbarItem>
             <SearchBar />
           </NavbarItem>
 
           {/* Authenticated / Guest */}
-          {/* Authenticated / Guest */}
           {isLoadingSession ? (
             // bisa skeleton atau kosong dulu
-            <NavbarItem className="hidden lg:flex">
+            <NavbarItem>
               <div className="h-10 w-10 animate-pulse rounded-full bg-gray-200" />
             </NavbarItem>
           ) : isAuthenticated ? (
@@ -146,9 +189,11 @@ const LandingPageLayoutNavbar = () => {
           ) : (
             <div className="flex gap-4">
               {BUTTON_ITEMS.map((item) => (
-                <NavbarItem key={item.label}>
+                <NavbarItem key={`button-${item.label}`}>
                   <Button
+                    as={Link}
                     color="primary"
+                    href={item.href}
                     variant={item.variant as ButtonProps["variant"]}
                   >
                     {item.label}

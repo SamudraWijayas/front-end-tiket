@@ -32,7 +32,7 @@ const EventFilter = () => {
   }, [isSuccessGetCategory]);
 
   return (
-    <div className="flex w-full flex-wrap items-center justify-between gap-4 bg-white p-4 shadow-md sm:px-6 lg:px-15">
+    <div className="flex w-full flex-wrap items-center justify-between gap-4 bg-blue-200/20 p-4 sm:px-6 lg:px-15">
       {/* Search Bar (kiri) */}
       <div className="w-full sm:flex-1">
         {/* <Controller
@@ -65,11 +65,12 @@ const EventFilter = () => {
                   defaultItems={dataCategory?.data.data || []}
                   placeholder="Category"
                   variant="bordered"
+                  color="default"
                   onSelectionChange={(value) => {
                     onChange(value);
                     handleChangeCategory(value !== null ? `${value}` : "");
                   }}
-                  className="w-full sm:w-48"
+                  className="w-full text-white placeholder-gray-300 sm:w-48" // input teks putih
                 >
                   {(category: ICategory) => (
                     <AutocompleteItem key={category._id}>
@@ -84,7 +85,7 @@ const EventFilter = () => {
             <Controller
               name="isOnline"
               control={control}
-              render={({ field: { onChange, ...field } }) => (
+              render={({ field: { ...field } }) => (
                 <Select
                   {...field}
                   placeholder="Online / Offline"

@@ -7,18 +7,24 @@ import BottomNav from "./LandingPageLayoutNavbar/BottomNav";
 interface PropTypes {
   title: string;
   children: ReactNode;
+  navbarBgColor?: string;
+  navbarColor?: string;
+  navbarPathColor?: string;
 }
 
 const LandingPageLayout = (props: PropTypes) => {
-  const { title, children } = props;
+  const { title, children, navbarBgColor, navbarColor, navbarPathColor } =
+    props;
   return (
     <Fragment>
       <PageHead title={title} />
-      <LandingPageLayoutNavbar />
-      <div>
-        {children}
-      </div>
-      <BottomNav/>
+      <LandingPageLayoutNavbar
+        bgColor={navbarBgColor}
+        color={navbarColor}
+        pathColor={navbarPathColor}
+      />
+      <div>{children}</div>
+      <BottomNav />
       <LandingPageFooter />
     </Fragment>
   );

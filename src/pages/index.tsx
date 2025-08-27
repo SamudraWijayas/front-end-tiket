@@ -12,7 +12,12 @@ const inter = Inter({
 export default function Home() {
   return (
     <div className={inter.className}>
-      <LandingPageLayout title="Home">
+      <LandingPageLayout
+        title="Home"
+        navbarBgColor="bg-white"
+        navbarColor="text-black"
+        navbarPathColor="text-blue-600"
+      >
         <Homes />
       </LandingPageLayout>
     </div>

@@ -12,7 +12,7 @@ const inter = Inter({
 export default function Event() {
   return (
     <div className={inter.className}>
-      <LandingPageLayout title="Event">
+      <LandingPageLayout title="Event" navbarBgColor="bg-blue-800" navbarColor="text-white" navbarPathColor="font-extrabold">
         <Events />
       </LandingPageLayout>
     </div>

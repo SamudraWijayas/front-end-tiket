@@ -14,7 +14,7 @@ export default function SearchBar() {
         // Icon search sebelum input terbuka
         <button
           onClick={() => setIsOpen(true)}
-          className="rounded-full bg-gray-100 p-2 transition hover:bg-gray-200"
+          className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-100 transition hover:bg-gray-200"
         >
           <Search className="h-5 w-5 text-gray-700" />
         </button>
