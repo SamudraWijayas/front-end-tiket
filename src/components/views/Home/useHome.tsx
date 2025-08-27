@@ -7,7 +7,10 @@ import {
 import bannerServices from "@/services/banner.service";
 import categoryServices from "@/services/category.service";
 import eventServices from "@/services/event.service";
-import { useQuery } from "@tanstack/react-query";
+import ticketService from "@/services/ticket.service";
+import { useQuery, useQueries } from "@tanstack/react-query";
+import { IEvent } from "@/types/Event";
+import { ITicket } from "@/types/Ticket";
 
 const useHome = () => {
   const getBanners = async () => {
@@ -55,6 +58,46 @@ const useHome = () => {
     },
   );
 
+  // Ambil tiket untuk setiap featured event
+  let ticketsByFeaturedEvent: Record<string, string> = {}; // simpan harga termurah langsung
+
+  const featuredEventIds =
+    dataFeaturedEvents?.data?.map((event: IEvent) => event._id as string) || [];
+
+  const ticketQueries = useQueries({
+    queries: featuredEventIds.map((eventId: string) => ({
+      queryKey: ["Tickets", eventId],
+      queryFn: async (): Promise<ITicket[]> => {
+        const { data } = await ticketService.getTicketsByEventId(eventId);
+        return data.data as ITicket[];
+      },
+      enabled: !!eventId,
+    })),
+  });
+
+  if (featuredEventIds.length && ticketQueries.length) {
+    ticketsByFeaturedEvent = featuredEventIds.reduce(
+      (acc: Record<string, string>, eventId: string, idx: number) => {
+        const data = ticketQueries[idx]?.data;
+
+        if (Array.isArray(data) && data.length > 0) {
+          // urutkan tiket berdasarkan harga ASC
+          const sorted = [...data].sort(
+            (a, b) => Number(a.price) - Number(b.price),
+          );
+
+          // simpan langsung HARGA TERMURAH (string/number)
+          acc[eventId] = sorted[0].price.toString();
+        } else {
+          acc[eventId] = ""; // kalau tidak ada tiket
+        }
+
+        return acc;
+      },
+      {} as Record<string, string>,
+    );
+  }
+
   return {
     dataBanners,
     isLoadingBanners,
@@ -64,6 +107,7 @@ const useHome = () => {
     isLoadingLatestEvents,
     dataCategories,
     isLoadingCategories,
+    ticketsByFeaturedEvent,
   };
 };
 

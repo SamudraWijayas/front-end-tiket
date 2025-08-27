@@ -13,11 +13,13 @@ export default function Home() {
     isLoadingBanners,
     dataFeaturedEvents,
     isLoadingFeaturedEvents,
-    dataLatestEvents,
-    isLoadingLatestEvents,
+    ticketsByFeaturedEvent,
+    // dataLatestEvents,
+    // isLoadingLatestEvents,
     dataCategories,
     isLoadingCategories,
   } = useHome();
+
   return (
     <>
       {/* <section className="flex h-screen w-full flex-col bg-gradient-to-r from-purple-600 to-pink-500 text-white">
@@ -90,9 +92,13 @@ export default function Home() {
         isLoadingBanners={isLoadingBanners}
       />
       <HomeList
-        title="Featured Event"
+        title="Event"
         events={dataFeaturedEvents?.data}
+        ticketsByEvent={ticketsByFeaturedEvent}
         isLoading={isLoadingFeaturedEvents}
+        categories={dataCategories}
+        urlMore="/event?isFeatured=true"
+        loadingCate={isLoadingCategories}
       />
     </>
   );
