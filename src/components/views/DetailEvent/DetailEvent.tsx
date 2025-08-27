@@ -1,32 +1,87 @@
 import Image from "next/image";
 import { Calendar, Clock, MapPin, Instagram, Globe } from "lucide-react";
+import useDetailEvent from "./useDetailEvent";
+import { convertTime } from "@/utils/date";
+import { Skeleton } from "@heroui/react";
 
 const Event = () => {
+  const {
+    dataEvent,
+    isLoadingDetailEvent,
+    dataTicket,
+    isLoadingTicket,
+    minTicket,
+    isLoadingMinTicket,
+  } = useDetailEvent();
+  const eventDate = dataEvent?.startDate
+    ? new Date(dataEvent.startDate).toLocaleDateString("id-ID", {
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+      })
+    : "-";
+
+  const eventTime = dataEvent?.startDate
+    ? new Date(dataEvent.startDate).toLocaleTimeString("id-ID", {
+        hour: "2-digit",
+        minute: "2-digit",
+      })
+    : "-";
+
+  const formattedTicketPrice = minTicket?.price
+    ? new Intl.NumberFormat("id-ID", {
+        style: "currency",
+        currency: "IDR",
+        minimumFractionDigits: 0,
+      }).format(minTicket.price)
+    : null;
+
   return (
-    <div className="mx-auto flex w-full max-w-6xl flex-col justify-center gap-6 px-4 lg:flex-row lg:px-0 my-6">
+    <div className="mx-auto my-6 flex w-full max-w-6xl flex-col justify-center gap-6 px-4 lg:flex-row lg:px-0">
       {/* Konten Kiri */}
       <div className="min-h-[70vh] w-full flex-1 space-y-4">
         {/* Banner */}
-        <div className="relative h-[400px] w-full overflow-hidden rounded-xl shadow-lg">
-          <Image
-            src="/images/general/logogreen.jpg"
-            alt="Amanda Festival"
-            fill
-            className="object-cover"
-          />
-        </div>
+        <Skeleton
+          className="mb-4 h-[400px] w-full rounded-xl shadow-lg"
+          isLoaded={!!dataEvent?.banner}
+        >
+          {dataEvent?.banner ? (
+            <div className="relative h-[400px] w-full overflow-hidden rounded-xl shadow-lg">
+              <Image
+                src={`${process.env.NEXT_PUBLIC_IMAGE}${dataEvent.banner}`}
+                alt={dataEvent.name}
+                fill
+                className="object-cover"
+              />
+            </div>
+          ) : (
+            <div className="h-[400px] w-full rounded-xl bg-gray-200" />
+          )}
+        </Skeleton>
+
+        {/* {dataEvent?.banner && (
+          <div className="relative h-[400px] w-full overflow-hidden rounded-xl shadow-lg">
+            <Image
+              src={`${process.env.NEXT_PUBLIC_IMAGE}${dataEvent.banner}`}
+              alt={dataEvent.name}
+              fill
+              className="object-cover"
+            />
+          </div>
+        )} */}
 
         {/* Deskripsi */}
         <div className="space-y-2">
           <h2 className="text-xl font-semibold">Deskripsi</h2>
-          <p className="line-clamp-3 leading-relaxed text-gray-700">
-            Amanda Festival 2025. Dalam rangka merayakan 25 tahun perjalanan
-            Amanda Brownies, hadir sebuah konser perayaan spesial bertajuk
-            Amanda Festival sebagai puncak acara ulang tahun ke 25 Amanda
-            Brownies. Festival ini bukan hanya sekadar konser musik spektakuler,
-            tetapi juga menghadirkan pengalaman yang tak terlupakan bagi semua
-            pengunjung.
-          </p>
+          <Skeleton
+            className="mt-2 h-32 w-full rounded-lg"
+            isLoaded={!!dataEvent?.description}
+          >
+            <p className="line-clamp-3 leading-relaxed text-gray-700">
+              {dataEvent?.description}
+            </p>
+          </Skeleton>
+
           <button className="text-blue-600 hover:underline">
             Tampilkan Lebih Banyak
           </button>
@@ -35,24 +90,31 @@ const Event = () => {
 
       {/* Info Event */}
       <div className="h-fit w-full rounded-xl border border-gray-200 p-6 shadow-sm lg:sticky lg:top-20 lg:w-86">
+        <div className="flex w-full max-w-[300px] items-center gap-3"></div>
         <div className="flex flex-col space-y-4">
-          <h1 className="text-3xl font-extrabold">AMANDA FESTIVAL</h1>
+          <Skeleton isLoaded={!!dataEvent?.name} className="mb-2 w-2/3 rounded">
+            <h1 className="text-xl font-extrabold">{dataEvent?.name}</h1>
+          </Skeleton>
 
           <div className="flex flex-col space-y-2 text-gray-700">
             <div className="flex items-center gap-2">
               <Calendar size={18} />
-              <span>26 Oktober 2025</span>
+              <Skeleton
+                isLoaded={!!eventDate}
+                className="mb-2 h-8 items-center rounded-lg"
+              >
+                <span>{eventDate}</span>
+              </Skeleton>
             </div>
             <div className="flex items-center gap-2">
               <Clock size={18} />
-              <span>15:00 WIB</span>
+              <Skeleton isLoaded={!!eventTime} className="mb-2 h-8 rounded-lg">
+                <span>{eventTime} WIB</span>
+              </Skeleton>
             </div>
             <div className="flex items-center gap-2">
               <MapPin size={18} />
-              <span>
-                Halaman Parkir BSCC DOME Balikpapan, Kota Balikpapan, Kalimantan
-                Timur
-              </span>
+              <span>{dataEvent?.location.address}</span>
             </div>
           </div>
 
@@ -61,7 +123,14 @@ const Event = () => {
           </p>
 
           <div>
-            <span className="text-lg font-semibold">Mulai Dari Rp125.000</span>
+            <Skeleton
+              isLoaded={!!formattedTicketPrice}
+              className="mb-2 h-8 rounded-lg"
+            >
+              <span className="text-lg font-semibold">
+                Mulai Dari {formattedTicketPrice}
+              </span>
+            </Skeleton>
           </div>
 
           <button className="mt-2 w-full rounded-lg bg-blue-600 px-4 py-2 text-white transition hover:bg-blue-700">
