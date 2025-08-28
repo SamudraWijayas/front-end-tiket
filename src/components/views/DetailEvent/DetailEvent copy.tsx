@@ -52,6 +52,9 @@ const DetailEvent = () => {
               </span>
             </div>
           </div>
+          <div className="">
+            
+          </div>
           <p className="text-sm text-gray-500">
             Dibuat Oleh Amanda Festival 2025
           </p>

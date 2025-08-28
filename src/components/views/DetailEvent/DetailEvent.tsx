@@ -1,18 +1,18 @@
+"use client";
+
 import Image from "next/image";
 import { Calendar, Clock, MapPin, Instagram, Globe } from "lucide-react";
 import useDetailEvent from "./useDetailEvent";
-import { convertTime } from "@/utils/date";
 import { Skeleton } from "@heroui/react";
+import { useState } from "react";
+import Link from "next/link";
+import { motion } from "framer-motion";
 
 const Event = () => {
-  const {
-    dataEvent,
-    isLoadingDetailEvent,
-    dataTicket,
-    isLoadingTicket,
-    minTicket,
-    isLoadingMinTicket,
-  } = useDetailEvent();
+  const { dataEvent, minTicket } = useDetailEvent();
+
+  const [showMore, setShowMore] = useState(false);
+
   const eventDate = dataEvent?.startDate
     ? new Date(dataEvent.startDate).toLocaleDateString("id-ID", {
         day: "numeric",
@@ -37,113 +37,127 @@ const Event = () => {
     : null;
 
   return (
-    <div className="mx-auto my-6 flex w-full max-w-6xl flex-col justify-center gap-6 px-4 lg:flex-row lg:px-0">
+    <div className="mx-auto my-8 flex w-full max-w-6xl flex-col justify-center gap-8 px-4 lg:flex-row lg:px-0">
       {/* Konten Kiri */}
-      <div className="min-h-[70vh] w-full flex-1 space-y-4">
+      <div className="min-h-[70vh] w-full flex-1 space-y-6">
         {/* Banner */}
         <Skeleton
-          className="mb-4 h-[400px] w-full rounded-xl shadow-lg"
+          className="h-[400px] w-full rounded-2xl shadow-md"
           isLoaded={!!dataEvent?.banner}
         >
           {dataEvent?.banner ? (
-            <div className="relative h-[400px] w-full overflow-hidden rounded-xl shadow-lg">
+            <div className="relative h-[400px] w-full overflow-hidden rounded-2xl shadow-md">
               <Image
                 src={`${process.env.NEXT_PUBLIC_IMAGE}${dataEvent.banner}`}
                 alt={dataEvent.name}
                 fill
-                className="object-cover"
+                className="object-cover transition-transform duration-300 hover:scale-105"
               />
             </div>
           ) : (
-            <div className="h-[400px] w-full rounded-xl bg-gray-200" />
+            <div className="h-[400px] w-full rounded-2xl bg-gray-200" />
           )}
         </Skeleton>
 
-        {/* {dataEvent?.banner && (
-          <div className="relative h-[400px] w-full overflow-hidden rounded-xl shadow-lg">
-            <Image
-              src={`${process.env.NEXT_PUBLIC_IMAGE}${dataEvent.banner}`}
-              alt={dataEvent.name}
-              fill
-              className="object-cover"
-            />
-          </div>
-        )} */}
-
         {/* Deskripsi */}
-        <div className="space-y-2">
-          <h2 className="text-xl font-semibold">Deskripsi</h2>
+        <div className="space-y-3">
+          <h2 className="text-xl font-semibold text-gray-900">Deskripsi</h2>
           <Skeleton
-            className="mt-2 h-32 w-full rounded-lg"
+            className="min-h-[120px] w-full rounded-lg"
             isLoaded={!!dataEvent?.description}
           >
-            <p className="line-clamp-3 leading-relaxed text-gray-700">
-              {dataEvent?.description}
-            </p>
-          </Skeleton>
+            <div className="relative ">
+              <div
+                className={`leading-relaxed whitespace-pre-line text-gray-700 ${
+                  !showMore ? "line-clamp-3 transition-all" : ""
+                }`}
+              >
+                {dataEvent?.description}
+              </div>
 
-          <button className="text-blue-600 hover:underline">
-            Tampilkan Lebih Banyak
-          </button>
+              {dataEvent?.description && (
+                <button
+                  onClick={() => setShowMore(!showMore)}
+                  className="mt-4 text-sm font-bold text-blue-800 transition hover:underline"
+                >
+                  {showMore
+                    ? "Tampilkan Lebih Sedikit"
+                    : "Tampilkan Lebih Banyak"}
+                </button>
+              )}
+            </div>
+          </Skeleton>
         </div>
       </div>
 
       {/* Info Event */}
-      <div className="h-fit w-full rounded-xl border border-gray-200 p-6 shadow-sm lg:sticky lg:top-20 lg:w-86">
-        <div className="flex w-full max-w-[300px] items-center gap-3"></div>
-        <div className="flex flex-col space-y-4">
-          <Skeleton isLoaded={!!dataEvent?.name} className="mb-2 w-2/3 rounded">
-            <h1 className="text-xl font-extrabold">{dataEvent?.name}</h1>
-          </Skeleton>
+      <div className="h-fit w-full rounded-2xl border border-gray-200 bg-white p-6 shadow-md lg:sticky lg:top-20 lg:w-[355px]">
+        <div className="flex flex-col space-y-5">
+          <h1 className="text-lg font-bold text-gray-900">{dataEvent?.name}</h1>
 
-          <div className="flex flex-col space-y-2 text-gray-700">
+          <div className="flex flex-col space-y-3 text-gray-700">
             <div className="flex items-center gap-2">
-              <Calendar size={18} />
+              <Calendar size={18} className="text-blue-600" />
               <Skeleton
-                isLoaded={!!eventDate}
-                className="mb-2 h-8 items-center rounded-lg"
+                isLoaded={!!dataEvent?.startDate}
+                className="w-full rounded-lg"
               >
                 <span>{eventDate}</span>
               </Skeleton>
             </div>
             <div className="flex items-center gap-2">
-              <Clock size={18} />
-              <Skeleton isLoaded={!!eventTime} className="mb-2 h-8 rounded-lg">
+              <Clock size={18} className="text-blue-600" />
+              <Skeleton
+                isLoaded={!!dataEvent?.startDate}
+                className="w-full rounded-lg"
+              >
                 <span>{eventTime} WIB</span>
               </Skeleton>
             </div>
             <div className="flex items-center gap-2">
-              <MapPin size={18} />
-              <span>{dataEvent?.location.address}</span>
+              <MapPin size={20} className="text-blue-600" />
+              <Skeleton
+                isLoaded={!!dataEvent?.location.address}
+                className="w-full rounded-lg"
+              >
+                <span>{dataEvent?.location.address}</span>
+              </Skeleton>
             </div>
           </div>
 
-          <p className="text-sm text-gray-500">
-            Dibuat Oleh Amanda Festival 2025
-          </p>
+          <div className="">
+            <span className="text-sm text-gray-400">Dibuat oleh</span>
+            <Skeleton isLoaded={!!dataEvent?.createdBy}>
+              <p className="text-sm font-bold text-gray-800">
+                {dataEvent?.createdBy?.fullName}
+              </p>
+            </Skeleton>
+          </div>
 
           <div>
             <Skeleton
               isLoaded={!!formattedTicketPrice}
               className="mb-2 h-8 rounded-lg"
             >
-              <span className="text-lg font-semibold">
+              <span className="text-lg font-semibold text-gray-900">
                 Mulai Dari {formattedTicketPrice}
               </span>
             </Skeleton>
+            <Link
+              href={`/event/${dataEvent?.slug}/tickets`}
+              className="block w-full rounded-lg bg-blue-600 px-4 py-2 text-center text-white shadow transition hover:bg-blue-700"
+            >
+              Beli Sekarang
+            </Link>
           </div>
 
-          <button className="mt-2 w-full rounded-lg bg-blue-600 px-4 py-2 text-white transition hover:bg-blue-700">
-            Beli Sekarang
-          </button>
-
           {/* Media Sosial */}
-          <div className="mt-4 flex gap-2">
-            <button className="flex flex-1 items-center justify-center gap-1 rounded-lg border px-3 py-2 transition hover:bg-gray-100">
-              <Instagram size={16} /> Instagram
+          <div className="mt-5 flex gap-2">
+            <button className="flex flex-1 items-center justify-center gap-2 rounded-lg border px-3 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-100">
+              <Instagram size={16} className="text-pink-500" /> Instagram
             </button>
-            <button className="flex flex-1 items-center justify-center gap-1 rounded-lg border px-3 py-2 transition hover:bg-gray-100">
-              <Globe size={16} /> Website
+            <button className="flex flex-1 items-center justify-center gap-2 rounded-lg border px-3 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-100">
+              <Globe size={16} className="text-green-600" /> Website
             </button>
           </div>
         </div>
