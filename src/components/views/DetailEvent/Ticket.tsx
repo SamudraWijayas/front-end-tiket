@@ -2,23 +2,16 @@
 
 import Image from "next/image";
 import useDetailEvent from "./useDetailEvent";
-import {
-  Accordion,
-  AccordionItem,
-  Button,
-  Card,
-  Chip,
-  Divider,
-  Skeleton,
-} from "@heroui/react";
-import Link from "next/link";
+import { Button, Card, Chip, Divider, Skeleton, Spinner } from "@heroui/react";
+
 import { useRouter } from "next/router";
 import { Minus, Plus } from "lucide-react";
 import { ITicket } from "@/types/Ticket";
 import { convertIDR } from "@/utils/currency";
 import { useSession } from "next-auth/react";
 import { useState } from "react";
-import DetailEventCart from "./DetailEventCart";
+import Script from "next/script";
+import environment from "@/config/environment";
 
 const Ticket = () => {
   const {
@@ -28,6 +21,8 @@ const Ticket = () => {
     handleAddToCart,
     handleChangeQuantity,
     dataTicketInCart,
+    mutateCreateOrder,
+    isPendingCreateOrder,
   } = useDetailEvent();
   const router = useRouter();
   const session = useSession();
@@ -52,6 +47,11 @@ const Ticket = () => {
 
   return (
     <div className="mx-auto my-8 flex w-full max-w-6xl flex-col justify-center gap-8 px-4 lg:flex-row lg:px-0">
+      <Script
+        src={environment.MIDTRANS_SNAP_URL}
+        data-client-key={environment.MIDTRANS_CLIENT_KEY}
+        strategy="lazyOnload"
+      />
       {/* Konten Kiri */}
       <div className="min-h-[70vh] w-full flex-1 space-y-6">
         <div>
@@ -207,10 +207,11 @@ const Ticket = () => {
           fullWidth
           color="primary"
           size="md"
-          disabled={cart.quantity === 0}
+          disabled={cart.quantity === 0 || isPendingCreateOrder}
           className="disabled:bg-primary-200"
+          onPress={() => mutateCreateOrder()}
         >
-          Checkout
+          {isPendingCreateOrder ? <Spinner color="white" /> : "Checkout"}
         </Button>
       </div>
     </div>

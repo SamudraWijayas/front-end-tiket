@@ -6,7 +6,6 @@ import useDetailEvent from "./useDetailEvent";
 import { Skeleton } from "@heroui/react";
 import { useState } from "react";
 import Link from "next/link";
-import { motion } from "framer-motion";
 
 const Event = () => {
   const { dataEvent, minTicket } = useDetailEvent();
@@ -127,7 +126,10 @@ const Event = () => {
 
           <div className="">
             <span className="text-sm text-gray-400">Dibuat oleh</span>
-            <Skeleton isLoaded={!!dataEvent?.createdBy} className="min-h-[26px] w-full rounded-lg">
+            <Skeleton
+              isLoaded={!!dataEvent?.createdBy}
+              className="min-h-[26px] w-full rounded-lg"
+            >
               <p className="text-sm font-bold text-gray-800">
                 {dataEvent?.createdBy?.fullName}
               </p>
