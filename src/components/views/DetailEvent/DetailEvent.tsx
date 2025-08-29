@@ -66,7 +66,7 @@ const Event = () => {
             className="min-h-[120px] w-full rounded-lg"
             isLoaded={!!dataEvent?.description}
           >
-            <div className="relative ">
+            <div className="relative">
               <div
                 className={`leading-relaxed whitespace-pre-line text-gray-700 ${
                   !showMore ? "line-clamp-3 transition-all" : ""
@@ -96,7 +96,7 @@ const Event = () => {
           <h1 className="text-lg font-bold text-gray-900">{dataEvent?.name}</h1>
 
           <div className="flex flex-col space-y-3 text-gray-700">
-            <div className="flex items-center gap-2">
+            <div className="flex w-4/5 items-center gap-2">
               <Calendar size={18} className="text-blue-600" />
               <Skeleton
                 isLoaded={!!dataEvent?.startDate}
@@ -109,7 +109,7 @@ const Event = () => {
               <Clock size={18} className="text-blue-600" />
               <Skeleton
                 isLoaded={!!dataEvent?.startDate}
-                className="w-full rounded-lg"
+                className="w-1/3 rounded-lg"
               >
                 <span>{eventTime} WIB</span>
               </Skeleton>
@@ -118,16 +118,16 @@ const Event = () => {
               <MapPin size={20} className="text-blue-600" />
               <Skeleton
                 isLoaded={!!dataEvent?.location.address}
-                className="w-full rounded-lg"
+                className="min-h-[26px] w-full rounded-lg" // kasih min-h biar gak ilang
               >
-                <span>{dataEvent?.location.address}</span>
+                <span className="block">{dataEvent?.location.address}</span>
               </Skeleton>
             </div>
           </div>
 
           <div className="">
             <span className="text-sm text-gray-400">Dibuat oleh</span>
-            <Skeleton isLoaded={!!dataEvent?.createdBy}>
+            <Skeleton isLoaded={!!dataEvent?.createdBy} className="min-h-[26px] w-full rounded-lg">
               <p className="text-sm font-bold text-gray-800">
                 {dataEvent?.createdBy?.fullName}
               </p>

@@ -42,6 +42,16 @@ const useDetailEvent = () => {
   }, [dataTicket, cart]);
 
   const handleAddToCart = (ticket: string) => {
+    if (!ticket) {
+      // Reset cart
+      setCart({
+        events: "",
+        ticket: "",
+        quantity: 0,
+      });
+      return;
+    }
+
     setCart({
       events: dataEvent._id as string,
       ticket,

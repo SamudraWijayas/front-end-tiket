@@ -8,6 +8,7 @@ import {
   Button,
   Card,
   Chip,
+  Divider,
   Skeleton,
 } from "@heroui/react";
 import Link from "next/link";
@@ -101,9 +102,9 @@ const Ticket = () => {
                     </Chip>
                   )}
                 </div>
-
+                <Divider />
                 {/* Price Section */}
-                <div className="flex items-center justify-between z-1">
+                <div className="z-1 flex items-center justify-between">
                   <span className="text-lg font-semibold text-black">
                     {convertIDR(Number(ticket?.price))}
                   </span>
@@ -112,14 +113,28 @@ const Ticket = () => {
                       <>
                         {cart.ticket === ticket._id ? (
                           <div className="flex items-center gap-2">
-                            <button
+                            {/* <button
                               onClick={() => handleChangeQuantity("decrement")}
                               className="rounded-sm border p-2 hover:bg-gray-100 disabled:opacity-40"
                               disabled={cart.quantity <= 1}
                             >
                               <Minus size={16} />
+                            </button> */}
+                            <button
+                              onClick={() => {
+                                if (cart.quantity === 1) {
+                                  // Reset cart, biar balik ke Add To Cart
+                                  handleAddToCart("");
+                                } else {
+                                  handleChangeQuantity("decrement");
+                                }
+                              }}
+                              className="rounded-sm border p-2 hover:bg-gray-100"
+                            >
+                              <Minus size={16} />
                             </button>
-                            <span className="w-6 text-center text-md font-bold">
+
+                            <span className="text-md w-6 text-center font-bold">
                               {cart.quantity}
                             </span>
                             <button
@@ -147,17 +162,10 @@ const Ticket = () => {
           );
         })}
       </div>
-      {/* <DetailEventCart
-        cart={cart}
-        dataTicketInCart={dataTicketInCart}
-        onChangeQuantity={handleChangeQuantity}
-        // onCreateOrder={mutateCreateOrder}
-        // isLoading={isPendingCreateOrder}
-      /> */}
 
       {/* Info Event */}
-      <div className="h-fit w-full rounded-2xl border border-gray-200 bg-white p-6 shadow-md lg:sticky lg:top-20 lg:w-[355px]">
-        <div className="flex flex-col space-y-5">
+      <div className="h-fit w-full space-y-5 rounded-2xl border border-gray-200 bg-white p-6 shadow-md lg:sticky lg:top-20 lg:w-[355px]">
+        <div className="flex flex-col space-y-1">
           <h1 className="text-lg font-bold">Detail Pesanan</h1>
           <Skeleton
             className="h-[200px] w-full rounded-2xl"
@@ -186,6 +194,24 @@ const Ticket = () => {
             </Skeleton>
           </div>
         </div>
+        <div className="flex items-center justify-between text-sm text-gray-700">
+          <p className="font-semibold">Total:</p>
+          <span className="font-bold">
+            {cart.quantity > 0
+              ? convertIDR(Number(dataTicketInCart.price) * cart.quantity)
+              : "Rp 0"}
+          </span>
+        </div>
+        <Divider />
+        <Button
+          fullWidth
+          color="primary"
+          size="md"
+          disabled={cart.quantity === 0}
+          className="disabled:bg-primary-200"
+        >
+          Checkout
+        </Button>
       </div>
     </div>
   );
