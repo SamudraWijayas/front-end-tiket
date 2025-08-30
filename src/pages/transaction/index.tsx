@@ -1,7 +1,7 @@
 import LandingPageLayout from "@/components/layouts/LandingPageLayout";
-import Payment from "@/components/views/Payment";
+import Transaction from "@/components/views/Member/Transaction";
 
-const PaymentPage = () => {
+const TransactionPage = () => {
   return (
     <LandingPageLayout
       title="Acara | Payment"
@@ -9,9 +9,8 @@ const PaymentPage = () => {
       navbarColor="text-black"
       navbarPathColor="text-blue-600"
     >
-      <Payment />
+      <Transaction />
     </LandingPageLayout>
   );
 };
-
-export default PaymentPage;
+export default TransactionPage;

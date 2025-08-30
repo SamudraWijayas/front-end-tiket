@@ -98,7 +98,7 @@ const useDetailEvent = () => {
       },
       onSuccess: (result) => {
         const transactionToken = result.payment.token;
-        (window as any).snap.pay(transactionToken);
+        window.snap.pay(transactionToken);
       },
     });
 

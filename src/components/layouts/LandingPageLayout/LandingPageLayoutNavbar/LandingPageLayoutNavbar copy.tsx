@@ -83,10 +83,9 @@ const LandingPageLayoutNavbar = (props: PropTypes) => {
 
   return (
     <Navbar
-      style={{ padding: 0 }}
       onMenuOpenChange={setIsMenuOpen}
       className={cn(
-        `top-0 right-0 left-0 z-50 !px-0 !py-0 shadow-md backdrop-blur-md lg:h-20 ${bgColor}`,
+        `top-0 right-0 left-0 z-50 bg-gray-500 shadow-md backdrop-blur-md lg:h-20 ${bgColor}`,
         className,
       )}
       maxWidth="full"
