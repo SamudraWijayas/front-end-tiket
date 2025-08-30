@@ -44,6 +44,7 @@ const Banner = () => {
               width={100}
               height={100}
               alt="image"
+              className="aspect-video h-20 w-26 rounded-lg object-cover"
             />
           );
         case "isShow":
@@ -89,10 +90,7 @@ const Banner = () => {
           totalPages={dataBanner?.pagination.totalPages || 0}
         />
       )}
-      <AddBannerModal
-        refetchBanner={refetchBanner}
-        {...addBannerModal}
-      />
+      <AddBannerModal refetchBanner={refetchBanner} {...addBannerModal} />
       <DeleteBannerModal
         refetchBanner={refetchBanner}
         {...deleteBannerModal}

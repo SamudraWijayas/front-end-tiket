@@ -1,11 +1,12 @@
-import { signOut } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { ReactNode } from "react";
 import Link from "next/link";
 import { cn } from "@/utils/cn";
-import { Button } from "@heroui/react";
+import { Avatar, Button, Skeleton } from "@heroui/react";
 import { LogOut, ChevronRight } from "lucide-react";
+import { IUser } from "@/types/User";
 
 interface SidebarItem {
   key: string;
@@ -18,15 +19,42 @@ interface PropTypes {
   sidebarItems: SidebarItem[];
   isOpen: boolean;
   collapsed: boolean;
+  dataProfile: IUser;
 }
 
-const DashboardLayoutSidebar = ({
-  sidebarItems,
-  isOpen,
-  collapsed,
-}: PropTypes) => {
-  const router = useRouter();
+const DashboardLayoutSidebar = (props: PropTypes) => {
+  const { sidebarItems, isOpen, collapsed, dataProfile } = props;
 
+  const router = useRouter();
+  const session = useSession();
+  const isLoadingSession = session.status === "loading";
+  const isAuthenticated = session.status === "authenticated";
+
+  // Initials
+  const initial = dataProfile?.fullName?.charAt(0).toUpperCase() || "U";
+
+  // Flat avatar colors
+  const flatColors = [
+    { bg: "bg-pink-100", text: "text-pink-600", border: "border-pink-200" },
+    { bg: "bg-blue-100", text: "text-blue-600", border: "border-blue-200" },
+    { bg: "bg-green-100", text: "text-green-600", border: "border-green-200" },
+    {
+      bg: "bg-yellow-100",
+      text: "text-yellow-600",
+      border: "border-yellow-200",
+    },
+    {
+      bg: "bg-purple-100",
+      text: "text-purple-600",
+      border: "border-purple-200",
+    },
+  ];
+
+  const index = dataProfile?.fullName
+    ? dataProfile.fullName.charCodeAt(0) % flatColors.length
+    : 0;
+
+  const { bg, text, border } = flatColors[index];
   return (
     <aside
       className={cn(
@@ -40,10 +68,10 @@ const DashboardLayoutSidebar = ({
       <div>
         <div className="mb-6 flex items-center gap-2 px-2">
           <Image
-            src="/images/general/logo.svg"
+            src="/images/general/logogreen.jpg"
             alt="logo"
-            width={32}
-            height={32}
+            width={52}
+            height={52}
             className="cursor-pointer"
             onClick={() => router.push("/")}
           />
@@ -58,7 +86,9 @@ const DashboardLayoutSidebar = ({
         {/* <p className="mb-2 px-2 text-xs font-semibold text-gray-400 uppercase">
           Main Menu
         </p> */}
-        <nav className={cn("space-y-1 flex flex-col", collapsed && "items-center")}>
+        <nav
+          className={cn("flex flex-col space-y-2", collapsed && "items-center")}
+        >
           {sidebarItems.map((item) => {
             const isActive = router.pathname.startsWith(item.href);
             return (
@@ -66,10 +96,10 @@ const DashboardLayoutSidebar = ({
                 key={item.key}
                 href={item.href}
                 className={cn(
-                  "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
+                  "flex items-center gap-3 rounded-lg px-3 py-2 text-[14px] font-medium transition-colors",
                   isActive
-                    ? "bg-blue-100 text-gray-900"
-                    : "text-gray-600 hover:bg-gray-50",
+                    ? "bg-blue-100 text-black"
+                    : "text-black hover:bg-gray-50",
                 )}
               >
                 <span className="text-lg">{item.icon}</span>
@@ -108,29 +138,52 @@ const DashboardLayoutSidebar = ({
 
         {/* User card */}
         {!collapsed && (
-          <div className="mt-3 flex items-center justify-between rounded-lg border border-gray-200 p-3">
-            <div className="flex items-center gap-2">
-              <Image
-                src="/images/general/logo.png"
-                alt="User Avatar"
-                width={32}
-                height={32}
-                className="rounded-full"
-              />
-              <div>
-                <p className="text-sm font-medium text-gray-800">
-                  Bruce Willingham
-                </p>
-                <p className="text-xs text-gray-500">willingbruce@fokys.com</p>
+          <>
+            {isLoadingSession ? (
+              // Skeleton saat loading
+              <div className="flex w-full max-w-[300px] items-center gap-3">
+                <div>
+                  <Skeleton className="flex h-12 w-12 rounded-full" />
+                </div>
+                <div className="flex w-full flex-col gap-2">
+                  <Skeleton className="h-3 w-3/5 rounded-lg" />
+                  <Skeleton className="h-3 w-4/5 rounded-lg" />
+                </div>
               </div>
-            </div>
-            <button
-              onClick={() => signOut()}
-              className="text-gray-400 hover:text-red-500"
-            >
-              <ChevronRight size={18} />
-            </button>
-          </div>
+            ) : (
+              // Card user ketika sudah ada data
+              isAuthenticated && (
+                <div className="mt-3 flex items-center justify-between rounded-lg border border-gray-200 p-3">
+                  <div className="flex items-center gap-2">
+                    <Avatar
+                      src={
+                        dataProfile?.profilePicture
+                          ? `${process.env.NEXT_PUBLIC_IMAGE}${dataProfile.profilePicture}`
+                          : undefined
+                      }
+                      name={initial}
+                      showFallback
+                      className={`cursor-pointer ${bg} ${text} ${border} text-xl font-bold md:text-2xl`}
+                    />
+                    <div>
+                      <p className="text-sm font-medium text-gray-800">
+                        {dataProfile?.fullName}
+                      </p>
+                      <p className="text-xs text-gray-500">
+                        {dataProfile?.email}
+                      </p>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => signOut()}
+                    className="text-gray-400 hover:text-red-500"
+                  >
+                    <ChevronRight size={18} />
+                  </button>
+                </div>
+              )
+            )}
+          </>
         )}
       </div>
     </aside>

@@ -9,8 +9,11 @@ import {
   NavbarContent,
   Avatar,
   Button,
+  Skeleton,
 } from "@heroui/react";
 import { AlignJustify, X, ChevronLeft, ChevronRight } from "lucide-react"; // ✅ import X
+import useDashboardLayout from "./useDashboardLayout";
+import { useSession } from "next-auth/react";
 
 interface PropTypes {
   children: ReactNode;
@@ -27,6 +30,36 @@ const DashboardLayout = ({
 }: PropTypes) => {
   const [open, setOpen] = useState(false); // mobile
   const [collapsed, setCollapsed] = useState(false); // desktop
+  const { dataProfile } = useDashboardLayout();
+  const session = useSession();
+  const isLoadingSession = session.status === "loading";
+  const isAuthenticated = session.status === "authenticated";
+
+  // Initials
+  const initial = dataProfile?.fullName?.charAt(0).toUpperCase() || "U";
+
+  // Flat avatar colors
+  const flatColors = [
+    { bg: "bg-pink-100", text: "text-pink-600", border: "border-pink-200" },
+    { bg: "bg-blue-100", text: "text-blue-600", border: "border-blue-200" },
+    { bg: "bg-green-100", text: "text-green-600", border: "border-green-200" },
+    {
+      bg: "bg-yellow-100",
+      text: "text-yellow-600",
+      border: "border-yellow-200",
+    },
+    {
+      bg: "bg-purple-100",
+      text: "text-purple-600",
+      border: "border-purple-200",
+    },
+  ];
+
+  const index = dataProfile?.fullName
+    ? dataProfile.fullName.charCodeAt(0) % flatColors.length
+    : 0;
+
+  const { bg, text, border } = flatColors[index];
 
   return (
     <>
@@ -37,6 +70,7 @@ const DashboardLayout = ({
           sidebarItems={type === "admin" ? SIDEBAR_ADMIN : SIDEBAR_ORGANIZER}
           isOpen={open}
           collapsed={collapsed}
+          dataProfile={dataProfile}
         />
 
         {/* Main Section */}
@@ -52,7 +86,7 @@ const DashboardLayout = ({
               <Button
                 isIconOnly
                 variant="light"
-                className="mx-auto hidden lg:flex bg-gray-200"
+                className="mx-auto hidden bg-gray-200 lg:flex"
                 onPress={() => setCollapsed(!collapsed)}
               >
                 {collapsed ? <ChevronRight /> : <ChevronLeft />}
@@ -72,11 +106,20 @@ const DashboardLayout = ({
             {/* Right side */}
             <NavbarContent justify="end" className="items-center gap-3">
               {/* Avatar */}
-              <Avatar
-                src="/images/general/logo.png"
-                alt="User Avatar"
-                className="h-9 w-9 border border-gray-200 shadow-sm transition-transform hover:scale-105"
-              />
+              {isLoadingSession ? (
+                <Skeleton className="flex h-12 w-12 rounded-full" />
+              ) : (
+                <Avatar
+                  src={
+                    dataProfile?.profilePicture
+                      ? `${process.env.NEXT_PUBLIC_IMAGE}${dataProfile.profilePicture}`
+                      : undefined
+                  }
+                  name={initial}
+                  showFallback
+                  className={`cursor-pointer ${bg} ${text} ${border} text-xl font-bold md:text-2xl`}
+                />
+              )}
 
               {/* Toggle button hanya di mobile */}
               <Button

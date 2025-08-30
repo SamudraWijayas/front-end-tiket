@@ -39,6 +39,12 @@ const TicketTab = () => {
               {convertIDR(cellValue as number)}
             </span>
           );
+        case "description":
+          return (
+            <span className="line-clamp-2 max-w-xs text-gray-600">
+              {cellValue as ReactNode}
+            </span>
+          );
         case "actions":
           return (
             <DropdownAction
@@ -95,7 +101,7 @@ const TicketTab = () => {
             emptyContent={
               <div className="flex flex-col items-center justify-center py-10 text-center">
                 <Image
-                  src="/images/general/logo.svg"
+                  src="/images/illustrations/nodata.jpg"
                   alt="Empty tickets"
                   width={100}
                   height={100}

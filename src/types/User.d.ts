@@ -5,6 +5,7 @@ interface IUser {
   isActive?: boolean;
   role?: string;
   username?: string;
+  profilePicture?: string;
 }
 
 export type { IUser };

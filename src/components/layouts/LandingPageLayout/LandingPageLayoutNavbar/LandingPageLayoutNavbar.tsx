@@ -211,7 +211,11 @@ const LandingPageLayoutNavbar = (props: PropTypes) => {
               <Dropdown>
                 <DropdownTrigger>
                   <Avatar
-                    src={dataProfile?.profilePicture || undefined}
+                    src={
+                      dataProfile?.profilePicture
+                        ? `${process.env.NEXT_PUBLIC_IMAGE}${dataProfile.profilePicture}`
+                        : undefined
+                    }
                     name={initial}
                     showFallback
                     className={`cursor-pointer ${bg} ${text} ${border} text-xl font-bold md:text-2xl`}

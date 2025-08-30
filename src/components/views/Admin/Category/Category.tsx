@@ -1,8 +1,5 @@
 import DataTable from "@/components/ui/DataTable";
-import {
-
-  useDisclosure,
-} from "@heroui/react";
+import { useDisclosure } from "@heroui/react";
 import Image from "next/image";
 import { Key, ReactNode, useCallback, useEffect } from "react";
 import { useRouter } from "next/router";
@@ -47,6 +44,7 @@ const Category = () => {
               width={100}
               height={100}
               alt="icon"
+              className="aspect-video w-26 h-20 rounded-lg object-cover"
             />
           );
         case "actions":
