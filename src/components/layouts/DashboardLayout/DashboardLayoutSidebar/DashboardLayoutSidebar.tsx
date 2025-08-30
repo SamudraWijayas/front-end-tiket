@@ -17,16 +17,23 @@ interface SidebarItem {
 interface PropTypes {
   sidebarItems: SidebarItem[];
   isOpen: boolean;
+  collapsed: boolean;
 }
 
-const DashboardLayoutSidebar = ({ sidebarItems, isOpen }: PropTypes) => {
+const DashboardLayoutSidebar = ({
+  sidebarItems,
+  isOpen,
+  collapsed,
+}: PropTypes) => {
   const router = useRouter();
 
   return (
     <aside
       className={cn(
-        "fixed z-50 flex h-screen w-full max-w-[260px] -translate-x-full flex-col justify-between border-r border-gray-200 bg-white px-3 py-4 transition-transform duration-300 lg:relative lg:translate-x-0",
-        { "translate-x-0": isOpen },
+        "fixed top-0 left-0 z-50 flex h-screen flex-col justify-between border-r border-gray-200 bg-white px-3 py-4 transition-all duration-300",
+        collapsed ? "w-[80px]" : "w-[260px]",
+        // mobile handling
+        isOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0",
       )}
     >
       {/* Top Brand */}
@@ -40,14 +47,18 @@ const DashboardLayoutSidebar = ({ sidebarItems, isOpen }: PropTypes) => {
             className="cursor-pointer"
             onClick={() => router.push("/")}
           />
-          <span className="text-lg font-semibold text-gray-800">Tiketbdl</span>
+          {!collapsed && (
+            <span className="text-lg font-semibold text-gray-800">
+              Tiketbdl
+            </span>
+          )}
         </div>
 
         {/* MAIN MENU */}
         {/* <p className="mb-2 px-2 text-xs font-semibold text-gray-400 uppercase">
           Main Menu
         </p> */}
-        <nav className="space-y-1">
+        <nav className={cn("space-y-1 flex flex-col", collapsed && "items-center")}>
           {sidebarItems.map((item) => {
             const isActive = router.pathname.startsWith(item.href);
             return (
@@ -62,12 +73,12 @@ const DashboardLayoutSidebar = ({ sidebarItems, isOpen }: PropTypes) => {
                 )}
               >
                 <span className="text-lg">{item.icon}</span>
-                {item.label}
+                {!collapsed && item.label}
               </Link>
             );
           })}
         </nav>
-      {/* <p className="mt-6 mb-2 px-2 text-xs font-semibold text-gray-400 uppercase">
+        {/* <p className="mt-6 mb-2 px-2 text-xs font-semibold text-gray-400 uppercase">
         Others
       </p> */}
       </div>
@@ -83,39 +94,44 @@ const DashboardLayoutSidebar = ({ sidebarItems, isOpen }: PropTypes) => {
         <button className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm text-gray-600 hover:bg-gray-50">
           ❓ Help Center
         </button> */}
-        <Button
-          fullWidth
-          className="flex items-center gap-2 rounded-lg bg-red-500 px-4 py-2 font-medium text-white shadow-md transition-all hover:bg-red-600 hover:shadow-lg"
-          onPress={() => signOut()}
-        >
-          <LogOut size={20} />
-          Logout
-        </Button>
+
+        {!collapsed && (
+          <Button
+            fullWidth
+            className="flex items-center gap-2 rounded-lg bg-red-500 px-4 py-2 font-medium text-white shadow-md transition-all hover:bg-red-600 hover:shadow-lg"
+            onPress={() => signOut()}
+          >
+            <LogOut size={20} />
+            Logout
+          </Button>
+        )}
 
         {/* User card */}
-        <div className="mt-3 flex items-center justify-between rounded-lg border border-gray-200 p-3">
-          <div className="flex items-center gap-2">
-            <Image
-              src="/images/general/logo.png"
-              alt="User Avatar"
-              width={32}
-              height={32}
-              className="rounded-full"
-            />
-            <div>
-              <p className="text-sm font-medium text-gray-800">
-                Bruce Willingham
-              </p>
-              <p className="text-xs text-gray-500">willingbruce@fokys.com</p>
+        {!collapsed && (
+          <div className="mt-3 flex items-center justify-between rounded-lg border border-gray-200 p-3">
+            <div className="flex items-center gap-2">
+              <Image
+                src="/images/general/logo.png"
+                alt="User Avatar"
+                width={32}
+                height={32}
+                className="rounded-full"
+              />
+              <div>
+                <p className="text-sm font-medium text-gray-800">
+                  Bruce Willingham
+                </p>
+                <p className="text-xs text-gray-500">willingbruce@fokys.com</p>
+              </div>
             </div>
+            <button
+              onClick={() => signOut()}
+              className="text-gray-400 hover:text-red-500"
+            >
+              <ChevronRight size={18} />
+            </button>
           </div>
-          <button
-            onClick={() => signOut()}
-            className="text-gray-400 hover:text-red-500"
-          >
-            <ChevronRight size={18} />
-          </button>
-        </div>
+        )}
       </div>
     </aside>
   );
