@@ -27,7 +27,7 @@ import { useRouter } from "next/router";
 
 import { cn } from "@/utils/cn";
 import { BUTTON_ITEMS, NAV_ITEMS } from "../LandingPageLayout.constants";
-import { Search } from "lucide-react";
+import { Search, FileText } from "lucide-react";
 import useLandingPageLayoutNavbar from "./useLandingPageLayoutNavbar";
 import { IEvent } from "@/types/Event";
 interface PropTypes {
@@ -35,10 +35,11 @@ interface PropTypes {
   className?: string;
   color?: string;
   pathColor?: string;
+  onOpenProfile?: () => void;
 }
 
 const LandingPageLayoutNavbar = (props: PropTypes) => {
-  const { bgColor, className, color, pathColor } = props;
+  const { bgColor, className, color, pathColor, onOpenProfile } = props;
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const router = useRouter();
   const session = useSession();
@@ -121,6 +122,18 @@ const LandingPageLayoutNavbar = (props: PropTypes) => {
                 {item.label}
               </NavbarItem>
             ))}
+            {isAuthenticated ? (
+              <NavbarItem
+                as={Link}
+                href="/transaction"
+                className={cn(
+                  `text-md font-semibold ${color}`,
+                  router.pathname === "/transaction" && `${pathColor}`,
+                )}
+              >
+                Transaction
+              </NavbarItem>
+            ) : null}
           </NavbarContent>
         </div>
 
@@ -134,12 +147,28 @@ const LandingPageLayoutNavbar = (props: PropTypes) => {
             </NavbarItem>
           ) : isAuthenticated ? (
             <NavbarItem>
-              <Avatar
-                src={dataProfile?.profilePicture || undefined}
-                name={initial}
-                showFallback
-                className={`cursor-pointer ${bg} ${text} ${border} text-xl font-bold md:text-2xl`}
-              />
+              <Dropdown>
+                <DropdownTrigger>
+                  <Avatar
+                    src={
+                      dataProfile?.profilePicture
+                        ? `${process.env.NEXT_PUBLIC_IMAGE}${dataProfile.profilePicture}`
+                        : undefined
+                    }
+                    name={initial}
+                    showFallback
+                    className={`cursor-pointer ${bg} ${text} ${border} text-xl font-bold md:text-2xl`}
+                  />
+                </DropdownTrigger>
+                <DropdownMenu>
+                  <DropdownItem
+                    key="signout"
+                    onPress={() => signOut({ callbackUrl: "/" })}
+                  >
+                    Log Out
+                  </DropdownItem>
+                </DropdownMenu>
+              </Dropdown>
             </NavbarItem>
           ) : (
             <div className="flex gap-4">
@@ -229,10 +258,13 @@ const LandingPageLayoutNavbar = (props: PropTypes) => {
                   >
                     Admin
                   </DropdownItem>
-                  <DropdownItem key="profile" href="/member/profile">
+                  <DropdownItem key="profile" onPress={onOpenProfile}>
                     Profile
                   </DropdownItem>
-                  <DropdownItem key="signout" onPress={() => signOut()}>
+                  <DropdownItem
+                    key="signout"
+                    onPress={() => signOut({ callbackUrl: "/" })}
+                  >
                     Log Out
                   </DropdownItem>
                 </DropdownMenu>

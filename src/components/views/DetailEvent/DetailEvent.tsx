@@ -136,7 +136,7 @@ const Event = () => {
             </Skeleton>
           </div>
 
-          <div>
+          <div className="fixed right-0 bottom-0 left-0 z-100 bg-white p-4 shadow-md lg:static lg:p-0 lg:shadow-none">
             <Skeleton
               isLoaded={!!formattedTicketPrice}
               className="mb-2 h-8 rounded-lg"
@@ -154,14 +154,14 @@ const Event = () => {
           </div>
 
           {/* Media Sosial */}
-          <div className="mt-5 flex gap-2">
-            <button className="flex flex-1 items-center justify-center gap-2 rounded-lg border px-3 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-100">
-              <Instagram size={16} className="text-pink-500" /> Instagram
-            </button>
-            <button className="flex flex-1 items-center justify-center gap-2 rounded-lg border px-3 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-100">
-              <Globe size={16} className="text-green-600" /> Website
-            </button>
-          </div>
+        </div>
+        <div className="mt-5 flex gap-2">
+          <button className="flex flex-1 items-center justify-center gap-2 rounded-lg border border-gray-200 px-3 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-100">
+            <Instagram size={16} className="text-pink-500" /> Instagram
+          </button>
+          <button className="flex flex-1 items-center justify-center gap-2 rounded-lg border border-gray-200 px-3 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-100">
+            <Globe size={16} className="text-green-600" /> Website
+          </button>
         </div>
       </div>
     </div>

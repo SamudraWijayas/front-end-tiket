@@ -3,6 +3,8 @@ import React, { Fragment, ReactNode } from "react";
 import LandingPageLayoutNavbar from "./LandingPageLayoutNavbar";
 import LandingPageFooter from "./LandingPageFooter";
 import BottomNav from "./LandingPageLayoutNavbar/BottomNav";
+import Profile from "@/components/views/Profile";
+import { useDisclosure } from "@heroui/react";
 
 interface PropTypes {
   title: string;
@@ -15,6 +17,7 @@ interface PropTypes {
 const LandingPageLayout = (props: PropTypes) => {
   const { title, children, navbarBgColor, navbarColor, navbarPathColor } =
     props;
+  const Profiles = useDisclosure();
   return (
     <Fragment>
       <PageHead title={title} />
@@ -22,9 +25,11 @@ const LandingPageLayout = (props: PropTypes) => {
         bgColor={navbarBgColor}
         color={navbarColor}
         pathColor={navbarPathColor}
+        onOpenProfile={Profiles.onOpen}
       />
       <div>{children}</div>
-      <BottomNav />
+      <Profile {...Profiles} />
+      <BottomNav onOpenProfile={Profiles.onOpen} />
       <LandingPageFooter />
     </Fragment>
   );

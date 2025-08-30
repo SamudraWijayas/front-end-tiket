@@ -1,8 +1,7 @@
-import { Home, FileText, Ticket } from "lucide-react";
+import { Home, FileText, Ticket,Search } from "lucide-react";
 
 const NAV_ITEMS = [
   { label: "Home", href: "/", icon: Home },
-  { label: "Transaction", href: "/transaction", icon: FileText },
   { label: "Event", href: "/event", icon: FileText },
   { label: "Tickets", href: "/tickets", icon: Ticket },
 ];

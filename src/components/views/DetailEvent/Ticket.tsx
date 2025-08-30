@@ -194,25 +194,32 @@ const Ticket = () => {
             </Skeleton>
           </div>
         </div>
-        <div className="flex items-center justify-between text-sm text-gray-700">
-          <p className="font-semibold">Total:</p>
-          <span className="font-bold">
-            {cart.quantity > 0
-              ? convertIDR(Number(dataTicketInCart.price) * cart.quantity)
-              : "Rp 0"}
-          </span>
+
+        <div className="fixed right-0 bottom-0 left-0 z-100 bg-white p-4 shadow-md lg:static lg:p-0 lg:shadow-none">
+          {/* Total Price */}
+          <div className="mb-2 flex items-center justify-between text-sm text-gray-700">
+            <p className="font-semibold">Total:</p>
+            <span className="font-bold">
+              {cart.quantity > 0
+                ? convertIDR(Number(dataTicketInCart.price) * cart.quantity)
+                : "Rp 0"}
+            </span>
+          </div>
+
+          <Divider className="my-5" />
+
+          {/* Checkout Button */}
+          <Button
+            fullWidth
+            color="primary"
+            size="md"
+            disabled={cart.quantity === 0 || isPendingCreateOrder}
+            className="disabled:bg-primary-200"
+            onPress={() => mutateCreateOrder()}
+          >
+            {isPendingCreateOrder ? <Spinner color="white" /> : "Checkout"}
+          </Button>
         </div>
-        <Divider />
-        <Button
-          fullWidth
-          color="primary"
-          size="md"
-          disabled={cart.quantity === 0 || isPendingCreateOrder}
-          className="disabled:bg-primary-200"
-          onPress={() => mutateCreateOrder()}
-        >
-          {isPendingCreateOrder ? <Spinner color="white" /> : "Checkout"}
-        </Button>
       </div>
     </div>
   );
