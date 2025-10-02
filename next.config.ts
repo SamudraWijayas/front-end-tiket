@@ -1,12 +1,22 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
   reactStrictMode: true,
   images: {
-    domains: ["localhost"], // karena API jalan di http://localhost:3400
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "back-end-tiket-two.vercel.app",
+        pathname: "/uploads/**",
+      },
+      {
+        protocol: "http",
+        hostname: "localhost",
+        port: "3400",
+        pathname: "/uploads/**",
+      },
+    ],
   },
-  
 };
 
 export default nextConfig;
