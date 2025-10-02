@@ -380,12 +380,12 @@ const Ticket = () => {
           )}
 
           {/* Total Price & Checkout */}
-          <div className="flex items-center justify-between gap-3 px-4 py-4">
+          <div className="flex flex-col gap-3 px-4 py-4 sm:flex-row sm:items-center sm:justify-between">
             {/* Collapsible Total */}
             <div className="flex-1 rounded-lg bg-white">
               <button
                 onClick={() => setIsOpen(!isOpen)}
-                className="flex w-full items-center justify-between rounded-lg px-4 text-left transition"
+                className="flex w-full items-center justify-between rounded-lg px-4 py-2 text-left transition"
               >
                 <div className="flex flex-col text-sm text-gray-700">
                   <p className="font-semibold">Total Price</p>
@@ -425,7 +425,7 @@ const Ticket = () => {
                       </>
                     ) : (
                       "Rp 0"
-                    )}  
+                    )}
                   </span>
                 </div>
 
@@ -480,7 +480,7 @@ const Ticket = () => {
               color="primary"
               size="md"
               disabled={cart.quantity === 0 || isPendingCreateOrder}
-              className="disabled:bg-primary-200 min-w-[110px] rounded-lg font-semibold shadow-md"
+              className="disabled:bg-primary-200 w-full rounded-lg font-semibold shadow-md sm:w-auto"
               onPress={() => mutateCreateOrder()}
             >
               {isPendingCreateOrder ? (
