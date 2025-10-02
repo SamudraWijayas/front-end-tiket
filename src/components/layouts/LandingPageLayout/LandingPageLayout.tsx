@@ -5,6 +5,7 @@ import LandingPageFooter from "./LandingPageFooter";
 import BottomNav from "./LandingPageLayoutNavbar/BottomNav";
 import Profile from "@/components/views/Profile";
 import { useDisclosure } from "@heroui/react";
+import Search from "@/components/views/Search";
 
 interface PropTypes {
   title: string;
@@ -18,6 +19,7 @@ const LandingPageLayout = (props: PropTypes) => {
   const { title, children, navbarBgColor, navbarColor, navbarPathColor } =
     props;
   const Profiles = useDisclosure();
+  const Searches = useDisclosure();
   return (
     <Fragment>
       <PageHead title={title} />
@@ -27,9 +29,15 @@ const LandingPageLayout = (props: PropTypes) => {
         pathColor={navbarPathColor}
         onOpenProfile={Profiles.onOpen}
       />
-      <div>{children}</div>
+      <div className="mt-20">{children}</div>
       <Profile {...Profiles} />
-      <BottomNav onOpenProfile={Profiles.onOpen} />
+      <BottomNav
+        onOpenProfile={Profiles.onOpen}
+        onOpenSearch={Searches.onOpen}
+      />
+      {/* search */}
+      {Searches.isOpen && <Search onClose={Searches.onClose} />}
+
       <LandingPageFooter />
     </Fragment>
   );

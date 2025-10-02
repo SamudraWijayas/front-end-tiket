@@ -204,12 +204,28 @@ export async function middleware(request: NextRequest) {
     req: request,
     secret: environment.AUTH_SECRET,
   });
+
   const { pathname } = request.nextUrl;
-  if (pathname === "/auth/login" || pathname === "/auth/register" || pathname === "/") {
+  if (
+    pathname === "/auth/login" ||
+    pathname === "/auth/register" ||
+    pathname === "/"
+  ) {
     if (token) {
       return NextResponse.redirect(new URL("/", request.url));
     }
   }
+  // if (
+  //   token?.user?.role === "member" &&
+  //   token.user.isProfileComplete === false
+  // ) {
+  //   if (!pathname.startsWith("/member/edit-profile")) {
+  //     const url = new URL("/member/edit-profile", request.url);
+  //     // 🔹 tambahin debug token di URL sementara
+  //     url.searchParams.set("debugToken", JSON.stringify(token));
+  //     return NextResponse.redirect(url);
+  //   }
+  // }
 
   if (pathname.startsWith("/admin")) {
     if (!token) {
@@ -239,6 +255,18 @@ export async function middleware(request: NextRequest) {
     }
   }
 
+  // 🔹 cek isProfileComplete untuk member
+  // if (
+  //   token?.user?.role === "member" &&
+  //   token.user.isProfileComplete === false
+  // ) {
+  //   if (!pathname.startsWith("/member/edit-profile")) {
+  //     return NextResponse.redirect(
+  //       new URL("/member/edit-profile", request.url),
+  //     );
+  //   }
+  // }
+
   if (pathname.startsWith("/organizer")) {
     if (!token) {
       const url = new URL("/auth/login", request.url);
@@ -251,11 +279,18 @@ export async function middleware(request: NextRequest) {
     }
 
     if (pathname === "/organizer") {
-      return NextResponse.redirect(new URL("/organizer/dashboard", request.url));
+      return NextResponse.redirect(
+        new URL("/organizer/dashboard", request.url),
+      );
     }
   }
 }
 
 export const config = {
-  matcher: ["/auth/:path*", "/admin/:path*", "/member/:path*", "/organizer/:path*"],
+  matcher: [
+    "/auth/:path*",
+    "/admin/:path*",
+    "/member/:path*",
+    "/organizer/:path*",
+  ],
 };

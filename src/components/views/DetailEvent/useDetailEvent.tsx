@@ -7,9 +7,13 @@ import { useContext, useMemo, useState } from "react";
 import { defaultCart } from "./DetailEvent.constants";
 import orderServices from "@/services/order.service";
 import { ToasterContext } from "@/contexts/ToasterContext";
+import voucherServices from "@/services/voucher.service";
+import { IVoucher } from "@/types/Voucher";
+import { convertIDR } from "@/utils/currency";
 
 const useDetailEvent = () => {
   const router = useRouter();
+  const [selectedVoucher, setSelectedVoucher] = useState<IVoucher | null>(null);
   const { setToaster } = useContext(ToasterContext);
   const getEventBySlug = async () => {
     const { data } = await eventServices.getEventBySlug(`${router.query.slug}`);
@@ -28,13 +32,30 @@ const useDetailEvent = () => {
     );
     return data.data;
   };
+  
 
   const { data: dataTicket } = useQuery({
     queryKey: ["Tickets"],
     queryFn: getTicketsByEventId,
     enabled: !!dataEvent?._id,
   });
+  // voucher
+  const getVoucherByEventId = async () => {
+    const { data } = await voucherServices.getVouchersByEventId(
+      `${dataEvent._id}`,
+    );
+    return data.data;
+  };
 
+  const { data: dataVoucher } = useQuery({
+    queryKey: ["Vouchers"],
+    queryFn: getVoucherByEventId,
+    enabled: !!dataEvent?._id,
+  });
+
+  
+
+  // cart
   const [cart, setCart] = useState<ICart>(defaultCart);
 
   const dataTicketInCart = useMemo(() => {
@@ -43,6 +64,31 @@ const useDetailEvent = () => {
     }
     return null;
   }, [dataTicket, cart]);
+
+  // Cek status tiket
+  const isTicketAvailable = (ticket: ITicket) => {
+    if (!ticket.isActive) return false;
+    if (ticket.quotaType === "unlimited") return true;
+    return Number(ticket.quantity) > 0;
+  };
+  type ChipColor =
+    | "secondary"
+    | "success"
+    | "danger"
+    | "primary"
+    | "default"
+    | "warning";
+
+  const getTicketStatus = (
+    ticket: ITicket,
+  ): { text: string; color: ChipColor } => {
+    if (!ticket.isActive) return { text: "Ditutup", color: "secondary" };
+    if (ticket.quotaType === "unlimited")
+      return { text: "Available", color: "success" };
+    return Number(ticket.quantity) > 0
+      ? { text: "Available", color: "success" }
+      : { text: "Sold Out", color: "danger" };
+  };
 
   const handleAddToCart = (ticket: string) => {
     if (!ticket) {
@@ -63,27 +109,39 @@ const useDetailEvent = () => {
   };
 
   const handleChangeQuantity = (type: "increment" | "decrement") => {
+    if (!dataTicketInCart) return;
+
+    const maxQty =
+      dataTicketInCart.quotaType === "limited"
+        ? Math.min(dataTicketInCart.quantity, dataTicketInCart.maxPurchase)
+        : dataTicketInCart.maxPurchase;
+
     if (type === "increment") {
-      if (cart.quantity < dataTicketInCart?.quantity) {
-        setCart((prev: ICart) => ({
-          ...prev,
-          quantity: prev.quantity + 1,
-        }));
+      if (cart.quantity < maxQty) {
+        setCart((prev: ICart) => ({ ...prev, quantity: prev.quantity + 1 }));
+      } else {
+        // Tambahkan pesan toaster kalau sudah mencapai maxPurchase
+        setToaster({
+          type: "error",
+          message: `Maksimal pembelian tiket ini adalah ${maxQty} tiket`,
+        });
       }
     } else {
       if (cart.quantity <= 1) {
         setCart(defaultCart);
       } else {
-        setCart((prev: ICart) => ({
-          ...prev,
-          quantity: prev.quantity - 1,
-        }));
+        setCart((prev: ICart) => ({ ...prev, quantity: prev.quantity - 1 }));
       }
     }
   };
 
   const createOrder = async () => {
-    const { data } = await orderServices.createOrder(cart);
+    const payload = {
+      ...cart,
+      vouchertiket: selectedVoucher?._id ?? undefined, // <-- sertakan id voucher
+    };
+
+    const { data } = await orderServices.createOrder(payload);
     return data.data;
   };
 
@@ -127,12 +185,91 @@ const useDetailEvent = () => {
     enabled: !!dataEvent?._id,
   });
 
+  // fungsi apply voucher
+  const applyVoucher = async (voucher: IVoucher | { code: string }) => {
+    if (!cart.ticket) {
+      setToaster({ type: "error", message: "Pilih tiket dulu" });
+      return;
+    }
+
+    try {
+      const { data } = await voucherServices.validateVoucher(
+        voucher.code as string,
+        cart.ticket,
+        dataEvent._id,
+      );
+
+      const selected = data.data;
+
+      // Validasi minimal transaksi
+      const subtotal = Number(dataTicketInCart?.price) * cart.quantity;
+      if (subtotal < (selected.minTransaction ?? 0)) {
+        setToaster({
+          type: "error",
+          message: `Voucher ini hanya berlaku untuk transaksi minimal ${convertIDR(
+            selected.minTransaction ?? 0,
+          )}`,
+        });
+        return;
+      }
+
+      // Validasi applicableTickets
+      if (
+        selected.applicableTickets &&
+        selected.applicableTickets.length > 0 &&
+        !selected.applicableTickets.includes(cart.ticket)
+      ) {
+        setToaster({
+          type: "error",
+          message: "Voucher ini tidak berlaku untuk tiket yang dipilih",
+        });
+        return;
+      }
+
+      setSelectedVoucher(selected);
+      setToaster({ type: "success", message: "Voucher berhasil digunakan" });
+    } catch (error) {
+      setToaster({
+        type: "error",
+        message: "Voucher tidak valid",
+      });
+    }
+  };
+
+  // fungsi hitung diskon voucher
+  const calculateDiscount = () => {
+    if (!selectedVoucher || cart.quantity === 0 || !dataTicketInCart) return 0;
+
+    const subtotal = Number(dataTicketInCart.price) * cart.quantity;
+
+    // Cek minimal transaksi
+    if (subtotal < (selectedVoucher.minTransaction ?? 0)) return 0;
+
+    if (selectedVoucher.discountType === "persentase") {
+      const discount =
+        (subtotal * (selectedVoucher.discountPercentage ?? 0)) / 100;
+      // Maksimal diskon
+      return Math.min(discount, selectedVoucher.maxDiscount ?? discount);
+    }
+
+    if (selectedVoucher.discountType === "jumlah tetap") {
+      // Jumlah tetap
+      return selectedVoucher.nominaldeduction ?? 0;
+    }
+
+    return 0;
+  };
+
+  const discount = calculateDiscount();
+
   return {
     dataEvent,
     isLoadingDetailEvent,
     dataTicket,
     minTicket,
     isLoadingMinTicket,
+
+    dataVoucher,
 
     dataTicketInCart,
     cart,
@@ -141,6 +278,12 @@ const useDetailEvent = () => {
     mutateCreateOrder,
     isPendingCreateOrder,
     createOrder,
+
+    selectedVoucher,
+    applyVoucher,
+    discount,
+    isTicketAvailable,
+    getTicketStatus,
   };
 };
 

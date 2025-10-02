@@ -1,14 +1,17 @@
 "use client";
 
 import React, { Fragment, useState } from "react";
+import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import { useSession, signOut } from "next-auth/react";
+import { Search, Menu, X } from "lucide-react";
+
+import { cn } from "@/utils/cn";
+import { BUTTON_ITEMS, NAV_ITEMS } from "../LandingPageLayout.constants";
+import useLandingPageLayoutNavbar from "./useLandingPageLayoutNavbar";
+import { IEvent } from "@/types/Event";
 import {
-  Navbar,
-  NavbarBrand,
-  NavbarContent,
-  NavbarItem,
-  NavbarMenu,
-  NavbarMenuItem,
-  Link,
   Button,
   ButtonProps,
   Dropdown,
@@ -21,17 +24,9 @@ import {
   ListboxItem,
   Spinner,
 } from "@heroui/react";
-import Image from "next/image";
-import { signOut, useSession } from "next-auth/react";
-import { useRouter } from "next/router";
 
-import { cn } from "@/utils/cn";
-import { BUTTON_ITEMS, NAV_ITEMS } from "../LandingPageLayout.constants";
-import { Search, FileText } from "lucide-react";
-import useLandingPageLayoutNavbar from "./useLandingPageLayoutNavbar";
-import { IEvent } from "@/types/Event";
 interface PropTypes {
-  bgColor?: string; // bisa warna custom
+  bgColor?: string;
   className?: string;
   color?: string;
   pathColor?: string;
@@ -40,9 +35,9 @@ interface PropTypes {
 
 const LandingPageLayoutNavbar = (props: PropTypes) => {
   const { bgColor, className, color, pathColor, onOpenProfile } = props;
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const router = useRouter();
   const session = useSession();
+
   const {
     dataProfile,
     dataEventsSearch,
@@ -52,14 +47,12 @@ const LandingPageLayoutNavbar = (props: PropTypes) => {
     search,
     setSearch,
   } = useLandingPageLayoutNavbar();
-  const isLoadingSession = session.status === "loading";
 
+  const isLoadingSession = session.status === "loading";
   const isAuthenticated = session.status === "authenticated";
 
-  // Initials
   const initial = dataProfile?.fullName?.charAt(0).toUpperCase() || "U";
 
-  // Flat avatar colors
   const flatColors = [
     { bg: "bg-pink-100", text: "text-pink-600", border: "border-pink-200" },
     { bg: "bg-blue-100", text: "text-blue-600", border: "border-blue-200" },
@@ -79,25 +72,19 @@ const LandingPageLayoutNavbar = (props: PropTypes) => {
   const index = dataProfile?.fullName
     ? dataProfile.fullName.charCodeAt(0) % flatColors.length
     : 0;
-
   const { bg, text, border } = flatColors[index];
 
   return (
-    <Navbar
-      style={{ padding: 0 }}
-      onMenuOpenChange={setIsMenuOpen}
+    <nav
       className={cn(
-        `top-0 right-0 left-0 z-50 !px-0 !py-0 shadow-md backdrop-blur-md lg:h-20 ${bgColor}`,
+        `fixed top-0 right-0 left-0 z-50 bg-transparent shadow-md backdrop-blur-md ${bgColor}`,
         className,
       )}
-      maxWidth="full"
-      shouldHideOnScroll={true} // Kalau ingin tetap muncul saat scroll
     >
-      <div className="max-w-screen-3xl mx-auto flex w-full items-center justify-center px-0 sm:px-6 lg:px-10">
-        {/* Left: Brand + Navigation */}
+      <div className="max-w-screen-3xl mx-auto flex h-20 items-center justify-between px-4 sm:px-6 lg:px-15">
+        {/* Left: Logo + Nav */}
         <div className="flex items-center gap-8">
-          {/* Logo */}
-          <NavbarBrand className="gap-2">
+          <Link href="/" className="flex items-center gap-2">
             <Image
               width={50}
               height={50}
@@ -105,94 +92,43 @@ const LandingPageLayoutNavbar = (props: PropTypes) => {
               alt="logo"
               className="cursor-pointer"
             />
-          </NavbarBrand>
+          </Link>
 
           {/* Desktop Nav */}
-          <NavbarContent className="hidden gap-10 lg:flex">
+          <div className="hidden gap-8 lg:flex">
             {NAV_ITEMS.map((item) => (
-              <NavbarItem
+              <Link
                 key={item.label}
-                as={Link}
                 href={item.href}
                 className={cn(
-                  `text-md font-semibold ${color}`,
+                  `text-md font-semibold transition-colors hover:text-blue-600 ${color}`,
                   router.pathname === item.href && `${pathColor}`,
                 )}
               >
                 {item.label}
-              </NavbarItem>
+              </Link>
             ))}
-            {isAuthenticated ? (
-              <NavbarItem
-                as={Link}
+            {isAuthenticated && (
+              <Link
                 href="/transaction"
                 className={cn(
-                  `text-md font-semibold ${color}`,
+                  `text-md font-semibold transition-colors hover:text-blue-600 ${color}`,
                   router.pathname === "/transaction" && `${pathColor}`,
                 )}
               >
                 Transaction
-              </NavbarItem>
-            ) : null}
-          </NavbarContent>
+              </Link>
+            )}
+          </div>
         </div>
 
-        {/* Right: Search + Auth */}
-        <NavbarContent justify="end" className="flex gap-6 lg:hidden">
-          {/* Authenticated / Guest */}
-          {isLoadingSession ? (
-            // bisa skeleton atau kosong dulu
-            <NavbarItem>
-              <div className="h-10 w-10 animate-pulse rounded-full bg-gray-200" />
-            </NavbarItem>
-          ) : isAuthenticated ? (
-            <NavbarItem>
-              <Dropdown>
-                <DropdownTrigger>
-                  <Avatar
-                    src={
-                      dataProfile?.profilePicture
-                        ? `${process.env.NEXT_PUBLIC_IMAGE}${dataProfile.profilePicture}`
-                        : undefined
-                    }
-                    name={initial}
-                    showFallback
-                    className={`cursor-pointer ${bg} ${text} ${border} text-xl font-bold md:text-2xl`}
-                  />
-                </DropdownTrigger>
-                <DropdownMenu>
-                  <DropdownItem
-                    key="signout"
-                    onPress={() => signOut({ callbackUrl: "/" })}
-                  >
-                    Log Out
-                  </DropdownItem>
-                </DropdownMenu>
-              </Dropdown>
-            </NavbarItem>
-          ) : (
-            <div className="flex gap-4">
-              {BUTTON_ITEMS.map((item) => (
-                <NavbarItem key={`button-${item.label}`}>
-                  <Button
-                    as={Link}
-                    color="primary"
-                    href={item.href}
-                    variant={item.variant as ButtonProps["variant"]}
-                  >
-                    {item.label}
-                  </Button>
-                </NavbarItem>
-              ))}
-            </div>
-          )}
-        </NavbarContent>
-
-        <NavbarContent justify="end" className="hidden gap-2 lg:flex">
-          <NavbarItem className="hidden lg:relative lg:flex">
+        {/* Right */}
+        <div className="flex items-center gap-4">
+          {/* Search (desktop) */}
+          <div className="relative hidden lg:block">
             <Input
               isClearable
-              className="w-[300px]"
+              className="w-[400px]"
               placeholder="Search Event"
               startContent={<Search />}
               onClear={() => setSearch("")}
@@ -201,7 +137,7 @@ const LandingPageLayoutNavbar = (props: PropTypes) => {
             {search !== "" && (
               <Listbox
                 items={dataEventsSearch?.data || []}
-                className="absolute top-12 right-0 rounded-xl border border-gray-200 bg-white"
+                className="absolute top-12 right-0 w-[300px] rounded-xl border border-gray-200 bg-white"
               >
                 {!isRefetchingEventsSearch && !isLoadingEventsSearch ? (
                   (item: IEvent) => (
@@ -214,9 +150,7 @@ const LandingPageLayoutNavbar = (props: PropTypes) => {
                           width={100}
                           height={40}
                         />
-                        <p className="line-clamp-2 w-3/5 text-wrap">
-                          {item.name}
-                        </p>
+                        <p className="line-clamp-2 w-3/5">{item.name}</p>
                       </div>
                     </ListboxItem>
                   )
@@ -227,131 +161,71 @@ const LandingPageLayoutNavbar = (props: PropTypes) => {
                 )}
               </Listbox>
             )}
-          </NavbarItem>
+          </div>
 
           {/* Authenticated / Guest */}
           {isLoadingSession ? (
-            // bisa skeleton atau kosong dulu
-            <NavbarItem>
-              <div className="h-10 w-10 animate-pulse rounded-full bg-gray-200" />
-            </NavbarItem>
+            <div className="h-10 w-10 animate-pulse rounded-full bg-gray-200" />
           ) : isAuthenticated ? (
-            <NavbarItem className="hidden lg:flex">
-              <Dropdown>
-                <DropdownTrigger>
-                  <Avatar
-                    src={
-                      dataProfile?.profilePicture
-                        ? `${process.env.NEXT_PUBLIC_IMAGE}${dataProfile.profilePicture}`
-                        : undefined
-                    }
-                    name={initial}
-                    showFallback
-                    className={`cursor-pointer ${bg} ${text} ${border} text-xl font-bold md:text-2xl`}
-                  />
-                </DropdownTrigger>
-                <DropdownMenu>
-                  <DropdownItem
-                    key="admin"
-                    href="/admin/dashboard"
-                    className={cn({ hidden: dataProfile?.role !== "admin" })}
-                  >
-                    Admin
-                  </DropdownItem>
-                  <DropdownItem key="profile" onPress={onOpenProfile}>
-                    Profile
-                  </DropdownItem>
-                  <DropdownItem
-                    key="signout"
-                    onPress={() => signOut({ callbackUrl: "/" })}
-                  >
-                    Log Out
-                  </DropdownItem>
-                </DropdownMenu>
-              </Dropdown>
-            </NavbarItem>
+            <Dropdown>
+              <DropdownTrigger>
+                <Avatar
+                  src={
+                    dataProfile?.profilePicture
+                      ? `${process.env.NEXT_PUBLIC_IMAGE}${dataProfile.profilePicture}`
+                      : undefined
+                  }
+                  name={initial}
+                  showFallback
+                  className={`cursor-pointer ${bg} ${text} ${border} text-xl font-bold md:text-2xl`}
+                />
+              </DropdownTrigger>
+              <DropdownMenu>
+                <DropdownItem
+                  key="admin"
+                  href="/admin/dashboard"
+                  className={cn({ hidden: dataProfile?.role !== "admin" })}
+                >
+                  Admin
+                </DropdownItem>
+                <DropdownItem
+                  key="organizer"
+                  href="/organizer/dashboard"
+                  className={cn({ hidden: dataProfile?.role !== "organizer" })}
+                >
+                  Organizer
+                </DropdownItem>
+                <DropdownItem key="profile" onPress={onOpenProfile}>
+                  Profile
+                </DropdownItem>
+                <DropdownItem
+                  key="signout"
+                  onPress={() => signOut({ callbackUrl: "/" })}
+                >
+                  Log Out
+                </DropdownItem>
+              </DropdownMenu>
+            </Dropdown>
           ) : (
-            <div className="flex gap-4">
+            <div className="hidden gap-3 lg:flex">
               {BUTTON_ITEMS.map((item) => (
-                <NavbarItem key={`button-${item.label}`}>
-                  <Button
-                    as={Link}
-                    color="primary"
-                    href={item.href}
-                    variant={item.variant as ButtonProps["variant"]}
-                  >
-                    {item.label}
-                  </Button>
-                </NavbarItem>
-              ))}
-            </div>
-          )}
-        </NavbarContent>
-
-        {/* Toggle always visible on mobile */}
-        {/* <NavbarMenuToggle
-          className="flex lg:hidden"
-          aria-label={isMenuOpen ? "Close menu" : "Open menu"}
-        /> */}
-      </div>
-
-      {/* Mobile Menu */}
-      <NavbarMenu className="gap-4 bg-white/90 backdrop-blur-md">
-        {/* Authenticated / Guest */}
-        {isAuthenticated ? (
-          <Fragment>
-            <NavbarMenuItem
-              className={cn({ hidden: dataProfile?.role !== "admin" })}
-            >
-              <Link
-                href="/admin/dashboard"
-                className="hover:text-primary text-lg font-medium text-black"
-              >
-                Admin
-              </Link>
-            </NavbarMenuItem>
-
-            <NavbarMenuItem>
-              <Link
-                href="/member/profile"
-                className="hover:text-primary text-lg font-medium text-black"
-              >
-                Profile
-              </Link>
-            </NavbarMenuItem>
-
-            <NavbarMenuItem>
-              <Button
-                color="primary"
-                onPress={() => signOut()}
-                className="mt-2 w-full"
-                variant="bordered"
-                size="md"
-              >
-                Log Out
-              </Button>
-            </NavbarMenuItem>
-          </Fragment>
-        ) : (
-          <Fragment>
-            {BUTTON_ITEMS.map((item) => (
-              <NavbarMenuItem key={`button-${item.label}`}>
                 <Button
+                  key={`button-${item.label}`}
                   as={Link}
                   color="primary"
                   href={item.href}
-                  fullWidth
                   variant={item.variant as ButtonProps["variant"]}
-                  size="md"
                 >
                   {item.label}
                 </Button>
-              </NavbarMenuItem>
-            ))}
-          </Fragment>
-        )}
-      </NavbarMenu>
-    </Navbar>
+              ))}
+            </div>
+          )}
+
+          {/* Mobile Menu Toggle */}
+        </div>
+      </div>
+    </nav>
   );
 };
 

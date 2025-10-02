@@ -64,7 +64,7 @@ const DashboardLayout = ({
   return (
     <>
       <PageHead title={title} />
-      <div className="max-w-screen-3xl 3xl:container flex">
+      <div className="max-w-screen-3xl 3xl:container flex bg-slate-100">
         {/* Sidebar */}
         <DashboardLayoutSidebar
           sidebarItems={type === "admin" ? SIDEBAR_ADMIN : SIDEBAR_ORGANIZER}

@@ -21,7 +21,7 @@ const Event = () => {
     }
   }, [router.isReady]);
   return (
-    <div className="flex w-full flex-col justify-center gap-6 mb-6">
+    <div className="mb-6 flex w-full flex-col justify-center gap-6">
       <EventFilter />
       <div className="min-h-[70vh] w-full flex-1 px-4 sm:px-6 lg:px-15">
         <div className="mb-4 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
@@ -50,13 +50,13 @@ const Event = () => {
           !isRefetchingEvents && (
             <div className="flex flex-col items-center justify-center gap-4 py-20">
               <Image
-                src="/images/general/logogreen.jpg"
+                src="/images/illustrations/nodata.jpg"
                 alt="no-data"
                 width={200}
                 height={200}
               />
-              <h2 className="text-primary text-center text-2xl font-bold">
-                Event is empty
+              <h2 className="text-center text-2xl font-extrabold text-black">
+                Tidak ada Event yang cocok
               </h2>
             </div>
           )}

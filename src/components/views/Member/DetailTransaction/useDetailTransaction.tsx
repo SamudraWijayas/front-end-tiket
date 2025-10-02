@@ -1,21 +1,37 @@
+import { ToasterContext } from "@/contexts/ToasterContext";
+import barcodeService from "@/services/barcode.service";
 import eventServices from "@/services/event.service";
 import orderServices from "@/services/order.service";
 import ticketServices from "@/services/ticket.service";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/router";
+import { useContext } from "react";
 
 const useDetailTransaction = () => {
   const router = useRouter();
+  const { setToaster } = useContext(ToasterContext);
 
   const getOrderById = async () => {
     const { data } = await orderServices.getOrderById(`${router.query.id}`);
     return data.data;
   };
 
-  const { data: dataTransaction } = useQuery({
+  const { data: dataTransaction, refetch: refetchTransaction } = useQuery({
     queryKey: ["Transaction"],
     queryFn: getOrderById,
     enabled: router.isReady,
+  });
+  const getBarcodeByOrderId = async () => {
+    const { data } = await barcodeService.getBarcodeByOrderId(
+      `${dataTransaction?._id}`,
+    );
+    return data.data; // <-- ambil array langsung
+  };
+
+  const { data: dataBarcode, refetch: refetchBarcode } = useQuery({
+    queryKey: ["Barcode", dataTransaction?._id],
+    queryFn: getBarcodeByOrderId,
+    enabled: !!dataTransaction?._id,
   });
 
   const getEventById = async () => {
@@ -44,10 +60,31 @@ const useDetailTransaction = () => {
     enabled: !!dataTransaction?.ticket,
   });
 
+  const handleCancelTransaction = async () => {
+    if (!dataTransaction?.orderId) return;
+    try {
+      await orderServices.cancelOrder(dataTransaction.orderId);
+      setToaster({
+        type: "success",
+        message: "Pesanan berhasil dibatalkan",
+      });
+      refetchTransaction(); // refresh data agar UI update
+    } catch (error) {
+      setToaster({
+        type: "error",
+        message: "Gagal membatalkan pesanan",
+      });
+    }
+  };
+
   return {
     dataTransaction,
     dataEvent,
     dataTicket,
+    handleCancelTransaction,
+
+    dataBarcode,
+    refetchBarcode,
   };
 };
 

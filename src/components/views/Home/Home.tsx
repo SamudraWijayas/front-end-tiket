@@ -87,19 +87,21 @@ export default function Home() {
           </div>
         </Card>
       </div> */}
-      <HomeSlider
-        banners={dataBanners?.data}
-        isLoadingBanners={isLoadingBanners}
-      />
-      <HomeList
-        title="Event"
-        events={dataFeaturedEvents?.data}
-        ticketsByEvent={ticketsByFeaturedEvent}
-        isLoading={isLoadingFeaturedEvents}
-        categories={dataCategories}
-        urlMore="/event?isFeatured=true"
-        loadingCate={isLoadingCategories}
-      />
+      <div className="pt-1">
+        <HomeSlider
+          banners={dataBanners?.data}
+          isLoadingBanners={isLoadingBanners}
+        />
+        <HomeList
+          title="Event"
+          events={dataFeaturedEvents?.data}
+          ticketsByEvent={ticketsByFeaturedEvent}
+          isLoading={isLoadingFeaturedEvents}
+          categories={dataCategories}
+          urlMore="/event?isFeatured=true"
+          loadingCate={isLoadingCategories}
+        />
+      </div>
     </>
   );
 }

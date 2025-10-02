@@ -3,7 +3,7 @@ import { Home, FileText, Ticket,Search } from "lucide-react";
 const NAV_ITEMS = [
   { label: "Home", href: "/", icon: Home },
   { label: "Event", href: "/event", icon: FileText },
-  { label: "Tickets", href: "/tickets", icon: Ticket },
+  // { label: "Tickets", href: "/tickets", icon: Ticket },
 ];
 
 const BUTTON_ITEMS = [

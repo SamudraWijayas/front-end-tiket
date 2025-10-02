@@ -3,7 +3,7 @@ import { Facebook, Instagram, Phone, Mail, MapPin } from "lucide-react";
 
 const LandingPageFooter = () => {
   return (
-    <footer className="bg-gray-100 text-gray-800 px-0 sm:px-6 lg:px-10">
+    <footer className="bg-gray-100 text-gray-800 px-0 sm:px-6 lg:px-10 border-t border-gray-200">
       <div className="mx-auto grid max-w-8xl grid-cols-1 gap-8 px-6 py-10 sm:grid-cols-2 md:grid-cols-4">
         {/* Syarat & Ketentuan */}
         <div>
@@ -70,7 +70,7 @@ const LandingPageFooter = () => {
 
       {/* Copyright */}
       <div className="border-t border-gray-300 py-4 text-center text-sm">
-        Copyright 2025 <span className="font-semibold">Symphonia Fest</span>
+        Copyright 2025 <span className="font-semibold">JokiNdess Fest</span>
       </div>
     </footer>
   );

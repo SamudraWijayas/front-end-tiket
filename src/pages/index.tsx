@@ -1,6 +1,7 @@
 import { Inter } from "next/font/google";
 import Homes from "@/components/views/Home";
 import LandingPageLayout from "@/components/layouts/LandingPageLayout";
+import useCheckProfile from "@/hooks/isProfileComplete";
 
 // Inisialisasi font Inter
 const inter = Inter({
@@ -10,6 +11,7 @@ const inter = Inter({
 });
 
 export default function Home() {
+  const { dataProfile, isLoading } = useCheckProfile();
   return (
     <div className={inter.className}>
       <LandingPageLayout

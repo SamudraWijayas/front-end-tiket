@@ -21,6 +21,11 @@ interface IEvent {
     region: string;
     coordinates: number[];
   };
+  lineUps?: {
+    namelineup: string;
+    instagram: string;
+    imagelineup: string;
+  };
   banner?: string | FileList;
 }
 
@@ -29,6 +34,7 @@ interface IEventForm extends IEvent {
   latitude?: string;
   longitude?: string;
   region?: string;
+  
 }
 
 export type { IRegency, IEvent, IEventForm };

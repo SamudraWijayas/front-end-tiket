@@ -174,7 +174,7 @@ const Register = () => {
                         {...field}
                         type={showPassword ? "text" : "password"}
                         className={`mt-2 w-full rounded-lg border border-gray-300 px-4 py-2 pr-10 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none ${
-                          errors.email
+                          errors.password
                             ? "border-red-500 focus:border-red-500 focus:ring-red-500"
                             : "border-gray-300 focus:border-blue-500 focus:ring-blue-500"
                         }`}

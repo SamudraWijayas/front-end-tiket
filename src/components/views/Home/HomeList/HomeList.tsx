@@ -30,7 +30,7 @@ const HomeList = ({
       <div className="mb-6 flex flex-col gap-4 px-6 sm:flex-row sm:items-center sm:justify-between sm:gap-0 lg:px-0">
         <h2 className="text-2xl font-extrabold">{title}</h2>
 
-        <Select className="max-w-xs" label="Pilih Kategori" variant="flat">
+        {/* <Select className="max-w-xs" label="Pilih Kategori" variant="flat">
           {Array.isArray(categories?.data) && categories.data.length > 0 ? (
             categories.data.map((category) => (
               <SelectItem key={`select-cate-${category._id}`}>
@@ -40,7 +40,7 @@ const HomeList = ({
           ) : (
             <SelectItem>Tidak ada kategori</SelectItem>
           )}
-        </Select>
+        </Select> */}
       </div>
 
       {/* Grid Card Event */}

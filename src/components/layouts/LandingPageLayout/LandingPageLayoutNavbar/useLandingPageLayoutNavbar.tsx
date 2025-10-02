@@ -22,8 +22,8 @@ const useLandingPageLayoutNavbar = () => {
   });
 
   const getEventsSearch = async () => {
-    const params = `search=${search}limit=${LIMIT_EVENT}&page=${PAGE_DEFAULT}&isPublish=true`;
-    const res = await eventServices.getEvents(params);
+    const params = `search=${search}&isPublish=true`;
+    const res = await eventServices.getEventsNoLimit(params);
     const { data } = res;
     return data;
   };

@@ -6,6 +6,7 @@ import {
   Tag,
   Bookmark,
   User,
+  Ticket,
 } from "lucide-react";
 const SIDEBAR_ADMIN = [
   {
@@ -57,6 +58,24 @@ const SIDEBAR_ORGANIZER = [
     label: "Dashboard",
     href: "/organizer/dashboard",
     icon: <LayoutDashboard />,
+  },
+  {
+    key: "event",
+    label: "Event",
+    href: "/organizer/event",
+    icon: <List />,
+  },
+  {
+    key: "order",
+    label: "Order",
+    href: "/organizer/order",
+    icon: <Wallet />,
+  },
+  {
+    key: "tiket",
+    label: "Tiket",
+    href: "/organizer/tiket",
+    icon: <Ticket />,
   },
   {
     key: "setting",

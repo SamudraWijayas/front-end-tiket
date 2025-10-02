@@ -68,18 +68,22 @@ const CardEvent = ({ event, className, isLoading, ticketPrice }: PropTypes) => {
                 <h3 className="line-clamp-1 text-base font-semibold text-gray-900">
                   {event?.name}
                 </h3>
-                <p className="line-clamp-2 text-sm text-gray-600">
-                  {event?.description}
+                {/* <div
+                  className="line-clamp-1 text-sm text-gray-600"
+                  dangerouslySetInnerHTML={{ __html: event?.description || "" }}
+                /> */}
+                <p className="line-clamp-2 text-sm text-gray-500">
+                  {event?.location?.address}
                 </p>
               </div>
             </div>
 
             {/* Location */}
-            <div className="w-full px-4 pb-4">
+            {/* <div className="w-full px-4 pb-4">
               <p className="line-clamp-1 text-sm text-gray-500">
                 {event?.location?.address}
               </p>
-            </div>
+            </div> */}
 
             <div className="w-full px-4 pb-4">
               {isLoading ? (
@@ -125,7 +129,6 @@ const CardEvent = ({ event, className, isLoading, ticketPrice }: PropTypes) => {
             </div>
             <Skeleton className="bg-default-200 mt-2 h-3 w-3/5 rounded-lg" />
             <Skeleton className="bg-default-200 h-3 w-4/5 rounded-lg" />
-
           </CardFooter>
         </Fragment>
       )}

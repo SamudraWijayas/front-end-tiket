@@ -4,6 +4,8 @@ import CoverTab from "./CoverTab";
 import useDetailEvent from "./useDetailEvent";
 import LocationTab from "./LocationTab";
 import TicketTab from "./TicketTab";
+import IncomeTab from "./IncomeTab";
+import LineUpTab from "./LineUpTab";
 
 const DetailEvent = () => {
   const {
@@ -45,8 +47,14 @@ const DetailEvent = () => {
           isSuccessUpdate={isSuccessMutateUpdateEvent}
         />
       </Tab>
+      <Tab key="lineup" title="Line Up">
+        <LineUpTab />
+      </Tab>
       <Tab key="ticket" title="Ticket">
-        <TicketTab/>
+        <TicketTab />
+      </Tab>
+      <Tab key="income" title="Income">
+        <IncomeTab />
       </Tab>
     </Tabs>
   );

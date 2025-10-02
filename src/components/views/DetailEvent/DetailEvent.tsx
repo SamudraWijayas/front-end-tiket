@@ -36,7 +36,7 @@ const Event = () => {
     : null;
 
   return (
-    <div className="mx-auto my-8 flex w-full max-w-6xl flex-col justify-center gap-8 px-4 lg:flex-row lg:px-0">
+    <div className="mx-auto mt-28 mb-8 flex w-full max-w-6xl flex-col justify-center gap-8 px-4 lg:flex-row lg:px-0">
       {/* Konten Kiri */}
       <div className="min-h-[70vh] w-full flex-1 space-y-6">
         {/* Banner */}
@@ -67,12 +67,13 @@ const Event = () => {
           >
             <div className="relative">
               <div
-                className={`leading-relaxed whitespace-pre-line text-gray-700 ${
-                  !showMore ? "line-clamp-3 transition-all" : ""
+                className={`prose max-w-none leading-relaxed text-gray-700 ${
+                  !showMore ? "line-clamp-3 overflow-hidden transition-all" : ""
                 }`}
-              >
-                {dataEvent?.description}
-              </div>
+                dangerouslySetInnerHTML={{
+                  __html: dataEvent?.description || "",
+                }}
+              />
 
               {dataEvent?.description && (
                 <button
@@ -136,7 +137,7 @@ const Event = () => {
             </Skeleton>
           </div>
 
-          <div className="fixed right-0 bottom-0 left-0 z-100 bg-white p-4 shadow-md lg:static lg:p-0 lg:shadow-none">
+          <div className="hidden lg:inline-block">
             <Skeleton
               isLoaded={!!formattedTicketPrice}
               className="mb-2 h-8 rounded-lg"
@@ -162,6 +163,23 @@ const Event = () => {
           <button className="flex flex-1 items-center justify-center gap-2 rounded-lg border border-gray-200 px-3 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-100">
             <Globe size={16} className="text-green-600" /> Website
           </button>
+        </div>
+
+        <div className="bayangan fixed right-0 bottom-0 left-0 z-100 bg-white p-4 shadow-md lg:hidden lg:p-0 lg:shadow-none">
+          <Skeleton
+            isLoaded={!!formattedTicketPrice}
+            className="mb-2 h-8 rounded-lg"
+          >
+            <span className="text-lg font-semibold text-gray-900">
+              Mulai Dari {formattedTicketPrice}
+            </span>
+          </Skeleton>
+          <Link
+            href={`/event/${dataEvent?.slug}/tickets`}
+            className="block w-full rounded-lg bg-blue-600 px-4 py-2 text-center text-white shadow transition hover:bg-blue-700"
+          >
+            Beli Sekarang
+          </Link>
         </div>
       </div>
     </div>

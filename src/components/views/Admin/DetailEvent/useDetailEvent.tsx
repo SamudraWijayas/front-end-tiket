@@ -79,6 +79,8 @@ const useDetailEvent = () => {
       enabled: !!dataEvent?.location?.region,
     });
 
+
+
   return {
     dataEvent,
 

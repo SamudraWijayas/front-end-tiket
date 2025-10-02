@@ -27,8 +27,8 @@ const DashboardLayoutSidebar = (props: PropTypes) => {
 
   const router = useRouter();
   const session = useSession();
-  const isLoadingSession = session.status === "loading";
   const isAuthenticated = session.status === "authenticated";
+  const isLoadingSession = session.status === "loading";
 
   // Initials
   const initial = dataProfile?.fullName?.charAt(0).toUpperCase() || "U";
@@ -87,7 +87,7 @@ const DashboardLayoutSidebar = (props: PropTypes) => {
           Main Menu
         </p> */}
         <nav
-          className={cn("flex flex-col space-y-2", collapsed && "items-center")}
+          className={cn("flex flex-col space-y-3", collapsed && "items-center")}
         >
           {sidebarItems.map((item) => {
             const isActive = router.pathname.startsWith(item.href);
@@ -98,11 +98,11 @@ const DashboardLayoutSidebar = (props: PropTypes) => {
                 className={cn(
                   "flex items-center gap-3 rounded-lg px-3 py-2 text-[14px] font-medium transition-colors",
                   isActive
-                    ? "bg-blue-100 text-black"
-                    : "text-black hover:bg-gray-50",
+                    ? "bg-blue-200/50 text-blue-700 border border-blue-400/50"
+                    : "text-gray-700 hover:bg-gray-50",
                 )}
               >
-                <span className="text-lg">{item.icon}</span>
+                <span className="text-sm">{item.icon}</span>
                 {!collapsed && item.label}
               </Link>
             );
@@ -166,10 +166,10 @@ const DashboardLayoutSidebar = (props: PropTypes) => {
                       className={`cursor-pointer ${bg} ${text} ${border} text-xl font-bold md:text-2xl`}
                     />
                     <div>
-                      <p className="text-sm font-medium text-gray-800">
+                      <p className="max-w-[150px] truncate text-sm font-medium text-gray-800">
                         {dataProfile?.fullName}
                       </p>
-                      <p className="text-xs text-gray-500">
+                      <p className="max-w-[150px] truncate text-xs text-gray-500">
                         {dataProfile?.email}
                       </p>
                     </div>

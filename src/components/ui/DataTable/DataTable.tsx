@@ -12,8 +12,9 @@ import {
   TableHeader,
   TableRow,
 } from "@heroui/react";
-import { Key, ReactNode, useMemo } from "react";
-import { Search } from "lucide-react";
+import type { Key } from "@react-types/shared";
+import { ReactNode, useMemo, useState } from "react";
+import { Search, Trash2 } from "lucide-react";
 import { LIMIT_LIST } from "@/constants/list.constants";
 import { cn } from "@/utils/cn";
 import useChangeUrl from "@/hooks/useChangeUrls";
@@ -30,10 +31,12 @@ interface PropsTypes {
   emptyContent: string | React.ReactNode;
   isLoading?: boolean;
   onClickButtonTopContent?: () => void;
+  onDeleteSelected?: (ids: string[]) => void; // ➝ tambahan prop untuk hapus
   renderCell: (item: Record<string, unknown>, columnKey: Key) => ReactNode;
   totalPages: number;
   showLimit?: boolean;
   showSearch?: boolean;
+  withSelection?: boolean;
 }
 
 const DataTable = (props: PropsTypes) => {
@@ -53,15 +56,20 @@ const DataTable = (props: PropsTypes) => {
     data,
     isLoading,
     onClickButtonTopContent,
+    onDeleteSelected,
     renderCell,
     totalPages,
     showLimit = true,
     showSearch = true,
+    withSelection = false,
   } = props;
+
+  // state untuk baris yang dipilih
+  const [selectedKeys, setSelectedKeys] = useState<"all" | Set<Key>>(new Set());
 
   const topContent = useMemo(() => {
     return (
-      <div className="flex flex-col-reverse items-start justify-between gap-y-4 lg:flex-row lg:items-center">
+      <div className="flex flex-col-reverse items-start justify-between gap-y-4 rounded-xl bg-white p-5 shadow-sm lg:flex-row lg:items-center">
         {showSearch && (
           <Input
             isClearable
@@ -72,11 +80,43 @@ const DataTable = (props: PropsTypes) => {
             onChange={handleSearch}
           />
         )}
-        {buttonTopContentLabel && (
-          <Button color="primary" onPress={onClickButtonTopContent}>
-            {buttonTopContentLabel}
-          </Button>
-        )}
+        <div className="flex items-center gap-2">
+          {withSelection &&
+            selectedKeys !== "all" &&
+            (selectedKeys as Set<Key>).size > 0 && (
+              <Button
+                color="danger"
+                variant="flat"
+                startContent={<Trash2 size={16} />}
+                onPress={() =>
+                  onDeleteSelected?.(
+                    Array.from(selectedKeys as Set<Key>) as string[],
+                  )
+                }
+              >
+                Delete ({(selectedKeys as Set<Key>).size})
+              </Button>
+            )}
+
+          {withSelection && selectedKeys === "all" && (
+            <Button
+              color="danger"
+              variant="flat"
+              startContent={<Trash2 size={16} />}
+              onPress={() =>
+                onDeleteSelected?.(data.map((item) => item._id as string))
+              }
+            >
+              Delete All
+            </Button>
+          )}
+
+          {buttonTopContentLabel && (
+            <Button color="primary" onPress={onClickButtonTopContent}>
+              {buttonTopContentLabel}
+            </Button>
+          )}
+        </div>
       </div>
     );
   }, [
@@ -84,6 +124,9 @@ const DataTable = (props: PropsTypes) => {
     handleSearch,
     handleClearSearch,
     onClickButtonTopContent,
+    selectedKeys,
+    onDeleteSelected,
+    data,
   ]);
 
   const ButtomContent = useMemo(() => {
@@ -124,8 +167,12 @@ const DataTable = (props: PropsTypes) => {
     handleChangeLimit,
     handleChangePage,
   ]);
+
   return (
     <Table
+      selectionMode={withSelection ? "multiple" : "none"}
+      selectedKeys={withSelection ? selectedKeys : undefined}
+      onSelectionChange={withSelection ? setSelectedKeys : undefined}
       bottomContent={ButtomContent}
       bottomContentPlacement="outside"
       topContentPlacement="outside"

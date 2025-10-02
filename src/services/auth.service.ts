@@ -5,6 +5,8 @@ import {
   ILogin,
   IProfile,
   IRegister,
+  IResetPassword,
+  IResetPasswordRequest,
   IUpdatePassword,
 } from "@/types/Auth";
 
@@ -14,6 +16,9 @@ const authServices = {
   activation: (payload: IActivation) =>
     instance.post(`${endpoint.AUTH}/activation`, payload),
   login: (payload: ILogin) => instance.post(`${endpoint.AUTH}/login`, payload),
+  loginWithGoogle: (idToken: string) =>
+    instance.post(`${endpoint.AUTH}/google`, { access_token: idToken }),
+
   getProfileWithToken: (token: string) =>
     instance.get(`${endpoint.AUTH}/me`, {
       headers: {
@@ -25,6 +30,11 @@ const authServices = {
     instance.put(`${endpoint.AUTH}/update-profile`, payload),
   updatePassword: (payload: IUpdatePassword) =>
     instance.put(`${endpoint.AUTH}/update-password`, payload),
+  // reset password
+  requestResetPassword: (payload: IResetPasswordRequest) =>
+    instance.post(`${endpoint.AUTH}/request-reset-password`, payload),
+  resetPassword: (payload: IResetPassword) =>
+    instance.post(`${endpoint.AUTH}/reset-password`, payload),
 };
 
 export default authServices;

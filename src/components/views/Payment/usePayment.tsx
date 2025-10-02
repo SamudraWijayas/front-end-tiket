@@ -10,7 +10,7 @@ const usePayment = () => {
     switch (status) {
       case "success":
         return "completed";
-      case "progress":
+      case "pending":
         return "pending";
       case "failed":
         return "cancelled";
