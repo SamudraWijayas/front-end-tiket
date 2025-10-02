@@ -2,6 +2,7 @@ import { Inter } from "next/font/google";
 import Homes from "@/components/views/Home";
 import LandingPageLayout from "@/components/layouts/LandingPageLayout";
 import useCheckProfile from "@/hooks/isProfileComplete";
+import { Metadata } from "next";
 
 // Inisialisasi font Inter
 const inter = Inter({
@@ -10,12 +11,19 @@ const inter = Inter({
   weight: ["400", "500", "600", "700"], // pilih weight yang mau digunakan
 });
 
+export const metadata: Metadata = {
+  title: "Home | Jokindess",
+  description: "Platform Terbaim untuk beli tiket dan buat acara",
+};
+
 export default function Home() {
-  const { dataProfile, isLoading } = useCheckProfile();
+  useCheckProfile();
+
   return (
     <div className={inter.className}>
       <LandingPageLayout
-        title="Home"
+        title="Home - Platform Terbaim untuk beli tiket dan buat acara"
+        description="Platform Terbaim untuk beli tiket dan buat acara"
         navbarBgColor="bg-white"
         navbarColor="text-black"
         navbarPathColor="text-blue-600"

@@ -37,13 +37,13 @@ const InfoTab = ({
     if (dataProfile) {
       setValueUpdateInfo("fullName", `${dataProfile?.fullName}`);
     }
-  }, [dataProfile]);
+  }, [dataProfile, setValueUpdateInfo]);
 
   useEffect(() => {
     if (isSuccessUpdate) {
       resetUpdateInfo();
     }
-  }, [isSuccessUpdate]);
+  }, [isSuccessUpdate, resetUpdateInfo]);
 
   return (
     <Card className="border-default-200 w-full rounded-2xl border shadow-md">

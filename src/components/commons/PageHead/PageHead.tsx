@@ -2,19 +2,43 @@ import Head from "next/head";
 
 interface PropTypes {
   title?: string;
+  description?: string;
+  keywords?: string;
+  image?: string;
 }
-const PageHead = (props: PropTypes) => {
-  const { title = "Default Title" } = props;
+
+const PageHead = ({
+  title = "Default Title",
+  description = "Platform Terbaim untuk beli tiket dan buat acara",
+  keywords = "event, tiket, konser",
+  image = "/opengraph-image.jpg",
+}: PropTypes) => {
   return (
     <Head>
       <title>{title}</title>
       <meta name="viewport" content="width=device-width, initial-scale=1" />
       <meta charSet="UTF-8" />
-      <meta name="description" content="A simple description for the page." />
+      <meta name="description" content={description} />
+      <meta name="keywords" content={keywords} />
+      <meta name="author" content="JokokiNdess Team" />
+      <meta property="og:site_name" content="JokokiNdess" />
+      <meta property="og:url" content="https://www.jokindess.com/" />
+
+      {/* Open Graph / Facebook */}
+      <meta property="og:title" content={title} />
+      <meta property="og:description" content={description} />
+      <meta property="og:image" content={image} />
+      <meta property="og:type" content="website" />
+
+      {/* Twitter Card */}
+      <meta name="twitter:card" content="summary_large_image" />
+      <meta name="twitter:title" content={title} />
+      <meta name="twitter:description" content={description} />
+      <meta name="twitter:image" content={image} />
+
       <link rel="icon" href="/favicon.ico" />
     </Head>
   );
 };
-
 
 export default PageHead;

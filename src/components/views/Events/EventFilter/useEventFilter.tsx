@@ -11,7 +11,7 @@ const schema = yup.object().shape({
 });
 
 const useEventFilter = () => {
-  const { control, reset, watch, getValues, setValue } = useForm({
+  const { control, setValue } = useForm({
     resolver: yupResolver(schema),
   });
 

@@ -1,8 +1,5 @@
 "use client";
 
-import Image from "next/image";
-import { MapPin, Search } from "lucide-react";
-import { Card, Input, Select, SelectItem } from "@heroui/react";
 import HomeSlider from "./HomeSlider";
 import useHome from "./useHome";
 import HomeList from "./HomeList";

@@ -8,7 +8,11 @@ import { useDisclosure } from "@heroui/react";
 import Search from "@/components/views/Search";
 
 interface PropTypes {
-  title: string;
+  title?: string;
+  description?: string;
+  keywords?: string;
+  image?: string;
+
   children: ReactNode;
   navbarBgColor?: string;
   navbarColor?: string;
@@ -16,13 +20,27 @@ interface PropTypes {
 }
 
 const LandingPageLayout = (props: PropTypes) => {
-  const { title, children, navbarBgColor, navbarColor, navbarPathColor } =
-    props;
+  const {
+    title,
+    description,
+    keywords,
+    image,
+
+    children,
+    navbarBgColor,
+    navbarColor,
+    navbarPathColor,
+  } = props;
   const Profiles = useDisclosure();
   const Searches = useDisclosure();
   return (
     <Fragment>
-      <PageHead title={title} />
+      <PageHead
+        title={title}
+        description={description}
+        keywords={keywords}
+        image={image}
+      />
       <LandingPageLayoutNavbar
         bgColor={navbarBgColor}
         color={navbarColor}

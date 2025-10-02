@@ -1,6 +1,6 @@
 "use client";
 
-import React, { Fragment, useState } from "react";
+import React, { Fragment } from "react";
 import {
   Navbar,
   NavbarBrand,
@@ -39,7 +39,6 @@ interface PropTypes {
 
 const LandingPageLayoutNavbar = (props: PropTypes) => {
   const { bgColor, className, color, pathColor } = props;
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const router = useRouter();
   const session = useSession();
   const {
@@ -83,7 +82,6 @@ const LandingPageLayoutNavbar = (props: PropTypes) => {
 
   return (
     <Navbar
-      onMenuOpenChange={setIsMenuOpen}
       className={cn(
         `top-0 right-0 left-0 z-50 bg-gray-500 shadow-md backdrop-blur-md lg:h-20 ${bgColor}`,
         className,

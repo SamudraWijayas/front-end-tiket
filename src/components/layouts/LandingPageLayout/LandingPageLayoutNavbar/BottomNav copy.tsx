@@ -2,10 +2,9 @@
 
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { Home, FileText, Ticket, Search, User } from "lucide-react";
+import {  User } from "lucide-react";
 import { NAV_ITEMS } from "../LandingPageLayout.constants";
 import { useSession } from "next-auth/react";
-import { Button } from "@heroui/react";
 
 interface PropTypes {
   onOpenProfile?: () => void;

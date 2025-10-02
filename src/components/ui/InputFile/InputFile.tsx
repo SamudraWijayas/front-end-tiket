@@ -1,7 +1,7 @@
 import { cn } from "@/utils/cn";
 import { Button, Spinner } from "@heroui/react";
 import Image from "next/image";
-import { ChangeEvent, ReactNode, useEffect, useId, useRef } from "react";
+import { ChangeEvent, ReactNode, useCallback, useEffect, useId, useRef } from "react";
 import { UploadCloud, X } from "lucide-react";
 
 interface PropTypes {
@@ -16,7 +16,6 @@ interface PropTypes {
   onUpload?: (files: FileList) => void;
   onDelete?: () => void;
   preview?: string;
-  
 }
 
 const InputFile = (props: PropTypes) => {
@@ -37,20 +36,26 @@ const InputFile = (props: PropTypes) => {
   const drop = useRef<HTMLLabelElement>(null);
   const dropzoneId = useId();
 
-  const handleDragOver = (e: DragEvent) => {
-    if (isDropable) {
-      e.preventDefault();
-      e.stopPropagation();
-    }
-  };
+  const handleDragOver = useCallback(
+    (e: DragEvent) => {
+      if (isDropable) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+    },
+    [isDropable],
+  );
 
-  const handleDrop = (e: DragEvent) => {
-    e.preventDefault();
-    const files = e.dataTransfer?.files;
-    if (files && onUpload) {
-      onUpload(files);
-    }
-  };
+  const handleDrop = useCallback(
+    (e: DragEvent) => {
+      e.preventDefault();
+      const files = e.dataTransfer?.files;
+      if (files && onUpload) {
+        onUpload(files);
+      }
+    },
+    [onUpload],
+  );
 
   useEffect(() => {
     const dropCurrent = drop.current;
@@ -63,8 +68,7 @@ const InputFile = (props: PropTypes) => {
         dropCurrent.removeEventListener("drop", handleDrop);
       };
     }
-  }, []);
-
+  }, [handleDragOver, handleDrop]);
   const handleOnUpload = (e: ChangeEvent<HTMLInputElement>) => {
     const files = e.currentTarget.files;
     if (files && onUpload) {

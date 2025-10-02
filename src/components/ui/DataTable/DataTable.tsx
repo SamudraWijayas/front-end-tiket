@@ -127,6 +127,8 @@ const DataTable = (props: PropsTypes) => {
     selectedKeys,
     onDeleteSelected,
     data,
+    showSearch, // ✅ tambahkan
+    withSelection, // ✅ tambahkan
   ]);
 
   const ButtomContent = useMemo(() => {
@@ -166,6 +168,7 @@ const DataTable = (props: PropsTypes) => {
     totalPages,
     handleChangeLimit,
     handleChangePage,
+    showLimit,
   ]);
 
   return (

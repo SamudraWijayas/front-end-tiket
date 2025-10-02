@@ -26,7 +26,6 @@ const Ticket = () => {
   const {
     dataEvent,
     dataTicket,
-    isTicketAvailable,
     getTicketStatus,
     cart,
     handleAddToCart,
@@ -83,7 +82,7 @@ const Ticket = () => {
         </div>
         {dataTicket?.map((ticket: ITicket) => {
           const showMore = showMoreMap[ticket._id ?? ""] || false;
-          const isAvailable = isTicketAvailable(ticket);
+          // const isAvailable = isTicketAvailable(ticket);
           const { text: statusText, color: statusColor } =
             getTicketStatus(ticket);
 

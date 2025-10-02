@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, FileText, Ticket, Search, User } from "lucide-react";
+import {  FileText, Search, User } from "lucide-react";
 import { NAV_ITEMS } from "../LandingPageLayout.constants";
 import { useSession } from "next-auth/react";
 import { Fragment } from "react";

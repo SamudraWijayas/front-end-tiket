@@ -3,7 +3,6 @@ import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/router";
 import { ToasterContext } from "@/contexts/ToasterContext";
 import authServices from "@/services/auth.service";
-import { IProfile } from "@/types/Auth";
 
 const useCheckProfile = () => {
   const router = useRouter();

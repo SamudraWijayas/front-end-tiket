@@ -10,7 +10,6 @@ import {
   ModalHeader,
 } from "@heroui/react";
 import Image from "next/image";
-import { CheckCircle } from "lucide-react";
 import { IVoucher } from "@/types/Voucher";
 import { convertIDR } from "@/utils/currency";
 import { ICart, ITicket } from "@/types/Ticket";

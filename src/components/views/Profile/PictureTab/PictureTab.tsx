@@ -44,7 +44,7 @@ const PictureTab = ({
     if (isSuccessUpdate) {
       resetUpdatePicture();
     }
-  }, [isSuccessUpdate]);
+  }, [isSuccessUpdate, resetUpdatePicture]);
 
   return (
     <Card className="border-default-200 w-full rounded-2xl border shadow-md">

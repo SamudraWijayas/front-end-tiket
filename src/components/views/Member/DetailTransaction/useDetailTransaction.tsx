@@ -69,7 +69,7 @@ const useDetailTransaction = () => {
         message: "Pesanan berhasil dibatalkan",
       });
       refetchTransaction(); // refresh data agar UI update
-    } catch (error) {
+    } catch {
       setToaster({
         type: "error",
         message: "Gagal membatalkan pesanan",

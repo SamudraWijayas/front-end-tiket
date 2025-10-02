@@ -10,6 +10,7 @@ import { ToasterContext } from "@/contexts/ToasterContext";
 import voucherServices from "@/services/voucher.service";
 import { IVoucher } from "@/types/Voucher";
 import { convertIDR } from "@/utils/currency";
+import lineupServices from "@/services/lineup.service";
 
 const useDetailEvent = () => {
   const router = useRouter();
@@ -26,13 +27,30 @@ const useDetailEvent = () => {
     enabled: router.isReady,
   });
 
+  const getLineupByEventId = async () => {
+    const { data } = await lineupServices.getLineupsByEventId(
+      `${dataEvent?._id}`,
+    );
+    return data.data;
+  };
+
+  const {
+    data: dataLineup,
+    refetch: refetchLineup,
+    isPending: isPendingLineup,
+    isRefetching: isRefetchingLineup,
+  } = useQuery({
+    queryKey: ["Lineups"],
+    queryFn: getLineupByEventId,
+    enabled: !!dataEvent?._id && router.isReady,
+  });
+
   const getTicketsByEventId = async () => {
     const { data } = await ticketServices.getTicketsByEventId(
       `${dataEvent._id}`,
     );
     return data.data;
   };
-  
 
   const { data: dataTicket } = useQuery({
     queryKey: ["Tickets"],
@@ -52,8 +70,6 @@ const useDetailEvent = () => {
     queryFn: getVoucherByEventId,
     enabled: !!dataEvent?._id,
   });
-
-  
 
   // cart
   const [cart, setCart] = useState<ICart>(defaultCart);
@@ -228,7 +244,7 @@ const useDetailEvent = () => {
 
       setSelectedVoucher(selected);
       setToaster({ type: "success", message: "Voucher berhasil digunakan" });
-    } catch (error) {
+    } catch {
       setToaster({
         type: "error",
         message: "Voucher tidak valid",
@@ -284,6 +300,11 @@ const useDetailEvent = () => {
     discount,
     isTicketAvailable,
     getTicketStatus,
+
+    dataLineup,
+    refetchLineup,
+    isPendingLineup,
+    isRefetchingLineup,
   };
 };
 

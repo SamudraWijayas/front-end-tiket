@@ -1,11 +1,11 @@
 "use client";
 
-import React, { Fragment, useState } from "react";
+import React, { Fragment } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useSession, signOut } from "next-auth/react";
-import { Search, Menu, X } from "lucide-react";
+import { Search } from "lucide-react";
 
 import { cn } from "@/utils/cn";
 import { BUTTON_ITEMS, NAV_ITEMS } from "../LandingPageLayout.constants";
@@ -207,19 +207,31 @@ const LandingPageLayoutNavbar = (props: PropTypes) => {
               </DropdownMenu>
             </Dropdown>
           ) : (
-            <div className="hidden gap-3 lg:flex">
-              {BUTTON_ITEMS.map((item) => (
+            <Fragment>
+              <div className="hidden gap-3 lg:flex">
+                {BUTTON_ITEMS.map((item) => (
+                  <Button
+                    key={`button-${item.label}`}
+                    as={Link}
+                    color="primary"
+                    href={item.href}
+                    variant={item.variant as ButtonProps["variant"]}
+                  >
+                    {item.label}
+                  </Button>
+                ))}
+              </div>
+              <div className="flex lg:hidden">
                 <Button
-                  key={`button-${item.label}`}
                   as={Link}
                   color="primary"
-                  href={item.href}
-                  variant={item.variant as ButtonProps["variant"]}
+                  href="/auth/login"
+                  variant="solid"
                 >
-                  {item.label}
+                  Login
                 </Button>
-              ))}
-            </div>
+              </div>
+            </Fragment>
           )}
 
           {/* Mobile Menu Toggle */}

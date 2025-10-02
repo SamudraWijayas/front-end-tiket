@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /member/
+Disallow: /payment/
+Disallow: /transaction/
+
+Sitemap: https://www.tiket.jokindess.com/sitemap.xml

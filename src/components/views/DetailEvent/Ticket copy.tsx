@@ -4,7 +4,6 @@ import Image from "next/image";
 import useDetailEvent from "./useDetailEvent";
 import { Button, Card, Chip, Divider, Skeleton, Spinner } from "@heroui/react";
 
-import { useRouter } from "next/router";
 import { Minus, Plus } from "lucide-react";
 import { ITicket } from "@/types/Ticket";
 import { convertIDR } from "@/utils/currency";
@@ -24,7 +23,6 @@ const Ticket = () => {
     mutateCreateOrder,
     isPendingCreateOrder,
   } = useDetailEvent();
-  const router = useRouter();
   const session = useSession();
   const [showMoreMap, setShowMoreMap] = useState<{ [key: string]: boolean }>(
     {},

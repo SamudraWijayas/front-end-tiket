@@ -33,7 +33,6 @@ const DashboardLayout = ({
   const { dataProfile } = useDashboardLayout();
   const session = useSession();
   const isLoadingSession = session.status === "loading";
-  const isAuthenticated = session.status === "authenticated";
 
   // Initials
   const initial = dataProfile?.fullName?.charAt(0).toUpperCase() || "U";

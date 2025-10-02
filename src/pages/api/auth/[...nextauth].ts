@@ -3,7 +3,6 @@ import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
 import {
-  IRegister,
   JWTExtended,
   SessionExtended,
   UserExtended,
@@ -55,7 +54,7 @@ export default NextAuth({
 
   callbacks: {
     // 🔹 intercept login Google → kirim ke backend → auto create kalau belum ada
-    async signIn({ user }) {
+    async signIn() {
       // Contoh: izinkan semua
       return true;
     },

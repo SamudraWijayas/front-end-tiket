@@ -1,4 +1,4 @@
-import { Home, FileText, Ticket,Search } from "lucide-react";
+import { Home, FileText} from "lucide-react";
 
 const NAV_ITEMS = [
   { label: "Home", href: "/", icon: Home },

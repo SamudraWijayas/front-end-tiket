@@ -2,7 +2,6 @@ import { IEvent } from "@/types/Event";
 import { ICategory } from "@/types/Category";
 import Link from "next/link";
 import CardEvent from "@/components/ui/CardEvent";
-import { Select, SelectItem } from "@heroui/react";
 
 interface PropTypes {
   title: string;

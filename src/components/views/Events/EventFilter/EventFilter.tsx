@@ -29,7 +29,13 @@ const EventFilter = () => {
       setValue("isOnline", `${currentIsOnline}`);
       setValue("isFeatured", `${currentIsFeatured}`);
     }
-  }, [isSuccessGetCategory]);
+  }, [
+    isSuccessGetCategory,
+    currentCategory,
+    currentIsOnline,
+    currentIsFeatured,
+    setValue,
+  ]);
 
   return (
     <div className="flex w-full flex-wrap items-center justify-between gap-4 bg-blue-200/20 p-4 sm:px-6 lg:px-15">
@@ -104,7 +110,7 @@ const EventFilter = () => {
             <Controller
               name="isFeatured"
               control={control}
-              render={({ field: { onChange, ...field } }) => (
+              render={({ field: { ...field } }) => (
                 <Select
                   {...field}
                   placeholder="Featured"

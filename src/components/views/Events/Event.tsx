@@ -19,7 +19,7 @@ const Event = () => {
     if (router.isReady) {
       setUrlExplore();
     }
-  }, [router.isReady]);
+  }, [router.isReady, setUrlExplore]);
   return (
     <div className="mb-6 flex w-full flex-col justify-center gap-6">
       <EventFilter />

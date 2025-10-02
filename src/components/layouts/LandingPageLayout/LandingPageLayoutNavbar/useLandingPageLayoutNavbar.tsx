@@ -1,4 +1,4 @@
-import { DELAY, LIMIT_EVENT, PAGE_DEFAULT } from "@/constants/list.constants";
+import { DELAY } from "@/constants/list.constants";
 import useDebounce from "@/hooks/useDebounce";
 import authServices from "@/services/auth.service";
 import eventServices from "@/services/event.service";
