@@ -40,6 +40,12 @@ const HomeList = ({
             <SelectItem>Tidak ada kategori</SelectItem>
           )}
         </Select> */}
+        <Link
+          href={urlMore}
+          className="text-sm font-medium text-blue-600 hover:underline"
+        >
+          Tampilkan Lebih Banyak
+        </Link>
       </div>
 
       {/* Grid Card Event */}
@@ -61,12 +67,12 @@ const HomeList = ({
       </div>
 
       {/* Link Tampilkan Lebih Banyak */}
-      <Link
+      {/* <Link
         href={urlMore}
         className="text-sm font-medium text-blue-600 hover:underline"
       >
         Tampilkan Lebih Banyak
-      </Link>
+      </Link> */}
     </div>
   );
 };

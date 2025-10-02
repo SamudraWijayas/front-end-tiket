@@ -66,14 +66,14 @@ const VoucherModal = (props: PropTypes) => {
       onClose={handleOnClose}
       className="!z-[9999]"
     >
-      <ModalContent className="!z-[9999] m-4 max-w-md rounded-2xl">
+      <ModalContent className="!z-[9999] m-2 w-full max-w-lg rounded-2xl sm:max-w-xl md:max-w-2xl">
         <ModalHeader>
           <h1 className="text-lg font-bold text-gray-900">Daftar Voucher</h1>
         </ModalHeader>
         <Divider />
         <ModalBody className="mt-4 mb-6 space-y-4">
           {/* Input voucher private */}
-          <div className="flex gap-2">
+          <div className="flex flex-col gap-2 sm:flex-row">
             <Input
               placeholder="Masukkan kode voucher"
               value={privateCode}
@@ -108,7 +108,7 @@ const VoucherModal = (props: PropTypes) => {
               return (
                 <div
                   key={voucher._id}
-                  className={`relative flex w-full overflow-hidden rounded-lg border bg-white shadow transition hover:shadow-lg ${
+                  className={`relative flex w-full flex-col overflow-hidden rounded-lg border bg-white shadow transition hover:shadow-lg sm:flex-row ${
                     isSelected
                       ? "border-green-500 ring-2 ring-green-300"
                       : "border-gray-200"
@@ -116,7 +116,7 @@ const VoucherModal = (props: PropTypes) => {
                 >
                   {/* Ribbon kiri */}
                   <div
-                    className={`absolute top-0 left-0 flex h-full w-[60px] items-center justify-center ${voucherColor}`}
+                    className={`absolute top-0 left-0 hidden h-full w-[60px] items-center justify-center sm:flex ${voucherColor}`}
                   >
                     <span className="rotate-180 text-[16px] font-bold text-white uppercase [writing-mode:vertical-rl]">
                       Discount
@@ -124,9 +124,9 @@ const VoucherModal = (props: PropTypes) => {
                   </div>
 
                   {/* Isi card */}
-                  <div className="ml-[60px] flex flex-1 flex-col justify-between p-4">
+                  <div className="flex flex-1 flex-col justify-between p-4 sm:ml-[60px]">
                     <div>
-                      <div className="flex items-center gap-2">
+                      <div className="flex flex-wrap items-center gap-2">
                         <span className="text-lg font-bold text-gray-900">
                           Potongan{" "}
                           {voucher.discountType === "persentase"
@@ -141,7 +141,7 @@ const VoucherModal = (props: PropTypes) => {
                       </p>
                     </div>
 
-                    <div className="mt-3 flex items-center justify-between">
+                    <div className="mt-3 flex flex-wrap items-center justify-between gap-2">
                       <div className="flex items-center gap-2">
                         <Image
                           src="/images/illustrations/voucher.png"
@@ -171,59 +171,56 @@ const VoucherModal = (props: PropTypes) => {
                         {isSelected ? "Dipakai" : "Gunakan"}
                       </button>
                     </div>
-                    <div>
-                      <Accordion>
-                        <AccordionItem
-                          aria-label="Syarat & Ketentuan"
-                          title="Syarat & Ketentuan"
-                        >
-                          <div className="space-y-3">
-                            {/* Maksimal Potongan */}
-                            <div className="rounded-md border-l-4 border-amber-500 bg-amber-50 p-2">
-                              <p className="text-sm font-semibold text-amber-800">
-                                Maksimal Potongan:{" "}
-                                {voucher.discountType === "persentase"
-                                  ? convertIDR(
-                                      (voucher.maxDiscount as number) || 0,
-                                    )
-                                  : convertIDR(
-                                      (voucher.nominaldeduction as number) || 0,
-                                    )}
-                              </p>
-                            </div>
 
-                            {/* Berlaku untuk tiket */}
-                            <div>
-                              <p className="mb-1 text-sm font-semibold text-gray-700">
-                                Berlaku untuk tiket:
-                              </p>
-                              <div className="flex flex-wrap gap-2">
-                                {voucher.applicableTickets &&
-                                voucher.applicableTickets.length > 0 ? (
-                                  voucher.applicableTickets.map((ticketId) => {
-                                    const ticketName =
-                                      dataTicket.find((t) => t._id === ticketId)
-                                        ?.name || "Unknown";
-                                    return (
-                                      <span
-                                        key={ticketId}
-                                        className="rounded-full bg-blue-100 px-2 py-1 text-xs font-medium text-blue-800"
-                                      >
-                                        {ticketName}
-                                      </span>
-                                    );
-                                  })
-                                ) : (
-                                  <span className="rounded-full bg-green-100 px-2 py-1 text-xs font-medium text-green-800">
-                                    Semua tiket
-                                  </span>
-                                )}
-                              </div>
+                    <Accordion className="mt-3">
+                      <AccordionItem
+                        aria-label="Syarat & Ketentuan"
+                        title="Syarat & Ketentuan"
+                      >
+                        <div className="space-y-3 text-sm">
+                          <div className="rounded-md border-l-4 border-amber-500 bg-amber-50 p-2">
+                            <p className="font-semibold text-amber-800">
+                              Maksimal Potongan:{" "}
+                              {voucher.discountType === "persentase"
+                                ? convertIDR(
+                                    (voucher.maxDiscount as number) || 0,
+                                  )
+                                : convertIDR(
+                                    (voucher.nominaldeduction as number) || 0,
+                                  )}
+                            </p>
+                          </div>
+
+                          <div>
+                            <p className="mb-1 font-semibold text-gray-700">
+                              Berlaku untuk tiket:
+                            </p>
+                            <div className="flex flex-wrap gap-2">
+                              {voucher.applicableTickets &&
+                              voucher.applicableTickets.length > 0 ? (
+                                voucher.applicableTickets.map((ticketId) => {
+                                  const ticketName =
+                                    dataTicket.find((t) => t._id === ticketId)
+                                      ?.name || "Unknown";
+                                  return (
+                                    <span
+                                      key={ticketId}
+                                      className="rounded-full bg-blue-100 px-2 py-1 text-xs font-medium text-blue-800"
+                                    >
+                                      {ticketName}
+                                    </span>
+                                  );
+                                })
+                              ) : (
+                                <span className="rounded-full bg-green-100 px-2 py-1 text-xs font-medium text-green-800">
+                                  Semua tiket
+                                </span>
+                              )}
                             </div>
                           </div>
-                        </AccordionItem>
-                      </Accordion>
-                    </div>
+                        </div>
+                      </AccordionItem>
+                    </Accordion>
                   </div>
                 </div>
               );
