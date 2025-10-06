@@ -414,18 +414,18 @@ const Ticket = () => {
                 <div className="mb-2 flex justify-between text-sm text-gray-600">
                   <p>Subtotal</p>
                   <span className="font-medium">
-                    {cart.quantity > 0 ? (
-                      <>
-                        <span className="mr-1 text-gray-500">
-                          {cart.quantity}x
-                        </span>
-                        {convertIDR(
-                          Number(dataTicketInCart.price) * cart.quantity,
-                        )}
-                      </>
-                    ) : (
-                      "Rp 0"
-                    )}  
+                    {cart.quantity > 0
+                      ? (() => {
+                          const subtotal =
+                            Number(dataTicketInCart.price) * cart.quantity;
+                          const tax = Math.round(
+                            (subtotal * (dataEvent?.taxPercentage ?? 0)) / 100,
+                          );
+                          const serviceFee = Math.round(subtotal * 0.05) + 2500;
+                          const total = subtotal + tax + serviceFee - discount;
+                          return convertIDR(Math.max(total, 0)); // jaga-jaga kalau diskon > total
+                        })()
+                      : "Rp 0"}
                   </span>
                 </div>
 

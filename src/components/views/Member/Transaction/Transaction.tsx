@@ -11,8 +11,11 @@ import Image from "next/image";
 const Transaction = () => {
   const { dataTransactions, isLoadingTransactions } = useTransaction();
 
+  const transactions = dataTransactions?.data ?? [];
+  const hasTransactions = transactions.length > 0;
+
   return (
-    <div className="flex justify-center px-2 sm:px-4 pt-5">
+    <div className="flex justify-center px-2 pt-5 sm:px-4">
       <div className="mt-4 mb-6 w-full max-w-5xl space-y-4">
         <h1 className="text-xl font-bold sm:text-2xl">Riwayat Pesanan</h1>
 
@@ -33,10 +36,25 @@ const Transaction = () => {
           </>
         )}
 
+        {/* Empty State */}
+        {!isLoadingTransactions && !hasTransactions && (
+          <div className="flex flex-col items-center justify-center gap-4 py-20">
+            <Image
+              src="/images/illustrations/nodata.jpg"
+              alt="no-data"
+              width={200}
+              height={200}
+            />
+            <h2 className="text-center text-xl font-bold sm:text-2xl">
+              Belum ada transaksi
+            </h2>
+          </div>
+        )}
+
         {/* Data Available */}
-        {!isLoadingTransactions && dataTransactions?.data?.length > 0 && (
+        {!isLoadingTransactions && hasTransactions && (
           <>
-            {dataTransactions.data.map((transaction: IOrder) => (
+            {transactions.map((transaction: IOrder) => (
               <div
                 key={transaction?._id}
                 className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm"
@@ -70,7 +88,7 @@ const Transaction = () => {
                   {/* Left: Image + Info */}
                   <div className="flex items-center gap-3">
                     <Image
-                      src={`${process.env.NEXT_PUBLIC_IMAGE}${transaction?.events?.banner ?? "No Event"}`}
+                      src={`${process.env.NEXT_PUBLIC_IMAGE}${transaction?.events?.banner ?? ""}`}
                       alt={transaction?.events?.name ?? "No Event"}
                       width={80}
                       height={80}
@@ -78,7 +96,7 @@ const Transaction = () => {
                     />
                     <div className="flex flex-col gap-1">
                       <span className="text-md font-medium text-gray-800">
-                        {transaction?.ticket?.name ?? "No Event"}
+                        {transaction?.ticket?.name ?? "-"}
                       </span>
                       <span className="text-sm text-gray-500">
                         {transaction?.quantity ?? 0} tiket
@@ -94,7 +112,9 @@ const Transaction = () => {
                   <div className="text-right">
                     <p className="text-sm text-gray-500">Total Pesanan</p>
                     <p className="text-base font-bold text-gray-800">
-                      {convertIDR(Number(transaction?.total))}
+                      {transaction?.total
+                        ? convertIDR(Number(transaction.total))
+                        : "-"}
                     </p>
                   </div>
                 </div>
@@ -117,21 +137,6 @@ const Transaction = () => {
               </div>
             ))}
           </>
-        )}
-
-        {/* Empty State */}
-        {!isLoadingTransactions && !dataTransactions?.data?.length && (
-          <div className="flex flex-col items-center justify-center gap-4 py-20">
-            <Image
-              src="/images/illustrations/nodata.jpg"
-              alt="no-data"
-              width={200}
-              height={200}
-            />
-            <h2 className="text-center text-xl font-bold sm:text-2xl">
-              Belum ada transaksi
-            </h2>
-          </div>
         )}
       </div>
     </div>
