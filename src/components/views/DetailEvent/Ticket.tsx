@@ -41,7 +41,6 @@ const Ticket = () => {
     selectedVoucher,
     lowestPrice,
   } = useDetailEvent();
-  console.log("pocer", selectedVoucher);
   // filter voucher public
   const publicVouchers = dataVoucher?.filter(
     (voucher: IVoucher) =>
