@@ -16,6 +16,8 @@ const useDetailEvent = () => {
   const router = useRouter();
   const [selectedVoucher, setSelectedVoucher] = useState<IVoucher | null>(null);
   const { setToaster } = useContext(ToasterContext);
+
+  // event
   const getEventBySlug = async () => {
     const { data } = await eventServices.getEventBySlug(`${router.query.slug}`);
     return data.data;
@@ -26,7 +28,7 @@ const useDetailEvent = () => {
     queryFn: getEventBySlug,
     enabled: router.isReady,
   });
-
+  // lineup
   const getLineupByEventId = async () => {
     const { data } = await lineupServices.getLineupsByEventId(
       `${dataEvent?._id}`,
@@ -44,7 +46,7 @@ const useDetailEvent = () => {
     queryFn: getLineupByEventId,
     enabled: !!dataEvent?._id && router.isReady,
   });
-
+  // tiket
   const getTicketsByEventId = async () => {
     const { data } = await ticketServices.getTicketsByEventId(
       `${dataEvent._id}`,
@@ -57,6 +59,19 @@ const useDetailEvent = () => {
     queryFn: getTicketsByEventId,
     enabled: !!dataEvent?._id,
   });
+
+  // Ambil tiket dengan harga termurah
+  const getLowestPrice = () => {
+    if (!dataTicket || dataTicket.length === 0) return null;
+
+    const lowestTicket = [...dataTicket].sort((a, b) => a.price - b.price)[0];
+
+    return lowestTicket.price;
+  };
+
+  // Gunakan:
+  const lowestPrice = getLowestPrice();
+
   // voucher
   const getVoucherByEventId = async () => {
     const { data } = await voucherServices.getVouchersByEventId(
@@ -176,31 +191,6 @@ const useDetailEvent = () => {
       },
     });
 
-  //   ticket kecil
-  const getSmallTicket = async () => {
-    const { data } = await ticketServices.getTicketsByEventId(
-      `${dataEvent._id}`,
-    );
-    const tickets = data.data;
-
-    if (!tickets || tickets.length === 0) return null;
-
-    // Beri tipe eksplisit untuk prev dan current
-    const minPriceTicket = tickets.reduce(
-      (prev: { price: number }, current: { price: number }) => {
-        return prev.price < current.price ? prev : current;
-      },
-    );
-
-    return minPriceTicket;
-  };
-
-  const { data: minTicket, isLoading: isLoadingMinTicket } = useQuery({
-    queryKey: ["Tickets", dataEvent?._id],
-    queryFn: getSmallTicket,
-    enabled: !!dataEvent?._id,
-  });
-
   // fungsi apply voucher
   const applyVoucher = async (voucher: IVoucher | { code: string }) => {
     if (!cart.ticket) {
@@ -282,8 +272,8 @@ const useDetailEvent = () => {
     dataEvent,
     isLoadingDetailEvent,
     dataTicket,
-    minTicket,
-    isLoadingMinTicket,
+
+    lowestPrice,
 
     dataVoucher,
 
@@ -296,6 +286,8 @@ const useDetailEvent = () => {
     createOrder,
 
     selectedVoucher,
+    setSelectedVoucher,
+
     applyVoucher,
     discount,
     isTicketAvailable,

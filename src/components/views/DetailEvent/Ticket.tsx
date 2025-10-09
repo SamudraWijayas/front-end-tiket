@@ -12,7 +12,7 @@ import {
   useDisclosure,
 } from "@heroui/react";
 
-import { ChevronDown, ChevronUp, Minus, Plus } from "lucide-react";
+import { ChevronRight, MapPin, Minus, Plus, TicketCheck } from "lucide-react";
 import { ITicket } from "@/types/Ticket";
 import { convertIDR } from "@/utils/currency";
 import { useSession } from "next-auth/react";
@@ -35,11 +35,13 @@ const Ticket = () => {
     isPendingCreateOrder,
 
     dataVoucher,
-    selectedVoucher,
     applyVoucher,
     discount,
+
+    selectedVoucher,
+    lowestPrice,
   } = useDetailEvent();
-  const [isOpen, setIsOpen] = useState(false);
+  console.log("pocer", selectedVoucher);
   // filter voucher public
   const publicVouchers = dataVoucher?.filter(
     (voucher: IVoucher) =>
@@ -76,7 +78,7 @@ const Ticket = () => {
         strategy="lazyOnload"
       />
       {/* Konten Kiri */}
-      <div className="min-h-[70vh] w-full flex-1 space-y-6">
+      <div className="min-h-[70vh] w-full flex-1 space-y-3">
         <div>
           <h1 className="text-2xl font-bold">Kategori Tiket</h1>
         </div>
@@ -175,10 +177,195 @@ const Ticket = () => {
             </Card>
           );
         })}
+        <div className="block lg:hidden">
+          <div className="rounded-lg border border-gray-200 bg-white px-2 py-3">
+            {dataEvent?.createdBy ? (
+              <p className="text-sm font-semibold text-gray-800">
+                {dataEvent?.createdBy?.fullName}
+              </p>
+            ) : (
+              <Skeleton className="h-5 w-30 rounded-lg" />
+            )}
+
+            <div className="mt-3 flex gap-2">
+              {dataEvent?.banner ? (
+                <div className="relative h-[90px] w-28 overflow-hidden rounded-xl">
+                  <Image
+                    src={`${process.env.NEXT_PUBLIC_IMAGE}${dataEvent.banner}`}
+                    alt={dataEvent.name}
+                    fill
+                    className="object-cover transition-transform duration-300 hover:scale-105"
+                  />
+                </div>
+              ) : (
+                <Skeleton className="h-[90px] w-28 rounded-2xl bg-gray-200" />
+              )}
+
+              <div className="flex w-full flex-col justify-between text-gray-700">
+                <div className="flex flex-col leading-none">
+                  {dataEvent?.name ? (
+                    <p className="text-sm font-medium text-gray-800">
+                      {dataEvent?.name}
+                    </p>
+                  ) : (
+                    <Skeleton className="h-4 w-30 rounded-lg" />
+                  )}
+                  {dataEvent?.startDate ? (
+                    <span className="block truncate text-[11px] leading-snug text-gray-600">
+                      {eventDate}
+                    </span>
+                  ) : (
+                    <Skeleton className="my-1 h-3 w-30 rounded-lg" />
+                  )}
+
+                  <div className="mt-2 flex items-center gap-1">
+                    <MapPin size={14} className="text-blue-600" />
+
+                    {dataEvent?.location.address ? (
+                      <span className="block truncate text-[11px] leading-snug text-gray-600">
+                        {dataEvent?.location.address}
+                      </span>
+                    ) : (
+                      <Skeleton className="h-3 w-30 rounded-lg" />
+                    )}
+                  </div>
+                </div>
+                {lowestPrice ? (
+                  <span className="text-sm text-amber-600">
+                    {convertIDR(lowestPrice)}
+                  </span>
+                ) : (
+                  <Skeleton className="my-1 h-3 w-30 rounded-lg" />
+                )}
+              </div>
+            </div>
+            <Divider className="my-3 h-[1px] bg-gray-200" />
+            {publicVouchers && publicVouchers.length > 0 && (
+              <div className="rounded-lg border border-gray-200 bg-gray-100 p-2">
+                {/* Header */}
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center">
+                    <Image
+                      src="/images/illustrations/voucher.png"
+                      alt="voucher"
+                      width={50}
+                      height={50}
+                      className="mr-2 h-6 w-6 mix-blend-multiply"
+                    />
+                    <span className="text-xs font-medium">
+                      {publicVouchers.length} Voucher Tersedia
+                    </span>
+                  </div>
+                  <span
+                    className="cursor-pointer text-xs text-blue-600 hover:underline"
+                    onClick={voucherModal.onOpen}
+                  >
+                    Lihat
+                  </span>
+                </div>
+              </div>
+            )}
+            <Divider className="my-3 h-[1px] bg-gray-200" />
+            {cart.quantity > 0 ? (
+              <div className="flex justify-between">
+                <span className="text-xs text-black">
+                  Total {cart.quantity} Tiket
+                </span>
+                <span className="text-xs text-black">
+                  {convertIDR(Number(dataTicketInCart.price) * cart.quantity)}
+                </span>
+              </div>
+            ) : (
+              ""
+            )}
+          </div>
+        </div>
+        <div className="block lg:hidden">
+          <div className="rounded-lg border border-gray-200 bg-white px-2 py-3">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <TicketCheck className="text-blue-700" />
+                <span className="text-sm font-semibold text-gray-800">
+                  Voucher
+                </span>
+              </div>
+              <div
+                className="flex cursor-pointer items-center gap-2"
+                onClick={voucherModal.onOpen}
+              >
+                <span
+                  className={`truncate text-right text-xs font-medium ${
+                    selectedVoucher
+                      ? "font-semibold text-green-700" // kalau sudah dipilih
+                      : "text-gray-400 italic" // kalau belum dipilih
+                  }`}
+                >
+                  {selectedVoucher?.code || "Belum dipilih"}
+                </span>
+                <ChevronRight
+                  size={15}
+                  className={
+                    selectedVoucher ? "text-green-700" : "text-gray-400"
+                  }
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="block lg:hidden">
+          <div className="rounded-lg border border-gray-200 bg-white px-2 py-3">
+            <span className="text-sm font-semibold text-gray-800">
+              Rincian Pembayaran
+            </span>
+            <div className="mt-3 flex flex-col gap-2">
+              <div className="flex items-center justify-between">
+                <span className="text-xs text-gray-700">Subtotal Pesanan</span>
+                {cart.quantity > 0 ? (
+                  <span className="text-xs text-gray-700">
+                    {convertIDR(Number(dataTicketInCart.price) * cart.quantity)}
+                  </span>
+                ) : (
+                  ""
+                )}
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-xs text-gray-700">Biaya Layanan</span>
+                <span className="text-xs text-gray-700">
+                  {cart.quantity > 0
+                    ? convertIDR(
+                        Math.round(
+                          Number(dataTicketInCart.price) * cart.quantity * 0.05,
+                        ) + 2500,
+                      )
+                    : ""}
+                </span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-xs text-gray-700">Biaya Pajak</span>
+                <span className="text-xs text-gray-700">
+                  {cart.quantity > 0
+                    ? convertIDR(
+                        (Number(dataTicketInCart.price) *
+                          cart.quantity *
+                          dataEvent?.taxPercentage) /
+                          100,
+                      )
+                    : null}
+                </span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-xs text-gray-700">Total Diskon</span>
+                <span className="text-xs text-blue-700">
+                  - {discount > 0 ? convertIDR(discount) : ""}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Info Event */}
-      <div className="h-fit w-full space-y-2 rounded-2xl border border-gray-200 bg-white p-6 shadow-md lg:sticky lg:top-20 lg:w-[355px]">
+      <div className="hidden h-fit w-full space-y-2 rounded-2xl border border-gray-200 bg-white p-6 shadow-md lg:sticky lg:top-20 lg:block lg:w-[355px]">
         <div className="flex flex-col space-y-2">
           <h1 className="text-lg font-bold">Detail Pesanan</h1>
           <Skeleton
@@ -208,7 +395,7 @@ const Ticket = () => {
             </Skeleton>
           </div>
           {publicVouchers && publicVouchers.length > 0 && (
-            <div className="rounded-lg border border-gray-200 bg-gray-100 p-3">
+            <div className="rounded-lg border border-gray-200 bg-gray-100 p-2">
               {/* Header */}
               <div className="flex items-center justify-between">
                 <div className="flex items-center">
@@ -249,247 +436,148 @@ const Ticket = () => {
 
         <Divider className="my-4" />
 
-        <div className="hidden lg:block">
-          {/* Total Price */}
-          <div className="mb-3 flex justify-between text-sm text-gray-700">
-            <p className="font-medium">Total:</p>
-            <span className="font-medium">
-              {cart.quantity > 0 ? (
-                <>
-                  <span className="mr-1 text-gray-500">{cart.quantity}x</span>
-                  {convertIDR(Number(dataTicketInCart.price) * cart.quantity)}
-                </>
-              ) : (
-                "Rp 0"
-              )}
-            </span>
-          </div>
+        {/* Total Price */}
+        <div className="mb-3 flex justify-between text-sm text-gray-700">
+          <p className="font-medium">Total:</p>
+          <span className="font-medium">
+            {cart.quantity > 0 ? (
+              <>
+                <span className="mr-1 text-gray-500">{cart.quantity}x</span>
+                {convertIDR(Number(dataTicketInCart.price) * cart.quantity)}
+              </>
+            ) : (
+              "Rp 0"
+            )}
+          </span>
+        </div>
 
-          {/* Pajak */}
-          <div className="mb-3 flex justify-between text-sm text-gray-700">
-            <p className="font-medium">Tax:</p>
+        {/* Pajak */}
+        <div className="mb-3 flex justify-between text-sm text-gray-700">
+          <p className="font-medium">Tax:</p>
 
-            <Skeleton
-              isLoaded={!!dataEvent?.taxPercentage}
-              className="rounded-lg"
-            >
-              <span className="font-semibold">
-                {cart.quantity > 0
-                  ? convertIDR(
-                      (Number(dataTicketInCart.price) *
-                        cart.quantity *
-                        dataEvent?.taxPercentage) /
-                        100,
-                    )
-                  : null}
-                ({dataEvent?.taxPercentage ?? 0}%)
-              </span>
-            </Skeleton>
-          </div>
-
-          {/* Service Fee */}
-          <div className="mb-3 flex justify-between text-sm text-gray-700">
-            <p className="font-medium">Service Fee:</p>
+          <Skeleton
+            isLoaded={!!dataEvent?.taxPercentage}
+            className="rounded-lg"
+          >
             <span className="font-semibold">
               {cart.quantity > 0
                 ? convertIDR(
-                    Math.round(
-                      Number(dataTicketInCart.price) * cart.quantity * 0.05,
-                    ) + 2500,
+                    (Number(dataTicketInCart.price) *
+                      cart.quantity *
+                      dataEvent?.taxPercentage) /
+                      100,
                   )
-                : "Rp 0"}
+                : null}
+              ({dataEvent?.taxPercentage ?? 0}%)
+            </span>
+          </Skeleton>
+        </div>
+
+        {/* Service Fee */}
+        <div className="mb-3 flex justify-between text-sm text-gray-700">
+          <p className="font-medium">Service Fee</p>
+          <span className="font-semibold">
+            {cart.quantity > 0
+              ? convertIDR(
+                  Math.round(
+                    Number(dataTicketInCart.price) * cart.quantity * 0.05,
+                  ) + 2500,
+                )
+              : "Rp 0"}
+          </span>
+        </div>
+
+        {/* Diskon Voucher */}
+        {discount > 0 && (
+          <div className="mb-3 flex justify-between text-sm text-gray-700">
+            <p className="font-medium">Voucher Discount:</p>
+            <span className="font-semibold text-green-600">
+              - {convertIDR(discount)}
             </span>
           </div>
+        )}
 
-          {/* Diskon Voucher */}
-          {discount > 0 && (
-            <div className="mb-3 flex justify-between text-sm text-gray-700">
-              <p className="font-medium">Voucher Discount:</p>
-              <span className="font-semibold text-green-600">
-                - {convertIDR(discount)}
+        <Divider className="my-4" />
+
+        {/* Grand Total */}
+        <div className="mb-4 flex items-center justify-between text-base font-bold text-gray-900 md:text-lg">
+          <p>Grand Total:</p>
+          <span className="text-amber-600">
+            {cart.quantity > 0
+              ? (() => {
+                  const subtotal =
+                    Number(dataTicketInCart.price) * cart.quantity;
+                  const tax = Math.round(
+                    (subtotal * (dataEvent?.taxPercentage ?? 0)) / 100,
+                  );
+                  const serviceFee = Math.round(subtotal * 0.05) + 2500;
+                  const total = subtotal + tax + serviceFee - discount;
+                  return convertIDR(Math.max(total, 0)); // jaga-jaga kalau diskon > total
+                })()
+              : "Rp 0"}
+          </span>
+        </div>
+
+        {/* Checkout Button */}
+        <Button
+          fullWidth
+          color="primary"
+          size="md"
+          disabled={cart.quantity === 0 || isPendingCreateOrder}
+          className="disabled:bg-primary-200 mt-2"
+          onPress={() => mutateCreateOrder()}
+        >
+          {isPendingCreateOrder ? <Spinner color="white" /> : "Checkout"}
+        </Button>
+      </div>
+      {/* fixed mobile */}
+      <div className="fixed right-0 bottom-0 left-0 z-40 rounded-t-2xl bg-white shadow-xl lg:hidden">
+        {/* Header */}
+        <div className="flex h-12 w-full items-center rounded-t-2xl bg-gradient-to-r from-blue-600 to-blue-500 px-4 text-white shadow-md">
+          <p className="text-sm font-semibold tracking-wide">
+            Your Ticket to Adventure
+          </p>
+        </div>
+        <div></div>
+        <div className="flex items-center justify-end gap-3 px-4 py-4">
+          <div className="flex flex-col gap-1">
+            <div className="flex items-center gap-1">
+              <p className="text-xs text-black">Total</p>
+              <span className="font-medium text-amber-600">
+                {cart.quantity > 0
+                  ? (() => {
+                      const subtotal =
+                        Number(dataTicketInCart.price) * cart.quantity;
+                      const tax = Math.round(
+                        (subtotal * (dataEvent?.taxPercentage ?? 0)) / 100,
+                      );
+                      const serviceFee = Math.round(subtotal * 0.05) + 2500;
+                      const total = subtotal + tax + serviceFee - discount;
+                      return convertIDR(Math.max(total, 0)); // jaga-jaga kalau diskon > total
+                    })()
+                  : "Rp 0"}
               </span>
             </div>
-          )}
-
-          <Divider className="my-4" />
-
-          {/* Grand Total */}
-          <div className="mb-4 flex items-center justify-between text-base font-bold text-gray-900 md:text-lg">
-            <p>Grand Total:</p>
-            <span className="text-amber-600">
-              {cart.quantity > 0
-                ? (() => {
-                    const subtotal =
-                      Number(dataTicketInCart.price) * cart.quantity;
-                    const tax = Math.round(
-                      (subtotal * (dataEvent?.taxPercentage ?? 0)) / 100,
-                    );
-                    const serviceFee = Math.round(subtotal * 0.05) + 2500;
-                    const total = subtotal + tax + serviceFee - discount;
-                    return convertIDR(Math.max(total, 0)); // jaga-jaga kalau diskon > total
-                  })()
-                : "Rp 0"}
-            </span>
+            <div className="flex items-center gap-1">
+              <p className="text-xs text-black">Hemat</p>
+              <span className="text-xs text-amber-600">
+                {discount > 0 ? convertIDR(discount) : "Rp 0"}
+              </span>
+            </div>
           </div>
-
-          {/* Checkout Button */}
           <Button
-            fullWidth
             color="primary"
             size="md"
             disabled={cart.quantity === 0 || isPendingCreateOrder}
-            className="disabled:bg-primary-200 mt-2"
+            className="disabled:bg-primary-200 min-w-[110px] rounded-lg font-semibold shadow-md"
             onPress={() => mutateCreateOrder()}
           >
-            {isPendingCreateOrder ? <Spinner color="white" /> : "Checkout"}
+            {isPendingCreateOrder ? (
+              <Spinner color="white" size="sm" />
+            ) : (
+              "Checkout"
+            )}
           </Button>
-        </div>
-
-        <div className="fixed right-0 bottom-0 left-0 z-40 rounded-t-2xl bg-white shadow-xl lg:hidden">
-          {/* Header */}
-          <div className="flex h-12 w-full items-center rounded-t-2xl bg-gradient-to-r from-blue-600 to-blue-500 px-4 text-white shadow-md">
-            <p className="text-sm font-semibold tracking-wide">
-              Your Ticket to Adventure
-            </p>
-          </div>
-
-          {/* Voucher */}
-          {publicVouchers && publicVouchers.length > 0 && (
-            <div className="mx-4 mt-3 rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 shadow-sm">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center">
-                  <Image
-                    src="/images/illustrations/voucher.png"
-                    alt="voucher"
-                    width={50}
-                    height={50}
-                    className="mr-2 h-7 w-7"
-                  />
-                  <span className="text-sm font-medium text-gray-700">
-                    {publicVouchers.length} Voucher Tersedia
-                  </span>
-                </div>
-                <button
-                  onClick={voucherModal.onOpen}
-                  className="text-sm font-semibold text-blue-600 hover:underline"
-                >
-                  Lihat
-                </button>
-              </div>
-            </div>
-          )}
-
-          {/* Total Price & Checkout */}
-          <div className="flex items-center justify-between gap-3 px-4 py-4">
-            {/* Collapsible Total */}
-            <div className="flex-1 rounded-lg bg-white">
-              <button
-                onClick={() => setIsOpen(!isOpen)}
-                className="flex w-full items-center justify-between rounded-lg px-4 text-left transition"
-              >
-                <div className="flex flex-col text-sm text-gray-700">
-                  <p className="font-semibold">Total Price</p>
-                  <span className="text-lg font-bold text-amber-600">
-                    {cart.quantity > 0
-                      ? convertIDR(
-                          Number(dataTicketInCart.price) * cart.quantity,
-                        )
-                      : "Rp 0"}
-                  </span>
-                </div>
-                {isOpen ? (
-                  <ChevronUp className="h-5 w-5 text-gray-500" />
-                ) : (
-                  <ChevronDown className="h-5 w-5 text-gray-500" />
-                )}
-              </button>
-
-              {/* Breakdown */}
-              <div
-                className={`overflow-hidden transition-all duration-300 ease-in-out ${
-                  isOpen ? "max-h-64 px-4 pt-2" : "max-h-0"
-                }`}
-              >
-                {/* Subtotal */}
-                <div className="mb-2 flex justify-between text-sm text-gray-600">
-                  <p>Subtotal</p>
-                  <span className="font-medium">
-                    {cart.quantity > 0
-                      ? (() => {
-                          const subtotal =
-                            Number(dataTicketInCart.price) * cart.quantity;
-                          const tax = Math.round(
-                            (subtotal * (dataEvent?.taxPercentage ?? 0)) / 100,
-                          );
-                          const serviceFee = Math.round(subtotal * 0.05) + 2500;
-                          const total = subtotal + tax + serviceFee - discount;
-                          return convertIDR(Math.max(total, 0)); // jaga-jaga kalau diskon > total
-                        })()
-                      : "Rp 0"}
-                  </span>
-                </div>
-
-                {/* Pajak */}
-                <div className="mb-2 flex justify-between text-sm text-gray-600">
-                  <p>Pajak ({dataEvent?.taxPercentage ?? 0}%)</p>
-                  <Skeleton
-                    isLoaded={!!dataEvent?.taxPercentage}
-                    className="rounded"
-                  >
-                    <span className="font-medium">
-                      {cart.quantity > 0
-                        ? convertIDR(
-                            (Number(dataTicketInCart.price) *
-                              cart.quantity *
-                              (dataEvent?.taxPercentage ?? 0)) /
-                              100,
-                          )
-                        : "Rp 0"}
-                    </span>
-                  </Skeleton>
-                </div>
-
-                {/* Service Fee */}
-                <div className="mb-2 flex justify-between text-sm text-gray-600">
-                  <p>Service Fee</p>
-                  <span className="font-medium">
-                    {cart.quantity > 0
-                      ? convertIDR(
-                          Math.round(
-                            Number(dataTicketInCart.price) *
-                              cart.quantity *
-                              0.05,
-                          ) + 2500,
-                        )
-                      : "Rp 0"}
-                  </span>
-                </div>
-
-                {/* Diskon */}
-                {discount > 0 && (
-                  <div className="mb-2 flex justify-between text-sm text-green-600">
-                    <p>Voucher Discount</p>
-                    <span>-{convertIDR(discount)}</span>
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {/* Checkout Button */}
-            <Button
-              color="primary"
-              size="md"
-              disabled={cart.quantity === 0 || isPendingCreateOrder}
-              className="disabled:bg-primary-200 min-w-[110px] rounded-lg font-semibold shadow-md"
-              onPress={() => mutateCreateOrder()}
-            >
-              {isPendingCreateOrder ? (
-                <Spinner color="white" size="sm" />
-              ) : (
-                "Checkout"
-              )}
-            </Button>
-          </div>
         </div>
       </div>
     </div>

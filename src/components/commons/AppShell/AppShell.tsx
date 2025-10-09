@@ -47,7 +47,7 @@ const AppShell = ({ children }: PropTypes) => {
 
   return (
     <main className={cn(inter.className)}>
-      <ToastProvider placement="bottom-center" />
+      <ToastProvider placement="top-center" />
       {children}
     </main>
   );
