@@ -13,7 +13,7 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: "Home | Jokindess",
-  description: "Platform Terbaim untuk beli tiket dan buat acara",
+  description: "Platform Terbaik untuk beli tiket dan buat acara",
 };
 
 export default function Home() {
@@ -22,8 +22,8 @@ export default function Home() {
   return (
     <div className={inter.className}>
       <LandingPageLayout
-        title="Home - Platform Terbaim untuk beli tiket dan buat acara"
-        description="Platform Terbaim untuk beli tiket dan buat acara"
+        title="Home - Platform Terbaik untuk beli tiket dan buat acara"
+        description="Platform Terbaik untuk beli tiket dan buat acara"
         navbarBgColor="bg-white"
         navbarColor="text-black"
         navbarPathColor="text-blue-600"

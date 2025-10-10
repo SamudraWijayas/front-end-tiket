@@ -9,7 +9,7 @@ import Link from "next/link";
 import { ILineup } from "@/types/Lineup";
 import { convertIDR } from "@/utils/currency";
 
-const Event = () => {
+const DetailEvent = () => {
   const { dataEvent, lowestPrice, dataLineup, dataVoucher } = useDetailEvent();
 
   const [showMore, setShowMore] = useState(false);
@@ -459,7 +459,7 @@ const Event = () => {
         </Skeleton>
         <Link
           href={`/event/${dataEvent?.slug}/tickets`}
-          className="block w-full rounded-lg bg-blue-600 px-4 py-2 text-center text-white shadow transition hover:bg-blue-700"
+          className="block w-full rounded-lg bg-blue-600 px-4 py-3 text-center text-white shadow transition hover:bg-blue-700"
         >
           {dataVoucher && dataVoucher.length > 0
             ? "Beli dengan Voucher"
@@ -470,4 +470,4 @@ const Event = () => {
   );
 };
 
-export default Event;
+export default DetailEvent;
