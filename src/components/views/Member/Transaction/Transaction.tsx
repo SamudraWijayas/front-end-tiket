@@ -1,15 +1,14 @@
 import React from "react";
-import { Calendar } from "lucide-react";
 import useTransaction from "./useTransaction";
 import { IOrder } from "@/types/Order";
 import { Chip, Divider, Skeleton } from "@heroui/react";
 import { convertIDR } from "@/utils/currency";
-import { convertTime } from "@/utils/date";
 import Link from "next/link";
 import Image from "next/image";
 
 const Transaction = () => {
   const { dataTransactions, isLoadingTransactions } = useTransaction();
+  console.log("sapa ajaa", dataTransactions);
 
   const transactions = dataTransactions?.data ?? [];
   const hasTransactions = transactions.length > 0;
@@ -61,8 +60,8 @@ const Transaction = () => {
               >
                 {/* Header */}
                 <div className="flex items-center justify-between">
-                  <h3 className="text-lg font-semibold sm:text-base">
-                    {transaction?.events?.name ?? "No Event"}
+                  <h3 className="text-sm font-semibold sm:text-base">
+                    {transaction?.events?.createdBy?.fullName ?? "No Event"}
                   </h3>
                   <Chip
                     size="sm"
@@ -86,34 +85,36 @@ const Transaction = () => {
                 {/* Body */}
                 <div className="my-2 grid gap-3 sm:grid-cols-2 sm:items-center">
                   {/* Left: Image + Info */}
-                  <div className="flex items-center gap-3">
-                    <Image
-                      src={`${process.env.NEXT_PUBLIC_IMAGE}${transaction?.events?.banner ?? ""}`}
-                      alt={transaction?.events?.name ?? "No Event"}
-                      width={80}
-                      height={80}
-                      className="h-24 w-24 rounded-md object-cover"
-                    />
-                    <div className="flex flex-col gap-1">
-                      <span className="text-md font-medium text-gray-800">
-                        {transaction?.ticket?.name ?? "-"}
-                      </span>
-                      <span className="text-sm text-gray-500">
-                        {transaction?.quantity ?? 0} tiket
-                      </span>
-                      <span className="flex items-center gap-1 text-xs text-gray-500">
-                        <Calendar size={14} />
-                        {convertTime(transaction?.createdAt)}
-                      </span>
+                  <div className="flex gap-3">
+                    <div className="relative h-[90px] w-28 overflow-hidden rounded-xl lg:w-40">
+                      <Image
+                        src={`${process.env.NEXT_PUBLIC_IMAGE}${transaction?.events?.banner}`}
+                        alt={`${transaction?.events?.name}`}
+                        fill
+                        className="object-cover transition-transform duration-300 hover:scale-105"
+                      />
+                    </div>
+                    <div className="flex w-full flex-col leading-none">
+                      <p className="text-sm font-medium text-gray-800">
+                        {transaction?.events?.name}
+                      </p>
+
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs text-gray-600">
+                          {transaction?.ticket?.name}
+                        </span>
+                      </div>
                     </div>
                   </div>
 
                   {/* Right: Harga */}
-                  <div className="text-right">
-                    <p className="text-sm text-gray-500">Total Pesanan</p>
-                    <p className="text-base font-bold text-gray-800">
+                  <div className="flex items-center justify-end gap-2 text-right">
+                    <p className="text-xs text-gray-500">
+                      Total {transaction?.quantity ?? 0} Pesanan:
+                    </p>
+                    <p className="text-xs font-bold text-gray-800">
                       {transaction?.total
-                        ? convertIDR(Number(transaction.total))
+                        ? convertIDR(Number(transaction.grandTotal))
                         : "-"}
                     </p>
                   </div>
@@ -128,7 +129,7 @@ const Transaction = () => {
                     Lihat Detail
                   </Link>
                   <Link
-                    href="/event"
+                    href={`/event/${transaction?.events?.slug}`}
                     className="bg-primary rounded-md px-3 py-1 text-sm text-white hover:bg-blue-700"
                   >
                     Beli Lagi

@@ -33,7 +33,7 @@ const useDetailTransaction = () => {
     queryFn: getBarcodeByOrderId,
     enabled: !!dataTransaction?._id,
   });
-
+// event
   const getEventById = async () => {
     const { data } = await eventServices.getEventById(
       `${dataTransaction?.events}`,

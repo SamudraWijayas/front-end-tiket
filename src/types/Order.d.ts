@@ -8,16 +8,21 @@ interface IOrder {
   events?: {
     name: string;
     banner: string;
+    slug: string;
+    createdBy: {
+      fullName: string;
+    };
   };
   createdBy?: {
     fullName: string;
   };
   total?: number;
+  grandTotal?: number;
   createdAt?: string | DateValue;
   quantity?: number;
   orderId?: number;
   pajak?: number;
-  vouchertiket?:number;
+  vouchertiket?: number;
   payment?: {
     redirect_url?: string;
   };

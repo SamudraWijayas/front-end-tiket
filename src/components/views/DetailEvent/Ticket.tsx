@@ -311,56 +311,66 @@ const Ticket = () => {
             </div>
           </div>
         </div>
-        <div className="block lg:hidden">
-          <div className="rounded-lg border border-gray-200 bg-white px-2 py-3">
-            <span className="text-sm font-semibold text-gray-800">
-              Rincian Pembayaran
-            </span>
-            <div className="mt-3 flex flex-col gap-2">
-              <div className="flex items-center justify-between">
-                <span className="text-xs text-gray-700">Subtotal Pesanan</span>
-                {cart.quantity > 0 ? (
+        {session.status === "authenticated" && (
+          <div className="block lg:hidden">
+            <div className="rounded-lg border border-gray-200 bg-white px-2 py-3">
+              <span className="text-sm font-semibold text-gray-800">
+                Rincian Pembayaran
+              </span>
+              <div className="mt-3 flex flex-col gap-2">
+                <div className="flex items-center justify-between">
                   <span className="text-xs text-gray-700">
-                    {convertIDR(Number(dataTicketInCart.price) * cart.quantity)}
+                    Subtotal Pesanan
                   </span>
-                ) : (
-                  ""
-                )}
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-xs text-gray-700">Biaya Layanan</span>
-                <span className="text-xs text-gray-700">
-                  {cart.quantity > 0
-                    ? convertIDR(
-                        Math.round(
-                          Number(dataTicketInCart.price) * cart.quantity * 0.05,
-                        ) + 2500,
-                      )
-                    : ""}
-                </span>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-xs text-gray-700">Biaya Pajak</span>
-                <span className="text-xs text-gray-700">
-                  {cart.quantity > 0
-                    ? convertIDR(
-                        (Number(dataTicketInCart.price) *
-                          cart.quantity *
-                          dataEvent?.taxPercentage) /
-                          100,
-                      )
-                    : null}
-                </span>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-xs text-gray-700">Total Diskon</span>
-                <span className="text-xs text-blue-700">
-                  - {discount > 0 ? convertIDR(discount) : ""}
-                </span>
+                  {cart.quantity > 0 ? (
+                    <span className="text-xs text-gray-700">
+                      {convertIDR(
+                        Number(dataTicketInCart.price) * cart.quantity,
+                      )}
+                    </span>
+                  ) : (
+                    ""
+                  )}
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-xs text-gray-700">Biaya Layanan</span>
+                  <span className="text-xs text-gray-700">
+                    {cart.quantity > 0
+                      ? convertIDR(
+                          Math.round(
+                            Number(dataTicketInCart.price) *
+                              cart.quantity *
+                              0.05,
+                          ) + 2500,
+                        )
+                      : ""}
+                  </span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-xs text-gray-700">Biaya Pajak</span>
+                  <span className="text-xs text-gray-700">
+                    {cart.quantity > 0
+                      ? convertIDR(
+                          (Number(dataTicketInCart.price) *
+                            cart.quantity *
+                            dataEvent?.taxPercentage) /
+                            100,
+                        )
+                      : null}
+                  </span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-xs text-gray-700">Total Diskon</span>
+                  {discount > 0 && (
+                    <span className="text-xs text-blue-700">
+                      - {convertIDR(discount)}
+                    </span>
+                  )}
+                </div>
               </div>
             </div>
           </div>
-        </div>
+        )}
       </div>
 
       {/* Info Event */}

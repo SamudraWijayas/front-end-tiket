@@ -18,9 +18,9 @@ const useTransaction = () => {
     isLoading: isLoadingTransactions,
     isFetching,
   } = useQuery({
-    queryKey: ["transactions", currentPage, currentLimit], // ✅ dinamis & unik per page
+    queryKey: ["transactions"], // ✅ dinamis & unik per page
     queryFn: getMemberTransactions,
-    enabled: router.isReady && !!currentPage && !!currentLimit, // ✅ fetch hanya jika param siap
+    // enabled: !!router.isReady,
   });
 
   return {

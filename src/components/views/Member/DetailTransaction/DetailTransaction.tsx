@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { MapPin, QrCode, Download } from "lucide-react";
 import { Divider, Skeleton, Card, Button } from "@heroui/react";
 import { convertIDR } from "@/utils/currency";
@@ -55,6 +55,18 @@ const TransactionDetailPage = () => {
     img.src = url;
   };
 
+  const [showToast, setShowToast] = useState(false);
+
+  const handleCopy = () => {
+    if (dataTransaction?.orderId) {
+      navigator.clipboard.writeText(dataTransaction.orderId);
+      setShowToast(true);
+
+      // otomatis hilang setelah 2 detik
+      setTimeout(() => setShowToast(false), 2000);
+    }
+  };
+
   return (
     <div className="flex flex-col items-center gap-3 bg-gradient-to-b from-gray-50 to-white px-4 py-3">
       {/* Midtrans script */}
@@ -91,14 +103,14 @@ const TransactionDetailPage = () => {
 
           <Skeleton isLoaded={!!dataTransaction?.orderId}>
             <p className="text-sm text-gray-600">
-              Order ID:{" "}
+              Invoice:{" "}
               <span className="font-semibold text-gray-900">
-                {dataTransaction?.orderId}
+                {dataTransaction?.noFaktur}
               </span>
             </p>
           </Skeleton>
 
-          <Skeleton isLoaded={!!dataTransaction?.createdAt}>
+          <Skeleton isLoaded={!!dataTransaction?.payment?.transaction_time}>
             <p className="text-xs text-gray-500">
               {convertTime(dataTransaction?.createdAt)}
             </p>
@@ -126,58 +138,66 @@ const TransactionDetailPage = () => {
       </Card>
 
       {/* Main Transaction Card */}
-      <Card className="w-full max-w-3xl space-y-6 rounded-lg p-6">
-        <Skeleton
-          isLoaded={!!dataEvent?.name}
-          className="h-5 w-full rounded-lg"
-        >
-          <h3 className="text-lg font-semibold sm:text-base">
-            {dataEvent?.name}
-          </h3>
-        </Skeleton>
+      <Card className="w-full max-w-3xl space-y-3 rounded-lg px-4 py-3">
+        {dataEvent?.createdBy ? (
+          <p className="text-sm font-semibold text-gray-800">
+            {dataEvent?.createdBy?.fullName}
+          </p>
+        ) : (
+          <Skeleton className="h-5 w-30 rounded-lg" />
+        )}
 
         {/* Event Summary */}
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex items-center gap-4">
-            <Skeleton isLoaded={!!dataEvent?.banner} className="rounded-lg">
-              <NextImage
-                src={
-                  dataEvent?.banner
-                    ? `${process.env.NEXT_PUBLIC_IMAGE}${dataEvent?.banner}`
-                    : "/default-event.jpg"
-                }
-                alt={dataEvent?.name ?? "No Event"}
-                width={96}
-                height={96}
-                className="h-24 w-24 rounded-lg object-cover"
-              />
-            </Skeleton>
-            <div>
-              <Skeleton isLoaded={!!dataTicket?.name} className="h-5 w-full">
-                <p className="text-md line-clamp-1 font-medium text-gray-800">
-                  {dataTicket?.name}
+          <div className="flex gap-2">
+            {dataEvent?.banner ? (
+              <div className="relative h-[90px] w-28 overflow-hidden rounded-xl lg:w-40">
+                <NextImage
+                  src={`${process.env.NEXT_PUBLIC_IMAGE}${dataEvent.banner}`}
+                  alt={dataEvent.name}
+                  fill
+                  className="object-cover transition-transform duration-300 hover:scale-105"
+                />
+              </div>
+            ) : (
+              <Skeleton className="h-[90px] w-28 rounded-2xl bg-gray-200 lg:w-40" />
+            )}
+            <div className="flex w-full flex-col leading-none">
+              {dataEvent?.name ? (
+                <p className="text-sm font-medium text-gray-800">
+                  {dataEvent?.name}
                 </p>
-              </Skeleton>
-              <Skeleton
-                isLoaded={!!dataTransaction?.quantity}
-                className="h-5 w-full"
-              >
-                <p className="mt-2 text-sm text-gray-500">
-                  {dataTransaction?.quantity ?? 0} tiket
-                </p>
-              </Skeleton>
+              ) : (
+                <Skeleton className="h-4 w-30 rounded-lg" />
+              )}
+              <div className="flex items-center justify-between">
+                {dataTicket?.name ? (
+                  <span className="text-xs text-gray-600">
+                    {dataTicket?.name}
+                  </span>
+                ) : (
+                  <Skeleton className="mt-1 h-4 w-30 rounded-lg" />
+                )}
+                {dataTransaction?.quantity ? (
+                  <span className="text-xs text-gray-500">
+                    x{dataTransaction?.quantity}
+                  </span>
+                ) : (
+                  <Skeleton className="mt-1 h-3 w-30 rounded-lg" />
+                )}
+              </div>
             </div>
           </div>
 
-          <div className="text-right">
-            <Skeleton
-              isLoaded={!!dataTransaction?.total}
-              className="h-5 w-full"
-            >
-              <p className="text-xl font-bold text-gray-900">
-                {convertIDR(Number(dataTransaction?.total) || 0)}
-              </p>
-            </Skeleton>
+          <div className="flex items-center justify-end gap-2">
+            <p className="text-xs text-gray-500">Total Pesanan:</p>
+            {dataTransaction?.total ? (
+              <span className="text-sm font-medium">
+                {convertIDR(dataTransaction?.total)}
+              </span>
+            ) : (
+              <Skeleton className="my-1 h-3 w-30 rounded-lg" />
+            )}
           </div>
         </div>
 
@@ -218,14 +238,16 @@ const TransactionDetailPage = () => {
 
         {/* Footer */}
         <Divider />
-        <Skeleton isLoaded={!!dataTransaction?.total}>
-          <div className="flex justify-end text-lg">
-            <span className="font-bold text-gray-800">
-              Total Pesanan:&nbsp;
-              {convertIDR(Number(dataTransaction?.total) || 0)}
+        <div className="flex items-center justify-end gap-2">
+          <p className="text-md text-gray-500">Total Pesanan:</p>
+          {dataTransaction?.total ? (
+            <span className="text-md font-medium text-amber-600">
+              {convertIDR(dataTransaction?.total)}
             </span>
-          </div>
-        </Skeleton>
+          ) : (
+            <Skeleton className="my-1 h-3 w-30 rounded-lg" />
+          )}
+        </div>
       </Card>
 
       {/* Pending Payment */}
@@ -251,21 +273,52 @@ const TransactionDetailPage = () => {
       )}
 
       {dataTransaction?.status === "completed" && (
-        <Card className="w-full max-w-3xl space-y-6 rounded-lg p-6">
-          <div className="flex items-center justify-between">
-            <h3 className="text-lg font-semibold sm:text-base">No. Pesanan</h3>
-            <p>{dataTransaction?.orderId}</p>
+        <Card className="w-full max-w-3xl space-y-2 rounded-lg p-6">
+          <div className="mb-4 flex items-center justify-between">
+            <h3 className="text-xs font-semibold sm:text-base lg:text-sm">
+              No. Pesanan
+            </h3>
+            <div className="relative">
+              <div className="flex items-center gap-2">
+                <p className="text-xs lg:text-sm">{dataTransaction?.orderId}</p>
+                <button
+                  onClick={handleCopy}
+                  className="rounded-md border border-gray-400 px-1 py-[2px] text-xs transition hover:bg-gray-100"
+                >
+                  Salin
+                </button>
+              </div>
+              {/* 
+              {showToast && (
+                <div className="animate-fade-in-out absolute bottom-[-40px] left-1/2 z-[100] -translate-x-1/2 rounded-md bg-black px-3 py-1 text-xs text-white shadow-md">
+                  Disalin
+                </div>
+              )} */}
+            </div>
+            {showToast && (
+              <div className="animate-fade-in-out fixed bottom-10 left-1/2 z-[100] -translate-x-1/2 rounded-md bg-black px-3 py-2 text-sm text-white shadow-md">
+                Disalin
+              </div>
+            )}
           </div>
           <div className="flex items-center justify-between">
-            <h3 className="text-lg font-semibold sm:text-base">
+            <h3 className="text-xs sm:text-base lg:text-sm">
               Metode Pembayaran
             </h3>
-            <p>
-              {dataTransaction?.payment?.payment_type}{" "}
-              <span className="uppercase">
-                ({dataTransaction?.payment?.bank})
-              </span>
+            <p className="text-xs text-gray-700 lg:text-sm">
+              {dataTransaction?.payment?.payment_type === "bank_transfer"
+                ? `Bank Transfer - ${dataTransaction?.payment?.bank?.toUpperCase() ?? "-"}`
+                : (dataTransaction?.payment?.payment_type?.toUpperCase() ??
+                  "-")}
             </p>
+          </div>
+          <div className="flex items-center justify-between">
+            <span className="text-xs text-gray-700 lg:text-sm">
+              Nota Pesanan / Faktur
+            </span>
+            <span className="text-xs text-gray-700 lg:text-sm">
+              {dataTransaction?.noFaktur}
+            </span>
           </div>
         </Card>
       )}
