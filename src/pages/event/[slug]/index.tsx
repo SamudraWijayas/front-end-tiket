@@ -30,6 +30,7 @@ export default function Event({ dataEvent }: PageProps) {
         title={`${dataEvent.name} - Tiket.Jokindess.com `}
         description={stripTags(dataEvent.description || "")}
         image={`${process.env.NEXT_PUBLIC_IMAGE}${dataEvent.banner}`}
+        keywords={`${dataEvent.name}, tiket ${dataEvent.name}, ${dataEvent.name} tiket, event ${dataEvent.name}`}
         navbarBgColor="bg-white"
         navbarColor="text-black"
         navbarPathColor="text-blue-600"
