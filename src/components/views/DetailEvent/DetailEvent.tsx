@@ -10,7 +10,8 @@ import { ILineup } from "@/types/Lineup";
 import { convertIDR } from "@/utils/currency";
 
 const DetailEvent = () => {
-  const { dataEvent, lowestPrice, dataLineup, dataVoucher } = useDetailEvent();
+  const { dataEvent, lowestPrice, dataLineup, dataVoucher, isPendingLineup } =
+    useDetailEvent();
 
   const [showMore, setShowMore] = useState(false);
 
@@ -190,12 +191,20 @@ const DetailEvent = () => {
           </div>
           <div className="space-y-3">
             <h2 className="text-xl font-semibold text-gray-900">Lineup</h2>
-            <Skeleton
-              className="min-h-[120px] w-full rounded-lg"
-              isLoaded={!!dataLineup?.length}
-            >
+
+            {isPendingLineup ? (
+              // ✅ Skeleton saat loading
+              <Skeleton
+                className="min-h-[120px] w-full rounded-lg"
+                isLoaded={false}
+              />
+            ) : !dataLineup?.length ? (
+              // ✅ Pesan jika kosong
+              ""
+            ) : (
+              // ✅ Tampilkan grid lineup jika ada data
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                {dataLineup?.map((artis: ILineup) => (
+                {dataLineup.map((artis: ILineup) => (
                   <a
                     key={artis._id || artis.nama}
                     href={artis.sosialmedia}
@@ -229,7 +238,7 @@ const DetailEvent = () => {
                   </a>
                 ))}
               </div>
-            </Skeleton>
+            )}
           </div>
         </div>
 
@@ -267,13 +276,19 @@ const DetailEvent = () => {
               </Skeleton>
             </Tab>
             <Tab key="lineup" title="Lineup">
-              {" "}
-              <Skeleton
-                className="min-h-[120px] w-full rounded-lg"
-                isLoaded={!!dataLineup?.length}
-              >
+              {isPendingLineup ? (
+                // ✅ Skeleton saat loading
+                <Skeleton
+                  className="min-h-[120px] w-full rounded-lg"
+                  isLoaded={false}
+                />
+              ) : !dataLineup?.length ? (
+                // ✅ Pesan jika kosong
+                ""
+              ) : (
+                // ✅ Tampilkan grid lineup jika ada data
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                  {dataLineup?.map((artis: ILineup) => (
+                  {dataLineup.map((artis: ILineup) => (
                     <a
                       key={artis._id || artis.nama}
                       href={artis.sosialmedia}
@@ -307,7 +322,7 @@ const DetailEvent = () => {
                     </a>
                   ))}
                 </div>
-              </Skeleton>
+              )}
             </Tab>
             <Tab key="sosmed" title="Sosial Media">
               <div className="mt-5 grid grid-cols-2 gap-2">

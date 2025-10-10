@@ -1,7 +1,12 @@
 "use client";
 
 import React, { useState } from "react";
-import { MapPin, QrCode, Download } from "lucide-react";
+import {
+  MapPin,
+  QrCode,
+  Download,
+  ChevronDown,
+} from "lucide-react";
 import { Divider, Skeleton, Card, Button } from "@heroui/react";
 import { convertIDR } from "@/utils/currency";
 import { convertTime } from "@/utils/date";
@@ -12,6 +17,7 @@ import environment from "@/config/environment";
 import NextImage from "next/image";
 
 const TransactionDetailPage = () => {
+  const [isOpen, setIsOpen] = useState(false);
   const {
     dataTransaction,
     dataEvent,
@@ -193,7 +199,7 @@ const TransactionDetailPage = () => {
             <p className="text-xs text-gray-500">Total Pesanan:</p>
             {dataTransaction?.total ? (
               <span className="text-sm font-medium">
-                {convertIDR(dataTransaction?.total)}
+                {convertIDR(dataTransaction?.grandTotal)}
               </span>
             ) : (
               <Skeleton className="my-1 h-3 w-30 rounded-lg" />
@@ -237,22 +243,70 @@ const TransactionDetailPage = () => {
         )}
 
         {/* Footer */}
-        <Divider />
-        <div className="flex items-center justify-end gap-2">
-          <p className="text-md text-gray-500">Total Pesanan:</p>
-          {dataTransaction?.total ? (
-            <span className="text-md font-medium text-amber-600">
-              {convertIDR(dataTransaction?.total)}
-            </span>
-          ) : (
-            <Skeleton className="my-1 h-3 w-30 rounded-lg" />
-          )}
+        <Divider className="mt-3 h-[1px] bg-gray-200" />
+        {/* Breakdown */}
+        <div className="flex flex-col">
+          <div
+            className={`overflow-hidden transition-all duration-300 ease-in-out ${
+              isOpen ? "mb-3 max-h-64" : "max-h-0"
+            }`}
+          >
+            <div className="flex flex-col gap-2">
+              <div className="flex items-center justify-between">
+                <span className="text-xs text-gray-700">Subtotal Pesanan</span>
+                <span className="text-xs text-gray-700">
+                  {convertIDR(dataTransaction?.total)}
+                </span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-xs text-gray-700">Biaya Layanan</span>
+                <span className="text-xs text-gray-700">
+                  {convertIDR(dataTransaction?.serviceFee)}
+                </span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-xs text-gray-700">Biaya Pajak</span>
+                <span className="text-xs text-gray-700">
+                  {convertIDR(dataTransaction?.pajak)}
+                </span>
+              </div>
+              {dataTransaction?.discount > 0 && (
+                <div className="flex items-center justify-between">
+                  <span className="text-xs text-gray-700">Total Diskon</span>
+                  <span className="text-xs text-gray-700">
+                    {convertIDR(dataTransaction.discount)}
+                  </span>
+                </div>
+              )}
+            </div>
+            <Divider className="mt-3 h-[1px] bg-gray-200" />
+          </div>
+          <button
+            className="flex items-center justify-end gap-1 transition"
+            onClick={() => setIsOpen(!isOpen)}
+          >
+            <div className="flex items-center gap-2">
+              <p className="text-sm text-gray-500">Total Pesanan:</p>
+              {dataTransaction?.total ? (
+                <span className="text-sm font-medium text-amber-600">
+                  {convertIDR(dataTransaction?.grandTotal)}
+                </span>
+              ) : (
+                <Skeleton className="my-1 h-3 w-30 rounded-lg" />
+              )}
+            </div>
+            <ChevronDown
+              className={`h-4 w-4 text-gray-500 transition-transform duration-300 ${
+                isOpen ? "rotate-180" : "rotate-0"
+              }`}
+            />
+          </button>
         </div>
       </Card>
 
       {/* Pending Payment */}
       {dataTransaction?.status === "pending" && (
-        <Card className="w-full max-w-3xl space-y-6 rounded-lg p-6">
+        <Card className="w-full max-w-3xl space-y-6 rounded-lg px-4 py-3">
           <div className="flex flex-col gap-3 sm:flex-row">
             <Button
               className="flex-1 rounded-md border border-gray-300 bg-white px-3 py-1 text-sm text-black hover:bg-gray-100"
@@ -273,7 +327,7 @@ const TransactionDetailPage = () => {
       )}
 
       {dataTransaction?.status === "completed" && (
-        <Card className="w-full max-w-3xl space-y-2 rounded-lg p-6">
+        <Card className="w-full max-w-3xl space-y-2 rounded-lg px-4 py-3">
           <div className="mb-4 flex items-center justify-between">
             <h3 className="text-xs font-semibold sm:text-base lg:text-sm">
               No. Pesanan
