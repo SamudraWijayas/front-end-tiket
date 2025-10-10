@@ -27,7 +27,7 @@ export default function Event({ dataEvent }: PageProps) {
   return (
     <div className={poppins.className}>
       <LandingPageLayout
-        title={`${dataEvent.name} - Tiket.Jokindess.com `}
+        title={`${dataEvent.name}`}
         description={stripTags(dataEvent.description || "")}
         image={`${process.env.NEXT_PUBLIC_IMAGE}${dataEvent.banner}`}
         keywords={`${dataEvent.name}, tiket ${dataEvent.name}, ${dataEvent.name} tiket, event ${dataEvent.name}`}
