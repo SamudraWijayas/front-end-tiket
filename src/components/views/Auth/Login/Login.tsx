@@ -136,7 +136,7 @@ const Login = () => {
           <button
             type="submit"
             disabled={isPendingLogin}
-            className="mt-4 flex items-center justify-center rounded-lg bg-indigo-600 px-4 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-70"
+            className="mt-4 flex items-center justify-center rounded-lg bg-green-900 px-4 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-green-700 disabled:cursor-not-allowed disabled:opacity-70"
           >
             {isPendingLogin ? (
               <div className="h-5 w-5 animate-spin rounded-full border-2 border-white border-t-transparent" />
@@ -196,7 +196,7 @@ const Login = () => {
       </div>
 
       {/* Right Side - Illustration */}
-      <div className="hidden w-1/2 items-center justify-center rounded-3xl bg-indigo-600 text-white lg:flex">
+      <div className="hidden w-1/2 items-center justify-center rounded-3xl bg-green-900 text-white lg:flex">
         <div className="max-w-md text-left">
           <h3 className="mb-4 text-2xl font-semibold">
             Satu akun untuk semua kebutuhan eventmu.

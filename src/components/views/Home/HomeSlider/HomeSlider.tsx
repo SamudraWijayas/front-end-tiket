@@ -26,11 +26,11 @@ const HomeSlider = (props: PropTypes) => {
           spaceBetween={30}
           loop
           modules={[Autoplay, Pagination]}
-          className="h-full w-full"
           autoplay={{
             delay: 2500,
             disableOnInteraction: false,
           }}
+          className="h-full w-full"
         >
           {banners?.map((banner: IBanner) => (
             <SwiperSlide key={banner._id}>
