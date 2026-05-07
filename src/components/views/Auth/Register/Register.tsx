@@ -258,7 +258,7 @@ const Register = () => {
           </p>
 
           <Image
-            src="/images/general/logogreen.jpg"
+            src="/images/general/logo-white-jokindes.png"
             alt="illustration"
             width={500}
             height={400}

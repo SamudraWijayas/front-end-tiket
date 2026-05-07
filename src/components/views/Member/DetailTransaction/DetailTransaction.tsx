@@ -333,7 +333,7 @@ const TransactionDetailPage = () => {
                   Batalkan Pesanan
                 </Button>
                 <Button
-                  className="bg-primary flex-1 rounded-md px-3 py-1 text-sm text-white hover:bg-blue-700"
+                  className="bg-primary flex-1 rounded-md px-3 py-1 text-sm text-white hover:bg-green-700"
                   onPress={() =>
                     window.snap.pay(dataTransaction?.payment?.token ?? "")
                   }

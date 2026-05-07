@@ -16,36 +16,40 @@ const HomeSlider = (props: PropTypes) => {
   const { banners, isLoadingBanners } = props;
 
   return (
-    <div className="mb-6 mt-6 h-[50vw] px-0 sm:h-[30vw] sm:px-6 lg:h-[20vw] lg:px-16">
+    <div className="mt-6 mb-6 px-0">
       {!isLoadingBanners ? (
         <Swiper
           pagination={{
-            // dynamicBullets: true,
             clickable: true,
           }}
-          spaceBetween={30}
+          slidesPerView={1.3}
+          centeredSlides={true}
+          spaceBetween={20}
           loop
           modules={[Autoplay, Pagination]}
           autoplay={{
             delay: 2500,
             disableOnInteraction: false,
           }}
-          className="h-full w-full"
+          className="w-full"
         >
           {banners?.map((banner: IBanner) => (
             <SwiperSlide key={banner._id}>
-              <Image
-                src={`${process.env.NEXT_PUBLIC_IMAGE}${banner.image}`}
-                alt={`${banner.title}`}
-                className="h-full w-full rounded-none lg:rounded-2xl object-cover"
-                width={1920}
-                height={800}
-              />
+              <div className="relative aspect-[16/6] w-full overflow-hidden rounded-none lg:rounded-2xl">
+                <Image
+                  src={`${process.env.NEXT_PUBLIC_IMAGE}${banner.image}`}
+                  alt="sip"
+                  fill
+                  unoptimized
+                  sizes="100vw"
+                  className="rounded-lg object-cover"
+                />
+              </div>
             </SwiperSlide>
           ))}
         </Swiper>
       ) : (
-        <Skeleton className="h-full w-full rounded-2xl" />
+        <Skeleton className="aspect-[16/6] w-full" />
       )}
     </div>
   );

@@ -12,14 +12,13 @@ const Event = () => {
   const router = useRouter();
   const { dataEvents, isLoadingEvents, isRefetchingEvents, ticketsByEvent } =
     useEvent();
-  console.log(ticketsByEvent);
-  const { setUrlExplore } = useChangeUrl();
+  // const { setUrlExplore } = useChangeUrl();
 
-  useEffect(() => {
-    if (router.isReady) {
-      setUrlExplore();
-    }
-  }, [router.isReady, setUrlExplore]);
+  // useEffect(() => {
+  //   if (router.isReady) {
+  //     setUrlExplore();
+  //   }
+  // }, [router.isReady, setUrlExplore]);
   return (
     <div className="mb-6 flex w-full flex-col justify-center gap-6">
       <EventFilter />

@@ -88,7 +88,7 @@ const LandingPageLayoutNavbar = (props: PropTypes) => {
             <Image
               width={50}
               height={50}
-              src="/images/general/logogreen.jpg"
+              src="/images/general/logo-green-jokindes.png"
               alt="logo"
               className="cursor-pointer"
             />
@@ -101,7 +101,7 @@ const LandingPageLayoutNavbar = (props: PropTypes) => {
                 key={item.label}
                 href={item.href}
                 className={cn(
-                  `text-md font-semibold transition-colors hover:text-blue-600 ${color}`,
+                  `text-md font-semibold transition-colors hover:text-green-600 ${color}`,
                   router.pathname === item.href && `${pathColor}`,
                 )}
               >
@@ -112,7 +112,7 @@ const LandingPageLayoutNavbar = (props: PropTypes) => {
               <Link
                 href="/transaction"
                 className={cn(
-                  `text-md font-semibold transition-colors hover:text-blue-600 ${color}`,
+                  `text-md font-semibold transition-colors hover:text-green-600 ${color}`,
                   router.pathname === "/transaction" && `${pathColor}`,
                 )}
               >
@@ -209,27 +209,27 @@ const LandingPageLayoutNavbar = (props: PropTypes) => {
           ) : (
             <Fragment>
               <div className="hidden gap-3 lg:flex">
-                {BUTTON_ITEMS.map((item) => (
-                  <Button
-                    key={`button-${item.label}`}
-                    as={Link}
-                    color="primary"
-                    href={item.href}
-                    variant={item.variant as ButtonProps["variant"]}
-                  >
-                    {item.label}
-                  </Button>
-                ))}
-              </div>
-              <div className="flex lg:hidden">
-                <Button
-                  as={Link}
-                  color="primary"
+                <Link
                   href="/auth/login"
-                  variant="solid"
+                  className="rounded-xl border border-green-800 px-4 py-2 text-sm font-medium text-green-800 transition hover:bg-green-50"
                 >
                   Login
-                </Button>
+                </Link>
+
+                <Link
+                  href="/auth/register"
+                  className="rounded-xl bg-green-800 px-4 py-2 text-sm font-medium text-white transition hover:bg-green-700"
+                >
+                  Register
+                </Link>
+              </div>
+              <div className="flex lg:hidden">
+                <Link
+                  href="/auth/login"
+                  className="rounded-xl bg-green-800 px-4 py-2 text-sm font-semibold text-white transition hover:bg-green-700"
+                >
+                  Login
+                </Link>
               </div>
             </Fragment>
           )}

@@ -111,7 +111,7 @@ const Ticket = () => {
                       {ticket?.description && (
                         <button
                           onClick={() => toggleShowMore(ticket._id ?? "")}
-                          className="mt-3 text-sm font-bold text-blue-800 transition hover:underline"
+                          className="mt-3 text-sm font-bold text-green-800 transition hover:underline"
                         >
                           {showMore
                             ? "Tampilkan Lebih Sedikit"
@@ -144,7 +144,7 @@ const Ticket = () => {
                                   handleChangeQuantity("decrement");
                                 }
                               }}
-                              className="rounded-sm bg-gray-100 p-2 text-blue-700"
+                              className="rounded-sm bg-gray-100 p-2 text-green-700"
                             >
                               <Minus size={16} />
                             </button>
@@ -154,20 +154,18 @@ const Ticket = () => {
                             </span>
                             <button
                               onClick={() => handleChangeQuantity("increment")}
-                              className="rounded-sm bg-gray-100 p-2 text-blue-700"
+                              className="rounded-sm bg-gray-100 p-2 text-green-700"
                             >
                               <Plus size={16} />
                             </button>
                           </div>
                         ) : (
-                          <Button
-                            size="sm"
-                            color="primary"
-                            className="rounded-lg font-semibold shadow-sm disabled:opacity-30"
-                            onPress={() => handleAddToCart(`${ticket._id}`)}
+                          <button
+                            onClick={() => handleAddToCart(`${ticket._id}`)}
+                            className="rounded-xl bg-green-600 px-3 py-2 text-xs font-semibold text-white shadow-md shadow-green-200 transition-all duration-300 hover:bg-green-700 hover:shadow-lg active:scale-95 disabled:cursor-not-allowed disabled:opacity-40"
                           >
                             Add To Cart
-                          </Button>
+                          </button>
                         )}
                       </>
                     )}
@@ -218,7 +216,7 @@ const Ticket = () => {
                   )}
 
                   <div className="mt-2 flex items-center gap-1">
-                    <MapPin size={14} className="text-blue-600" />
+                    <MapPin size={14} className="text-green-600" />
 
                     {dataEvent?.location.address ? (
                       <span className="block truncate text-[11px] leading-snug text-gray-600">
@@ -256,7 +254,7 @@ const Ticket = () => {
                     </span>
                   </div>
                   <span
-                    className="cursor-pointer text-xs text-blue-600 hover:underline"
+                    className="cursor-pointer text-xs text-green-600 hover:underline"
                     onClick={voucherModal.onOpen}
                   >
                     Lihat
@@ -283,7 +281,7 @@ const Ticket = () => {
           <div className="rounded-lg border border-gray-200 bg-white px-2 py-3">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <TicketCheck className="text-blue-700" />
+                <TicketCheck className="text-green-700" />
                 <span className="text-sm font-semibold text-gray-800">
                   Voucher
                 </span>
@@ -362,7 +360,7 @@ const Ticket = () => {
                 <div className="flex items-center justify-between">
                   <span className="text-xs text-gray-700">Total Diskon</span>
                   {discount > 0 && (
-                    <span className="text-xs text-blue-700">
+                    <span className="text-xs text-green-700">
                       - {convertIDR(discount)}
                     </span>
                   )}
@@ -420,7 +418,7 @@ const Ticket = () => {
                   </span>
                 </div>
                 <span
-                  className="cursor-pointer text-sm text-blue-600 hover:underline"
+                  className="cursor-pointer text-sm text-green-600 hover:underline"
                   onClick={voucherModal.onOpen}
                 >
                   Lihat
@@ -528,21 +526,22 @@ const Ticket = () => {
         </div>
 
         {/* Checkout Button */}
-        <Button
-          fullWidth
-          color="primary"
-          size="md"
+        <button
           disabled={cart.quantity === 0 || isPendingCreateOrder}
-          className="disabled:bg-primary-200 mt-2"
-          onPress={() => mutateCreateOrder()}
+          onClick={() => mutateCreateOrder()}
+          className="mt-2 flex w-full items-center justify-center rounded-2xl bg-green-700 px-4 py-2 text-sm font-bold text-white shadow-lg shadow-green-200 transition-all duration-300 hover:bg-green-700 hover:shadow-xl active:scale-[0.98] disabled:cursor-not-allowed disabled:bg-green-300 disabled:shadow-none"
         >
-          {isPendingCreateOrder ? <Spinner color="white" /> : "Checkout"}
-        </Button>
+          {isPendingCreateOrder ? (
+            <Spinner color="white" size="sm" />
+          ) : (
+            "Checkout"
+          )}
+        </button>
       </div>
       {/* fixed mobile */}
       <div className="fixed right-0 bottom-0 left-0 z-40 rounded-t-2xl bg-white shadow-xl lg:hidden">
         {/* Header */}
-        <div className="flex h-12 w-full items-center rounded-t-2xl bg-gradient-to-r from-blue-600 to-blue-500 px-4 text-white shadow-md">
+        <div className="flex h-12 w-full items-center rounded-t-2xl bg-gradient-to-r from-green-600 to-green-500 px-4 text-white shadow-md">
           <p className="text-sm font-semibold tracking-wide">
             Your Ticket to Adventure
           </p>

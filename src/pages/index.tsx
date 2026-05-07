@@ -26,7 +26,7 @@ export default function Home() {
         description="Platform Terbaik untuk beli tiket dan buat acara"
         navbarBgColor="bg-white"
         navbarColor="text-black"
-        navbarPathColor="text-blue-600"
+        navbarPathColor="text-green-900"
       >
         <Homes />
       </LandingPageLayout>

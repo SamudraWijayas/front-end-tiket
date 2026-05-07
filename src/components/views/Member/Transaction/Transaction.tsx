@@ -130,7 +130,7 @@ const Transaction = () => {
                   </Link>
                   <Link
                     href={`/event/${transaction?.events?.slug}`}
-                    className="bg-primary rounded-md px-3 py-1 text-sm text-white hover:bg-blue-700"
+                    className="bg-green-800 rounded-md px-3 py-1 text-sm text-white hover:bg-green-700"
                   >
                     Beli Lagi
                   </Link>

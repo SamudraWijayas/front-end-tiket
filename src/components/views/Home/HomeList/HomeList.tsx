@@ -2,12 +2,13 @@ import { IEvent } from "@/types/Event";
 import { ICategory } from "@/types/Category";
 import Link from "next/link";
 import CardEvent from "@/components/ui/CardEvent";
+import { ArrowRight } from "lucide-react";
 
 interface PropTypes {
   title: string;
   events: IEvent[];
   categories: { data: ICategory[] };
-  ticketsByEvent: Record<string, string>; // tiket dikelompokkan per eventId
+  ticketsByEvent: Record<string, string>;
   isLoading: boolean;
   loadingCate: boolean;
   urlMore?: string;
@@ -18,62 +19,61 @@ const HomeList = ({
   events,
   ticketsByEvent,
   isLoading,
-  categories,
   urlMore = "/event",
 }: PropTypes) => {
-  console.log(categories);
-
   return (
-    <div className="mt-6 mb-6 px-0 text-gray-800 sm:px-6 lg:px-15">
-      {/* Header: Judul + Select Kategori */}
-      <div className="mb-6 flex flex-col gap-4 px-6 sm:flex-row sm:items-center sm:justify-between sm:gap-0 lg:px-0">
-        <h2 className="text-2xl font-extrabold">{title}</h2>
+    <section className="mt-10 mb-10 px-4 sm:px-6 lg:px-16">
+      {/* Header */}
+      <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+          <p className="mb-2 text-sm font-semibold tracking-widest text-green-700 uppercase">
+            Explore Events
+          </p>
 
-        {/* <Select className="max-w-xs" label="Pilih Kategori" variant="flat">
-          {Array.isArray(categories?.data) && categories.data.length > 0 ? (
-            categories.data.map((category) => (
-              <SelectItem key={`select-cate-${category._id}`}>
-                {category.name}
-              </SelectItem>
-            ))
-          ) : (
-            <SelectItem>Tidak ada kategori</SelectItem>
-          )}
-        </Select> */}
+          <h2 className="text-3xl font-black tracking-tight text-gray-900 lg:text-4xl">
+            {title}
+          </h2>
+
+          <p className="mt-2 max-w-2xl text-sm leading-relaxed text-gray-500 lg:text-base">
+            Temukan berbagai event menarik dengan pengalaman terbaik dan
+            pemesanan tiket yang mudah.
+          </p>
+        </div>
+
         <Link
           href={urlMore}
-          className="text-sm font-medium text-blue-600 hover:underline"
+          className="group inline-flex items-center gap-2 rounded-full border border-green-700 px-5 py-3 text-sm font-semibold text-green-800 transition-all duration-300 hover:bg-green-700 hover:text-white"
         >
-          Tampilkan Lebih Banyak
+          Lihat Semua
+          <ArrowRight
+            size={18}
+            className="transition-transform duration-300 group-hover:translate-x-1"
+          />
         </Link>
       </div>
 
-      {/* Grid Card Event */}
-      <div className="grid grid-cols-1 gap-6 px-6 sm:grid-cols-2 md:grid-cols-3 lg:px-0 xl:grid-cols-4">
+      {/* Event Grid */}
+      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {!isLoading
           ? events.map((event) => (
-              <CardEvent
+              <div
                 key={`card-event-${event._id}`}
-                event={event}
-                ticketPrice={event._id ? ticketsByEvent[event._id] : ""}
-              />
+                className="transition-transform duration-300 hover:-translate-y-1"
+              >
+                <CardEvent
+                  event={event}
+                  ticketPrice={event._id ? ticketsByEvent[event._id] : ""}
+                />
+              </div>
             ))
-          : Array.from({ length: 4 }).map((_, index) => (
+          : Array.from({ length: 8 }).map((_, index) => (
               <CardEvent
                 key={`card-event-loading-${index}`}
-                isLoading={isLoading}
+                isLoading={true}
               />
             ))}
       </div>
-
-      {/* Link Tampilkan Lebih Banyak */}
-      {/* <Link
-        href={urlMore}
-        className="text-sm font-medium text-blue-600 hover:underline"
-      >
-        Tampilkan Lebih Banyak
-      </Link> */}
-    </div>
+    </section>
   );
 };
 

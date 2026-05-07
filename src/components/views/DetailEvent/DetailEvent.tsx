@@ -106,7 +106,7 @@ const DetailEvent = () => {
           {/* Detail Waktu & Lokasi */}
           <div className="flex flex-col space-y-2 text-gray-700">
             <div className="flex items-center gap-2">
-              <Calendar size={18} className="shrink-0 text-blue-600" />
+              <Calendar size={18} className="shrink-0 text-green-600" />
               <Skeleton
                 isLoaded={!!dataEvent?.startDate}
                 className="w-full rounded-lg"
@@ -116,7 +116,7 @@ const DetailEvent = () => {
             </div>
 
             <div className="flex items-center gap-2">
-              <Clock size={18} className="shrink-0 text-blue-600" />
+              <Clock size={18} className="shrink-0 text-green-600" />
               <Skeleton
                 isLoaded={!!dataEvent?.startDate}
                 className="w-1/3 rounded-lg"
@@ -126,7 +126,7 @@ const DetailEvent = () => {
             </div>
 
             <div className="flex items-start gap-2">
-              <MapPin size={20} className="mt-1 shrink-0 text-blue-600" />
+              <MapPin size={20} className="mt-1 shrink-0 text-green-600" />
               <Skeleton
                 isLoaded={!!dataEvent?.location.address}
                 className="min-h-[26px] w-full rounded-lg"
@@ -179,7 +179,7 @@ const DetailEvent = () => {
                 {dataEvent?.description && (
                   <button
                     onClick={() => setShowMore(!showMore)}
-                    className="mt-4 text-sm font-bold text-blue-800 transition hover:underline"
+                    className="mt-4 text-sm font-bold text-green-800 transition hover:underline"
                   >
                     {showMore
                       ? "Tampilkan Lebih Sedikit"
@@ -367,7 +367,7 @@ const DetailEvent = () => {
 
           <div className="flex flex-col space-y-2 text-gray-700">
             <div className="flex w-4/5 items-center gap-2">
-              <Calendar size={18} className="text-blue-600" />
+              <Calendar size={18} className="text-green-600" />
               <Skeleton
                 isLoaded={!!dataEvent?.startDate}
                 className="w-full rounded-lg"
@@ -376,7 +376,7 @@ const DetailEvent = () => {
               </Skeleton>
             </div>
             <div className="flex items-center gap-2">
-              <Clock size={18} className="text-blue-600" />
+              <Clock size={18} className="text-green-600" />
               <Skeleton
                 isLoaded={!!dataEvent?.startDate}
                 className="w-1/3 rounded-lg"
@@ -385,7 +385,7 @@ const DetailEvent = () => {
               </Skeleton>
             </div>
             <div className="flex items-center gap-2">
-              <MapPin size={20} className="text-blue-600" />
+              <MapPin size={20} className="text-green-600" />
               <Skeleton
                 isLoaded={!!dataEvent?.location.address}
                 className="min-h-[26px] w-full rounded-lg" // kasih min-h biar gak ilang
@@ -426,7 +426,7 @@ const DetailEvent = () => {
               </Skeleton>
               <Link
                 href={`/event/${dataEvent?.slug}/tickets`}
-                className="block w-full rounded-lg bg-blue-600 px-4 py-2 text-center font-medium text-white shadow transition hover:bg-blue-700"
+                className="block w-full rounded-lg bg-green-600 px-4 py-2 text-center font-medium text-white shadow transition hover:bg-green-700"
               >
                 Beli Sekarang
               </Link>
@@ -474,7 +474,7 @@ const DetailEvent = () => {
         </Skeleton>
         <Link
           href={`/event/${dataEvent?.slug}/tickets`}
-          className="block w-full rounded-lg bg-blue-600 px-4 py-3 text-center text-white shadow transition hover:bg-blue-700"
+          className="block w-full rounded-lg bg-green-600 px-4 py-3 text-center text-white shadow transition hover:bg-green-700"
         >
           {dataVoucher && dataVoucher.length > 0
             ? "Beli dengan Voucher"
