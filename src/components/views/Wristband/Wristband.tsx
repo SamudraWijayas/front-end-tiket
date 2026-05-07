@@ -1,6 +1,5 @@
 import React, { useMemo, useState } from "react";
 import Image from "next/image";
-
 import {
   ShieldCheck,
   BadgeCheck,
@@ -13,7 +12,11 @@ import {
   QrCode,
   FileText,
 } from "lucide-react";
-
+type OptionButtonProps = {
+  active: boolean;
+  onClick: () => void;
+  children: React.ReactNode;
+};
 const imageMap: Record<string, string[]> = {
   "Kain-Tanpa QR": [
     "/images/writsband/kain-non.png",
@@ -68,7 +71,7 @@ const Wristband = () => {
     return quantity * pricePerItem;
   }, [qty, pricePerItem]);
 
-  const OptionButton = ({ active, onClick, children }: any) => (
+  const OptionButton = ({ active, onClick, children }: OptionButtonProps) => (
     <button
       onClick={onClick}
       className={cn(
