@@ -6,6 +6,8 @@ import { HeroUIProvider } from "@heroui/react";
 import { ToasterProvider } from "@/contexts/ToasterContext";
 import AppShell from "@/components/commons/AppShell";
 import { onErrorHander } from "@/libs/axios/responseHanler";
+import "swiper/css";
+import "swiper/css/pagination";
 
 const queryClient = new QueryClient({
   defaultOptions: {
