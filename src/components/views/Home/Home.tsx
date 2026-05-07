@@ -84,7 +84,7 @@ export default function Home() {
           </div>
         </Card>
       </div> */}
-      <div className="pt-1">
+      <div className="pt-11">
         <HomeSlider
           banners={dataBanners?.data}
           isLoadingBanners={isLoadingBanners}

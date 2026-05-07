@@ -1,0 +1,25 @@
+import { Inter } from "next/font/google";
+import LandingPageLayout from "@/components/layouts/LandingPageLayout";
+import Wristband from "@/components/views/Wristband/Wristband";
+
+// Inisialisasi font Inter
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-inter", // opsional, bisa dipakai di CSS variable
+  weight: ["400", "500", "600", "700"], // pilih weight yang mau digunakan
+});
+
+export default function Event() {
+  return (
+    <div className={inter.className}>
+      <LandingPageLayout
+        title="Event"
+        navbarBgColor="bg-white"
+        navbarColor="text-black"
+        navbarPathColor="font-extrabold"
+      >
+        <Wristband />
+      </LandingPageLayout>
+    </div>
+  );
+}

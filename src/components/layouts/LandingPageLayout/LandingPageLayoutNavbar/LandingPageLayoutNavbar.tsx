@@ -8,12 +8,10 @@ import { useSession, signOut } from "next-auth/react";
 import { Search } from "lucide-react";
 
 import { cn } from "@/utils/cn";
-import { BUTTON_ITEMS, NAV_ITEMS } from "../LandingPageLayout.constants";
+import { NAV_ITEMS } from "../LandingPageLayout.constants";
 import useLandingPageLayoutNavbar from "./useLandingPageLayoutNavbar";
 import { IEvent } from "@/types/Event";
 import {
-  Button,
-  ButtonProps,
   Dropdown,
   DropdownTrigger,
   Avatar,
@@ -31,10 +29,18 @@ interface PropTypes {
   color?: string;
   pathColor?: string;
   onOpenProfile?: () => void;
+  showTopBar?: boolean;
 }
 
 const LandingPageLayoutNavbar = (props: PropTypes) => {
-  const { bgColor, className, color, pathColor, onOpenProfile } = props;
+  const {
+    bgColor,
+    className,
+    color,
+    pathColor,
+    onOpenProfile,
+    showTopBar = false,
+  } = props;
   const router = useRouter();
   const session = useSession();
 
@@ -81,6 +87,25 @@ const LandingPageLayoutNavbar = (props: PropTypes) => {
         className,
       )}
     >
+      {showTopBar && (
+        <div className="max-w-screen-3xl mx-auto flex h-9 items-center justify-center bg-green-900 px-4 sm:px-6 lg:px-15">
+          <div className="flex gap-4">
+            <Link
+              href="/writsband"
+              className="text-sm text-white transition-colors"
+            >
+              Tiket Gelang
+            </Link>
+            <Link
+              href="https://wa.me/6287718517731"
+              target="_blank"
+              className="text-sm text-white transition-colors"
+            >
+              Customer Service
+            </Link>
+          </div>
+        </div>
+      )}
       <div className="max-w-screen-3xl mx-auto flex h-20 items-center justify-between px-4 sm:px-6 lg:px-15">
         {/* Left: Logo + Nav */}
         <div className="flex items-center gap-8">

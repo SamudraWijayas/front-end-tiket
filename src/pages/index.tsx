@@ -27,6 +27,7 @@ export default function Home() {
         navbarBgColor="bg-white"
         navbarColor="text-black"
         navbarPathColor="text-green-900"
+        showTopBar={true}
       >
         <Homes />
       </LandingPageLayout>

@@ -17,6 +17,7 @@ interface PropTypes {
   navbarBgColor?: string;
   navbarColor?: string;
   navbarPathColor?: string;
+  showTopBar?: boolean;
 }
 
 const LandingPageLayout = (props: PropTypes) => {
@@ -30,6 +31,7 @@ const LandingPageLayout = (props: PropTypes) => {
     navbarBgColor,
     navbarColor,
     navbarPathColor,
+    showTopBar,
   } = props;
   const Profiles = useDisclosure();
   const Searches = useDisclosure();
@@ -46,6 +48,7 @@ const LandingPageLayout = (props: PropTypes) => {
         color={navbarColor}
         pathColor={navbarPathColor}
         onOpenProfile={Profiles.onOpen}
+        showTopBar={showTopBar}
       />
       <div className="mt-20">{children}</div>
       <Profile {...Profiles} />

@@ -17,8 +17,13 @@ const HomeSlider = ({ banners, isLoadingBanners }: PropTypes) => {
           pagination={{
             clickable: true,
           }}
-          slidesPerView={2}
-          spaceBetween={16}
+          slidesPerView={1}
+          breakpoints={{
+            1024: {
+              slidesPerView: 2,
+            },
+          }}
+          spaceBetween={8}
           loop
           speed={800}
           modules={[Autoplay, Pagination]}
@@ -38,7 +43,7 @@ const HomeSlider = ({ banners, isLoadingBanners }: PropTypes) => {
                   width={1920}
                   height={700}
                   unoptimized
-                  className="h-full w-full object-cover bg-gray-200"
+                  className="h-full w-full bg-gray-200 object-cover"
                 />
               </div>
             </SwiperSlide>
